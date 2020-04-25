@@ -1,0 +1,77 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: deploy-project
+  namespace: tekton-pipelines
+spec:
+  params:
+    - name: gitbranch
+      type: string
+    - name: gitrevision
+      type: string
+    - name: projectname
+      type: string
+    - name: isprivate
+      default: "true"
+      type: string
+    - name: dockerregistry
+      type: string
+      description: The Docker registry to push images to
+      default: docker.cloud.cluster.fun/private
+    - name: publicdockerregistry
+      type: string
+      description: The Docker registry to push images to
+      default: docker.cloud.cluster.fun/averagemarcus
+    - name: imagetag
+      type: string
+      description: The Docker image tag
+      default: latest
+  resources:
+    - name: git-source
+      type: git
+  tasks:
+    - name: build-and-publish-latest
+      taskRef:
+        name: docker-build-and-publish
+      params:
+        - name: IMAGE
+          value: $(params.dockerregistry)/$(params.projectname):$(params.imagetag)
+      resources:
+        inputs:
+          - name: src
+            resource: git-source
+    - name: build-and-publish-sha
+      taskRef:
+        name: docker-build-and-publish
+      params:
+        - name: IMAGE
+          value: $(params.dockerregistry)/$(params.projectname):$(params.gitrevision)
+      resources:
+        inputs:
+          - name: src
+            resource: git-source
+    - name: build-and-publish-public
+      conditions:
+        - conditionRef: is-public-project
+          params:
+            - name: isprivate
+              value: $(params.isprivate)
+      taskRef:
+        name: docker-build-and-publish
+      params:
+        - name: IMAGE
+          value: $(params.publicdockerregistry)/$(params.projectname):$(params.imagetag)
+      resources:
+        inputs:
+          - name: src
+            resource: git-source
+    - name: make-release
+      taskRef:
+        name: make
+      params:
+        - name: TARGET
+          value: "release"
+      resources:
+        inputs:
+          - name: src
+            resource: git-source

@@ -1,0 +1,19 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: make
+  namespace: tekton-pipelines
+spec:
+  params:
+  - name: TARGET
+    description: The make target to run
+  resources:
+    inputs:
+    - name: src
+      type: git
+  steps:
+  - name: make
+    workingDir: /workspace/src
+    image: docker.cloud.cluster.fun/averagemarcus/ci-builder:latest
+    script: |
+      make --dry-run -t $(params.TARGET) &> /dev/null && make $(params.TARGET) || echo "No '$(params.TARGET)' target found, skipping"

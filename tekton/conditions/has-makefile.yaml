@@ -1,0 +1,12 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Condition
+metadata:
+  name: has-makefile
+  namespace: tekton-pipelines
+spec:
+  resources:
+    - name: src
+      type: git
+  check:
+    image: alpine
+    script: 'test -f $(resources.src.path)/Makefile'

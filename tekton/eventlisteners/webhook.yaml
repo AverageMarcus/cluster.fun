@@ -1,0 +1,51 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: webhook-listener
+  namespace: tekton-pipelines
+spec:
+  serviceAccountName: eventlistener
+  triggers:
+  - name: pull-request
+    interceptors:
+    - cel:
+        filter: "header.match('X-GitHub-Event', 'pull_request') && body.action != 'closed'"
+        overlays:
+        - key: commit_sha
+          expression: "body.pull_request.head.sha"
+        - key: branch
+          expression: "body.pull_request.head.ref"
+        - key: ref
+          expression: "body.pull_request.head.ref"
+    bindings:
+    - name: gitea-binding
+    template:
+      name: pr-project
+  - name: deploy-master
+    interceptors:
+    - cel:
+        filter: "header.match('X-GitHub-Event', 'push') && split(body.ref, '/')[2] == body.repository.default_branch"
+        overlays:
+        - key: commit_sha
+          expression: "body.after"
+        - key: branch
+          expression: "split(body.ref, '/')[2]"
+        - key: ref
+          expression: "body.ref"
+    bindings:
+    - name: gitea-binding
+    template:
+      name: deploy-project
+  - name: tag
+    interceptors:
+    - cel:
+        filter: "header.match('X-GitHub-Event', 'create') && body.ref_type == 'tag'"
+        overlays:
+        - key: commit_sha
+          expression: "body.sha"
+        - key: ref
+          expression: "body.ref"
+    bindings:
+    - name: gitea-binding
+    template:
+      name: project-tag

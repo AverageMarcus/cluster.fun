@@ -1,0 +1,11 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Condition
+metadata:
+  name: is-public-project
+  namespace: tekton-pipelines
+spec:
+  params:
+    - name: isprivate
+  check:
+    image: alpine
+    script: 'test $(params.isprivate) == false'

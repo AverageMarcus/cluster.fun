@@ -1,0 +1,45 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: docker-build-and-publish
+  namespace: tekton-pipelines
+spec:
+  params:
+  - name: DOCKERFILE
+    type: string
+    description: The path to the dockerfile to build
+    default: /Dockerfile
+  - name: CONTEXT
+    type: string
+    description: The build context used by Docker.
+    default: ./
+  - name: IMAGE
+    type: string
+    description: Name (reference) of the image to build.
+  - name: EXTRA_ARGS
+    type: string
+    default: ""
+  resources:
+    inputs:
+    - name: src
+      type: git
+  results:
+  - name: IMAGE_DIGEST
+    description: Digest of the image just built.
+  steps:
+  - name: build-and-push
+    workingDir: /workspace/src
+    image: gcr.io/kaniko-project/executor:latest
+    env:
+    - name: DOCKER_CONFIG
+      value: /tekton/home/.docker
+    command:
+    - /kaniko/executor
+    - $(params.EXTRA_ARGS)
+    - --dockerfile=/workspace/src/$(params.DOCKERFILE)
+    - --context=/workspace/src/$(params.CONTEXT)
+    - --destination=$(params.IMAGE)
+    - --oci-layout-path=/workspace/src/image-digest
+    - --digest-file=/tekton/results/IMAGE_DIGEST
+    securityContext:
+      runAsUser: 0
