@@ -17,3 +17,5 @@ spec:
     value: $(body.repository.name)
   - name: isprivate
     value: $(body.repository.private)
+  - name: prid
+    value: $(body.number)

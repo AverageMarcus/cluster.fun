@@ -69,6 +69,10 @@ spec:
       params:
         - name: TARGET
           value: "ci"
+        - name: REPO
+          value: $(params.projectname)
+        - name: PR_ID
+          value: $(params.prid)
       resources:
         inputs:
           - name: src

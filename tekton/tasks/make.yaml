@@ -17,3 +17,13 @@ spec:
     image: docker.cluster.fun/averagemarcus/ci-builder:latest
     script: |
       make --dry-run -t $(params.TARGET) &> /dev/null && make $(params.TARGET) || echo "No '$(params.TARGET)' target found, skipping"
+    env:
+    - name: REPO
+      value: $(params.REPO)
+    - name: PR_ID
+      value: $(params.PR_ID)
+    - name: ACCESS_TOKEN
+      valueFrom:
+        secretKeyRef:
+          name: gitea-access-token
+          key: access-token

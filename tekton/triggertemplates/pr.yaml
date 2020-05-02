@@ -15,6 +15,8 @@ spec:
       description: The ref of the PR
     - name: projectname
       description: The name of the git project
+    - name: prid
+      description: The number of the PR
   resourcetemplates:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
@@ -31,6 +33,8 @@ spec:
             value: $(params.gitrevision)
           - name: projectname
             value: $(params.projectname)
+          - name: prid
+            value: $(params.prid)
         resources:
           - name: git-source
             resourceSpec:
