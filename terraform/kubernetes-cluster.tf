@@ -7,7 +7,6 @@ resource "scaleway_k8s_cluster_beta" "k8s-cluster" {
   ingress          = "traefik"
 
   feature_gates = [
-    "EphemeralContainers",
     "HPAScaleToZero",
     "TTLAfterFinished"
   ]
@@ -34,5 +33,5 @@ output "wildcard_dns" {
 }
 
 output "kubeconfig" {
-  value = scaleway_k8s_cluster_beta.k8s-cluster.kubeconfig
+  value = scaleway_k8s_cluster_beta.k8s-cluster.kubeconfig[0].config_file
 }
