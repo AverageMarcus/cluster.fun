@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: black-hole
+  namespace: kube-system
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 9090
+    name: web
+  selector:
+    app: black-hole
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: black-hole
+  namespace: kube-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: black-hole
+  template:
+    metadata:
+      labels:
+        app: black-hole
+    spec:
+      containers:
+      - name: black-hole
+        image: averagemarcus/black-hole:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9090
+          name: web
+        resources:
+          limits:
+            memory: 20Mi
+            cpu: 10m
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: black-hole
+  namespace: kube-system
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        backend:
+          serviceName: black-hole
+          servicePort: 80

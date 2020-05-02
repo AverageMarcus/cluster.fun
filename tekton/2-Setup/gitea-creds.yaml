@@ -19,4 +19,4 @@ metadata:
     kube-1password: 3jgo56jlsrdxilf2vdp5zsw6lq
     kube-1password/vault: Kubernetes
     tekton.dev/git-0: https://git.cloud.cluster.fun
-type: kubernetes.io/basic-auth
+type: Opaque

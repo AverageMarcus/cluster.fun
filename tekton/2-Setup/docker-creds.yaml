@@ -7,5 +7,5 @@ metadata:
     kube-1password: kgpbumszi4stqgyzg4kqrttxam
     kube-1password/vault: Kubernetes
     tekton.dev/docker-0: https://docker.cloud.cluster.fun/averagemarcus
-type: kubernetes.io/basic-auth
+type: Opaque
 

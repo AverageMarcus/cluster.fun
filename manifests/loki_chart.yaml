@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: logging
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: grafana-credentials
+  namespace: logging
+  annotations:
+    kube-1password: wpynfxkdipeeacyfxkvtdsuj54
+    kube-1password/vault: Kubernetes
+type: Opaque
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: loki
+  namespace: logging
+spec:
+  chart:
+    repository: https://grafana.github.io/loki/charts
+    name: loki-stack
+    version: 0.36.2
+  maxHistory: 4
+  skipCRDs: false
+  values:
+    fluent-bit:
+      enabled: "true"
+    promtail:
+      enabled: "true"
+    loki:
+      persistence:
+        enabled: "true"
+        size: 10Gi
+
+# ---
+# apiVersion: helm.fluxcd.io/v1
+# kind: HelmRelease
+# metadata:
+#   name: grafana
+#   namespace: logging
+# spec:
+#   chart:
+#     repository: https://kubernetes-charts.storage.googleapis.com
+#     name: grafana
+#     version: 5.0.22
+#   maxHistory: 4
+#   skipCRDs: false
+#   values:
+#     admin:
+#       existingSecret: "grafana-credentials"
+#       userKey: username
+#       passwordKey: password
+#     persistence:
+#       enabled: "false"
+#     datasources:
+#       datasources.yaml:
+#         apiVersion: 1
+#         datasources:
+#         - name: Loki
+#           type: loki
+#           url: http://logging-loki.logging:3100
+#           access: proxy
+#           jsonData:
+#             maxLines: 1000

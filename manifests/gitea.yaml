@@ -1,0 +1,119 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gitea
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: gitea-secret-key
+  namespace: gitea
+  annotations:
+    kube-1password: 2j4lrhtz5k6eqiwato4pebu3r4
+    kube-1password/vault: Kubernetes
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: git
+  namespace: gitea
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: web
+    name: web
+  selector:
+    app: git
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: git
+  namespace: gitea
+  labels:
+    app: git
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: git
+  serviceName: "git"
+  template:
+    metadata:
+      labels:
+        app: git
+    spec:
+      containers:
+      - name: git
+        image: gitea/gitea:1.11
+        env:
+        - name: APP_NAME
+          value: "Git"
+        - name: RUN_MODE
+          value: prod
+        - name: DISABLE_SSH
+          value: "true"
+        - name: ROOT_URL
+          value: https://git.cluster.fun
+        - name: DISABLE_REGISTRATION
+          value: "true"
+        - name: DEFAULT_PRIVATE
+          value: private
+        - name: ENABLE_PUSH_CREATE_USER
+          value: "true"
+        - name: ENABLE_PUSH_CREATE_ORG
+          value: "true"
+        - name: ISSUE_PAGING_NUM
+          value: "20"
+        - name: DEFAULT_THEME
+          value: arc-green
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: gitea-secret-key
+              key: password
+        ports:
+        - containerPort: 3000
+          name: web
+        resources:
+          requests:
+            memory: 400Mi
+            cpu: 10m
+        volumeMounts:
+        - mountPath: /data
+          name: git-data
+  volumeClaimTemplates:
+  - metadata:
+      name: git-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: scw-bssd-retain
+      resources:
+        requests:
+          storage: 20Gi
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: git
+  namespace: gitea
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+spec:
+  tls:
+  - hosts:
+    - git.cluster.fun
+    secretName: git
+  rules:
+  - host: git.cluster.fun
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: git
+          servicePort: 80
