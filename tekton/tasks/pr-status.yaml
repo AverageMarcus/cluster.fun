@@ -14,7 +14,7 @@ spec:
     default: "pending"
   steps:
   - name: pr-status-update
-    image: docker.cloud.cluster.fun/averagemarcus/gitea-pr-state:latest
+    image: docker.cluster.fun/averagemarcus/gitea-pr-state:latest
     env:
     - name: ACCESS_TOKEN
       valueFrom:

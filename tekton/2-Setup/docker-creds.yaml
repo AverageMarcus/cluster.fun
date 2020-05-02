@@ -6,6 +6,6 @@ metadata:
   annotations:
     kube-1password: kgpbumszi4stqgyzg4kqrttxam
     kube-1password/vault: Kubernetes
-    tekton.dev/docker-0: https://docker.cloud.cluster.fun/averagemarcus
+    tekton.dev/docker-0: https://docker.cluster.fun/averagemarcus
 type: Opaque
 

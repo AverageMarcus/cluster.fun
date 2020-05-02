@@ -17,11 +17,11 @@ spec:
     - name: dockerregistry
       type: string
       description: The Docker registry to push images to
-      default: docker.cloud.cluster.fun/private
+      default: docker.cluster.fun/private
     - name: publicdockerregistry
       type: string
       description: The Docker registry to push images to
-      default: docker.cloud.cluster.fun/averagemarcus
+      default: docker.cluster.fun/averagemarcus
     - name: imagetag
       type: string
       description: The Docker image tag

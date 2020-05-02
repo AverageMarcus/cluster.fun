@@ -14,6 +14,6 @@ spec:
   steps:
   - name: make
     workingDir: /workspace/src
-    image: docker.cloud.cluster.fun/averagemarcus/ci-builder:latest
+    image: docker.cluster.fun/averagemarcus/ci-builder:latest
     script: |
       make --dry-run -t $(params.TARGET) &> /dev/null && make $(params.TARGET) || echo "No '$(params.TARGET)' target found, skipping"
