@@ -1,0 +1,100 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: rss
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: rss
+  namespace: rss
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rss
+  namespace: rss
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 8080
+    name: web
+  selector:
+    app: rss
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rss
+  namespace: rss
+  labels:
+    app: rss
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rss
+  template:
+    metadata:
+      labels:
+        app: rss
+    spec:
+      securityContext:
+        fsGroup: 1000
+      dnsConfig:
+        options:
+          - name: ndots
+            value: "2"
+      containers:
+      - name: web
+        image: mdswanson/stringer
+        env:
+        - name: SECRET_TOKEN
+          value: inward-popcorn-decamp-epsilon
+        - name: PORT
+          value: "8080"
+        - name: DATABASE_URL
+          value: sqlite3:/data/stringer.db
+        ports:
+        - containerPort: 8080
+          name: web
+        volumeMounts:
+          - mountPath: /data
+            name: storage
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: rss
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: rss
+  namespace: rss
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+spec:
+  tls:
+  - hosts:
+    - rss.cluster.fun
+    secretName: rss-ingress
+  rules:
+  - host: rss.cluster.fun
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: rss
+          servicePort: 80
+
+---
