@@ -9,3 +9,15 @@ metadata:
     tekton.dev/docker-0: https://docker.cluster.fun/averagemarcus
 type: Opaque
 
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: docker-config
+  namespace: tekton-pipelines
+  annotations:
+    kube-1password: i6ngbk5zf4k52xgwdwnfup5bby
+    kube-1password/vault: Kubernetes
+    kube-1password/secret-text-key: config.json
+type: Opaque

@@ -32,6 +32,8 @@ spec:
           expression: "split(body.ref, '/')[2]"
         - key: ref
           expression: "body.ref"
+        - key: number
+          expression: "0"
     bindings:
     - name: gitea-binding
     template:
@@ -45,6 +47,8 @@ spec:
           expression: "body.sha"
         - key: ref
           expression: "body.ref"
+        - key: number
+          expression: "0"
     bindings:
     - name: gitea-binding
     template:

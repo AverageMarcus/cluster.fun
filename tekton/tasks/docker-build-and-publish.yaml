@@ -32,7 +32,7 @@ spec:
     image: gcr.io/kaniko-project/executor:latest
     env:
     - name: DOCKER_CONFIG
-      value: /tekton/home/.docker
+      value: /kaniko/.docker
     command:
     - /kaniko/executor
     - $(params.EXTRA_ARGS)
@@ -43,3 +43,14 @@ spec:
     - --digest-file=/tekton/results/IMAGE_DIGEST
     securityContext:
       runAsUser: 0
+    volumeMounts:
+      - name: docker-config
+        mountPath: /kaniko/.docker/config.json
+        subPath: config.json
+  volumes:
+    - name: docker-config
+      secret:
+        secretName: docker-config
+
+
+
