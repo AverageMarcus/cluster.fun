@@ -66,7 +66,7 @@ spec:
         - --upstream=http://localhost:8000
         - --http-address=$(HOST_IP):8080
         - --redirect-url=https://website-to-remarkable.cluster.fun/oauth2/callback
-        - --email-domain=*
+        - --email-domain=marcusnoble.co.uk
         - --pass-basic-auth=false
         - --pass-access-token=false
         - --oidc-issuer-url=https://marcusnoble.eu.auth0.com/
