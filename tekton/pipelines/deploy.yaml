@@ -65,12 +65,36 @@ spec:
         inputs:
           - name: src
             resource: git-source
+    - name: build-and-publish-sha-public
+      conditions:
+        - conditionRef: is-public-project
+          params:
+            - name: isprivate
+              value: $(params.isprivate)
+      taskRef:
+        name: docker-build-and-publish
+      params:
+        - name: IMAGE
+          value: $(params.publicdockerregistry)/$(params.projectname):$(params.gitrevision)
+      resources:
+        inputs:
+          - name: src
+            resource: git-source
     - name: make-release
       taskRef:
         name: make
+      runAfter:
+        - build-and-publish-sha
+        - build-and-publish-sha-public
       params:
         - name: TARGET
           value: "release"
+        - name: REPO
+          value: $(params.projectname)
+        - name: PR_ID
+          value: ""
+        - name: SHA
+          value: $(params.gitrevision)
       resources:
         inputs:
           - name: src

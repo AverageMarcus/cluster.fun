@@ -41,6 +41,7 @@ spec:
     - --destination=$(params.IMAGE)
     - --oci-layout-path=/workspace/src/image-digest
     - --digest-file=/tekton/results/IMAGE_DIGEST
+    - --cache=true
     securityContext:
       runAsUser: 0
     volumeMounts:
