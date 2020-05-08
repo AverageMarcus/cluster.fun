@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: qr
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: qr
+  namespace: qr
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 8080
+    name: web
+  selector:
+    app: qr
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qr
+  namespace: qr
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: qr
+  template:
+    metadata:
+      labels:
+        app: qr
+    spec:
+      containers:
+      - name: web
+        image: docker.cluster.fun/averagemarcus/qr:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          name: web
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: qr
+  namespace: qr
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+spec:
+  tls:
+  - hosts:
+    - qr.cluster.fun
+    secretName: qr-ingress
+  rules:
+  - host: qr.cluster.fun
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: qr
+          servicePort: 80
+
