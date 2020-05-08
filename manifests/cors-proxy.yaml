@@ -1,0 +1,90 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cors-proxy
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cors-proxy
+  namespace: cors-proxy
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 8000
+    name: web
+  selector:
+    app: cors-proxy
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cors-proxy
+  namespace: cors-proxy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cors-proxy
+  template:
+    metadata:
+      labels:
+        app: cors-proxy
+    spec:
+      containers:
+      - name: web
+        image: docker.cluster.fun/averagemarcus/cors-proxy:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+          name: web
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: cors-proxy
+  namespace: cors-proxy
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+spec:
+  tls:
+  - hosts:
+    - cors-proxy.cluster.fun
+    secretName: cors-proxy-ingress
+  rules:
+  - host: cors-proxy.cluster.fun
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: cors-proxy
+          servicePort: 80
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: cors-proxy-mn
+  namespace: cors-proxy
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+spec:
+  tls:
+  - hosts:
+    - cors-proxy.marcusnoble.co.uk
+    secretName: cors-proxy-mn-ingress
+  rules:
+  - host: cors-proxy.marcusnoble.co.uk
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: cors-proxy
+          servicePort: 80
