@@ -1,0 +1,89 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: twitter-profile-pic
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: twitter-profile-pic
+  namespace: twitter-profile-pic
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 9090
+    name: web
+  selector:
+    app: twitter-profile-pic
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: twitter-profile-pic
+  namespace: twitter-profile-pic
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: twitter-profile-pic
+  template:
+    metadata:
+      labels:
+        app: twitter-profile-pic
+    spec:
+      containers:
+      - name: web
+        image: docker.cluster.fun/averagemarcus/twitter-profile-pic:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9090
+          name: web
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: twitter-profile-pic
+  namespace: twitter-profile-pic
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+spec:
+  tls:
+  - hosts:
+    - twitter-profile-pic.marcusnoble.co.uk
+    secretName: twitter-profile-pic-ingress
+  rules:
+  - host: twitter-profile-pic.marcusnoble.co.uk
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: twitter-profile-pic
+          servicePort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: twitter-profile-pic-jsox
+  namespace: twitter-profile-pic
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+spec:
+  tls:
+  - hosts:
+    - twitter-profile-pic.jsoxford.com
+    secretName: twitter-profile-pic-jsox-ingress
+  rules:
+  - host: twitter-profile-pic.jsoxford.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: twitter-profile-pic
+          servicePort: 80
