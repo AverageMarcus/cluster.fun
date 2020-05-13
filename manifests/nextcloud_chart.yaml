@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nextcloud
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: nextcloud-values
+  namespace: nextcloud
+  annotations:
+    kube-1password: v32a4zpuvhmxxrwmtmmv6526ry
+    kube-1password/vault: Kubernetes
+    kube-1password/secret-text-key: values.yaml
+type: Opaque
+---
+
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: nextcloud
+  namespace: nextcloud
+spec:
+  chart:
+    repository: https://kubernetes-charts.storage.googleapis.com
+    name: nextcloud
+    version: 1.10.0
+  maxHistory: 5
+  valuesFrom:
+  - secretKeyRef:
+      name: nextcloud-values
+      namespace: nextcloud
+      key: values.yaml
+      optional: false
+  values:
+    image:
+      tag: 18-apache
+    ingress:
+      enabled: true
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt
+        traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+        traefik.ingress.kubernetes.io/redirect-entry-point: https
+        traefik.ingress.kubernetes.io/redirect-permanent: "true"
+      tls:
+      - hosts:
+        - nextcloud.cluster.fun
+        secretName: nextcloud-ingress
+    nextcloud:
+      host: nextcloud.cluster.fun
+    persistence:
+      enabled: true
+      storageClass: scw-bssd-retain
+      size: 5Gi
+    cronjob:
+      enabled: true
+    resources:
+      requests:
+        memory: 500Mi
+        cpu: 50m
