@@ -1,0 +1,255 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: chat
+
+---
+
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: matrix
+  namespace: chat
+spec:
+  chart:
+    repository: https://dacruz21.github.io/helm-charts
+    name: matrix
+    version: 1.1.2
+  maxHistory: 4
+  values:
+    matrix:
+      serverName: "matrix.cluster.fun"
+      telemetry: false
+      hostname: "matrix.cluster.fun"
+      presence: true
+      blockNonAdminInvites: false
+      search: true
+      adminEmail: "matrix@marcusnoble.co.uk"
+      uploads:
+        maxSize: 10M
+        maxPixels: 32M
+      federation:
+        enabled: false
+        allowPublicRooms: false
+        blacklist:
+          - '127.0.0.0/8'
+          - '10.0.0.0/8'
+          - '172.16.0.0/12'
+          - '192.168.0.0/16'
+          - '100.64.0.0/10'
+          - '169.254.0.0/16'
+          - '::1/128'
+          - 'fe80::/64'
+          - 'fc00::/7'
+      registration:
+        enabled: false
+        allowGuests: false
+      urlPreviews:
+        enabled: true
+        rules:
+          maxSize: 4M
+          ip:
+            blacklist:
+              - '127.0.0.0/8'
+              - '10.0.0.0/8'
+              - '172.16.0.0/12'
+              - '192.168.0.0/16'
+              - '100.64.0.0/10'
+              - '169.254.0.0/16'
+              - '::1/128'
+              - 'fe80::/64'
+              - 'fc00::/7'
+
+    volumes:
+      media:
+        capacity: 4Gi
+      signingKey:
+        capacity: 1Gi
+
+    postgresql:
+      enabled: true
+      persistence:
+        size: 4Gi
+
+    synapse:
+      image:
+        repository: "matrixdotorg/synapse"
+        tag: v1.12.4
+        pullPolicy: IfNotPresent
+      service:
+        type: ClusterIP
+        port: 80
+      replicaCount: 1
+      resources: {}
+
+    riot:
+      enabled: true
+      integrations:
+        enabled: true
+        ui: "https://scalar.vector.im/"
+        api: "https://scalar.vector.im/api"
+        widgets:
+          - "https://scalar.vector.im/_matrix/integrations/v1"
+          - "https://scalar.vector.im/api"
+          - "https://scalar-staging.vector.im/_matrix/integrations/v1"
+          - "https://scalar-staging.vector.im/api"
+          - "https://scalar-staging.riot.im/scalar/api"
+      # Experimental features in riot-web, see https://github.com/vector-im/riot-web/blob/develop/docs/labs.md
+      labs:
+        - feature_pinning
+        - feature_custom_status
+        - feature_state_counters
+        - feature_many_integration_managers
+        - feature_mjolnir
+        - feature_dm_verification
+        - feature_bridge_state
+        - feature_presence_in_room_list
+        - feature_custom_themes
+      # Servers to show in the Explore menu (the current server is always shown)
+      roomDirectoryServers: []
+      # Prefix before permalinks generated when users share links to rooms, users, or messages. If running an unfederated Synapse, set the below to the URL of your Riot instance.
+      permalinkPrefix: "https://chat.cluster.fun"
+      image:
+        repository: "vectorim/riot-web"
+        tag: v1.6.0
+        pullPolicy: IfNotPresent
+      service:
+        type: ClusterIP
+        port: 80
+      replicaCount: 1
+      resources: {}
+
+    # Settings for Coturn TURN relay, used for routing voice calls
+    coturn:
+      enabled: false
+
+    mail:
+      enabled: false
+      relay:
+        enabled: false
+
+    bridges:
+      irc:
+        enabled: false
+      whatsapp:
+        enabled: false
+      discord:
+        enabled: false
+
+    networkPolicies:
+      enabled: false
+
+    ingress:
+      enabled: false
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: matrix
+  namespace: chat
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+spec:
+  tls:
+  - hosts:
+    - matrix.cluster.fun
+    secretName: matrix-ingress
+  rules:
+  - host: matrix.cluster.fun
+    http:
+      paths:
+      - path: /.well-known/matrix
+        backend:
+          serviceName: well-known
+          servicePort: 80
+      - path: /
+        backend:
+          serviceName: chat-matrix-synapse
+          servicePort: 80
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: riot
+  namespace: chat
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+spec:
+  tls:
+  - hosts:
+    - chat.cluster.fun
+    secretName: riot-ingress
+  rules:
+  - host: chat.cluster.fun
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: chat-matrix-riot
+          servicePort: 80
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: well-known
+  namespace: chat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: well-known
+  template:
+    metadata:
+      labels:
+        app: well-known
+    spec:
+      containers:
+      - name: web
+        image: nginx
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+          name: web
+        volumeMounts:
+        - name: well-known
+          mountPath: /usr/share/nginx/html/.well-known/matrix
+      volumes:
+      - name: well-known
+        configMap:
+          name: well-known
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: well-known
+  namespace: chat
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 80
+    name: web
+  selector:
+    app: well-known
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: well-known
+  namespace: chat
+data:
+  server: |-
+    {
+      "m.server": "matrix.cluster.fun:443"
+    }
