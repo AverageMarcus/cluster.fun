@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ghost
+
+---
+
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: ghost
+  namespace: ghost
+spec:
+  chart:
+    repository: https://charts.bitnami.com/bitnami
+    name: ghost
+    version: 10.0.2
+  maxHistory: 4
+  values:
+    ghostHost: www.chloehiggins.co.uk
+    ghostUsername: chloe
+    ghostEmail: ghost@chloes.email
+    ghostBlogTitle: "Chloe's Website"
+    service:
+      type: ClusterIP
+    mariadb:
+      master:
+        persistence:
+          enabled: true
+          size: 1Gi
+    persistence:
+      enabled: true
+      size: 1Gi
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ghost
+  namespace: ghost
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+spec:
+  tls:
+  - hosts:
+    - www.chloehiggins.co.uk
+    - chloehiggins.co.uk
+    secretName: ghost-ingress
+  rules:
+  - host: www.chloehiggins.co.uk
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: ghost-ghost
+          servicePort: 80
+  - host: chloehiggins.co.uk
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: ghost-ghost
+          servicePort: 80
