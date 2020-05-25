@@ -49,6 +49,8 @@ spec:
   maxHistory: 4
   skipCRDs: false
   values:
+    image:
+      tag: 7.0.0
     admin:
       existingSecret: "grafana-credentials"
       userKey: username
