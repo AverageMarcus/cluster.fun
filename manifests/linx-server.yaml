@@ -1,0 +1,114 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: linx-server
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: linx-server
+  namespace: linx-server
+data:
+  linx-server.conf: |-
+    sitename = share
+    maxsize = 524288000
+    maxexpiry = 0
+    selifpath = f
+    nologs = false
+    force-random-filename = false
+    s3-endpoint = https://s3.fr-par.scw.cloud
+    s3-region = fr-par
+    s3-bucket = cluster.fun-linx
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: linx-server-s3
+  namespace: linx-server
+  annotations:
+    kube-1password: d5dgclm3qrxd4fntivv26ec3ee
+    kube-1password/vault: Kubernetes
+type: Opaque
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: linx-server
+  namespace: linx-server
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: web
+    name: web
+  selector:
+    app: linx-server
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: linx-server
+  namespace: linx-server
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: linx-server
+  template:
+    metadata:
+      labels:
+        app: linx-server
+    spec:
+      containers:
+      - name: web
+        image: andreimarcu/linx-server:version-2.3.5
+        imagePullPolicy: Always
+        args:
+          - -config
+          - /config/linx-server.conf
+        ports:
+        - containerPort: 8080
+          name: web
+        env:
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: linx-server-s3
+                key: username
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: linx-server-s3
+                key: password
+        volumeMounts:
+          - name: config
+            mountPath: /config
+      volumes:
+        - name: config
+          configMap:
+            name: linx-server
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: linx-server
+  namespace: linx-server
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+spec:
+  tls:
+  - hosts:
+    - share.cluster.fun
+    secretName: linx-server-ingress
+  rules:
+  - host: share.cluster.fun
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: linx-server
+          servicePort: 80
