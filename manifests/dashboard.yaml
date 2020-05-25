@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dashboard
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: docker-config
+  namespace: dashboard
+  annotations:
+    kube-1password: i6ngbk5zf4k52xgwdwnfup5bby
+    kube-1password/vault: Kubernetes
+    kube-1password/secret-text-key: .dockerconfigjson
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: e30=
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashboard
+  namespace: dashboard
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: web
+    name: web
+  selector:
+    app: dashboard
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard
+  namespace: dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dashboard
+  template:
+    metadata:
+      labels:
+        app: dashboard
+    spec:
+      imagePullSecrets:
+        - name: docker-config
+      containers:
+      - name: web
+        image: docker.cluster.fun/private/dashboard:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          name: web
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: dashboard
+  namespace: dashboard
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+spec:
+  tls:
+  - hosts:
+    - dash.cluster.fun
+    secretName: dashboard-ingress
+  rules:
+  - host: dash.cluster.fun
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: dashboard
+          servicePort: 80
