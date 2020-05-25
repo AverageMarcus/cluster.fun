@@ -15,8 +15,12 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: gitea-creds
+  namespace: tekton-pipelines
   annotations:
     kube-1password: 3jgo56jlsrdxilf2vdp5zsw6lq
     kube-1password/vault: Kubernetes
     tekton.dev/git-0: https://git.cluster.fun
-type: Opaque
+type: kubernetes.io/basic-auth
+data:
+  username: ""
+  password: ""
