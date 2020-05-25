@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: buzzers
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: buzzers
+  namespace: buzzers
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: web
+    name: web
+  selector:
+    app: buzzers
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: buzzers
+  namespace: buzzers
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: buzzers
+  template:
+    metadata:
+      labels:
+        app: buzzers
+    spec:
+      containers:
+      - name: web
+        image: docker.cluster.fun/averagemarcus/buzzers:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          name: web
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: buzzers
+  namespace: buzzers
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+spec:
+  tls:
+  - hosts:
+    - buzzers.cluster.fun
+    secretName: buzzers-ingress
+  rules:
+  - host: buzzers.cluster.fun
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: buzzers
+          servicePort: 80
