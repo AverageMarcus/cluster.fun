@@ -9,3 +9,15 @@ spec:
   check:
     image: alpine
     script: 'test $(params.isprivate) == false'
+---
+apiVersion: tekton.dev/v1alpha1
+kind: Condition
+metadata:
+  name: is-private-project
+  namespace: tekton-pipelines
+spec:
+  params:
+    - name: isprivate
+  check:
+    image: alpine
+    script: 'test $(params.isprivate) == true'
