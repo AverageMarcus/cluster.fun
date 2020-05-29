@@ -1,0 +1,108 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kube-janitor
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kube-janitor
+  namespace: kube-janitor
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kube-janitor
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+- apiGroups:
+  - "*"
+  resources:
+  - "*"
+  verbs:
+  - get
+  - watch
+  - list
+  - delete
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: kube-janitor
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kube-janitor
+subjects:
+- kind: ServiceAccount
+  name: kube-janitor
+  namespace: kube-janitor
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kube-janitor
+  namespace: kube-janitor
+data:
+  rules.yaml: |-
+    rules:
+      - id: tekton-tasks
+        # remove deployments and statefulsets without a label "application"
+        resources:
+          - pods
+        jmespath: "(metadata.labels.\"tekton.dev/pipeline\")"
+        ttl: 1h
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    application: kube-janitor
+    version: v20.4.1
+  name: kube-janitor
+  namespace: kube-janitor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      application: kube-janitor
+  template:
+    metadata:
+      labels:
+        application: kube-janitor
+        version: v20.4.1
+    spec:
+      serviceAccountName: kube-janitor
+      containers:
+      - name: janitor
+        image: hjacobs/kube-janitor:20.4.1
+        args:
+          - --interval=15
+          - --rules-file=/config/rules.yaml
+          - --include-namespaces=tekton-pipelines
+          - --include-resources=pods
+        resources:
+          limits:
+            memory: 100Mi
+          requests:
+            cpu: 5m
+            memory: 100Mi
+        securityContext:
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
+        volumeMounts:
+          - name: config-volume
+            mountPath: /config
+      volumes:
+      - name: config-volume
+        configMap:
+          name: kube-janitor
