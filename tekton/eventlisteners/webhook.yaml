@@ -24,12 +24,12 @@ spec:
   - name: deploy-master
     interceptors:
     - cel:
-        filter: "header.match('X-GitHub-Event', 'push') && split(body.ref, '/')[2] == body.repository.default_branch"
+        filter: "header.match('X-GitHub-Event', 'push') && body.ref.split('/')[2] == body.repository.default_branch"
         overlays:
         - key: commit_sha
           expression: "body.after"
         - key: branch
-          expression: "split(body.ref, '/')[2]"
+          expression: "body.ref.split('/')[2]"
         - key: ref
           expression: "body.ref"
         - key: number
