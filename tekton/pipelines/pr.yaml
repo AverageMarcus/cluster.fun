@@ -11,6 +11,8 @@ spec:
       type: string
     - name: projectname
       type: string
+    - name: prid
+      type: string
   resources:
     - name: git-source
       type: git
