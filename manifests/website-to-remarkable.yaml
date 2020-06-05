@@ -2,6 +2,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: website-to-remarkable
+  labels:
+    goldilocks.fairwinds.com/enabled: "true"
 ---
 apiVersion: v1
 kind: Secret
@@ -92,6 +94,13 @@ spec:
         ports:
         - containerPort: 8080
           protocol: TCP
+        resources:
+          limits:
+            cpu: 12m
+            memory: 125Mi
+          requests:
+            cpu: 12m
+            memory: 125Mi
       - name: web
         image: docker.cluster.fun/averagemarcus/website-to-remarkable:latest
         imagePullPolicy: Always
@@ -104,6 +113,13 @@ spec:
         ports:
         - containerPort: 8000
           name: web
+        resources:
+          limits:
+            cpu: 12m
+            memory: 125Mi
+          requests:
+            cpu: 12m
+            memory: 125Mi
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress

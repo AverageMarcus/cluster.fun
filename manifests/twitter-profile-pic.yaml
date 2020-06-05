@@ -2,6 +2,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: twitter-profile-pic
+  labels:
+    goldilocks.fairwinds.com/enabled: "true"
 ---
 apiVersion: v1
 kind: Service
@@ -39,6 +41,13 @@ spec:
         ports:
         - containerPort: 9090
           name: web
+        resources:
+          limits:
+            cpu: 25m
+            memory: 250Mi
+          requests:
+            cpu: 25m
+            memory: 250Mi
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress

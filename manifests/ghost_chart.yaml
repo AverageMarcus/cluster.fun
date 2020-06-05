@@ -2,6 +2,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: ghost
+  labels:
+    goldilocks.fairwinds.com/enabled: "true"
 
 ---
 
@@ -31,6 +33,13 @@ spec:
     persistence:
       enabled: true
       size: 1Gi
+    resources:
+      limits:
+        cpu: 25m
+        memory: 250Mi
+      requests:
+        cpu: 25m
+        memory: 250Mi
 
 ---
 

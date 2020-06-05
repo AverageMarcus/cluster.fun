@@ -2,6 +2,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: cctv
+  labels:
+    goldilocks.fairwinds.com/enabled: "true"
 ---
 apiVersion: v1
 kind: Secret
@@ -64,6 +66,13 @@ spec:
         ports:
         - containerPort: 8080
           protocol: TCP
+        resources:
+          limits:
+            cpu: 25m
+            memory: 250Mi
+          requests:
+            cpu: 25m
+            memory: 250Mi
 ---
 apiVersion: v1
 kind: Service

@@ -2,6 +2,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: rss
+  labels:
+    goldilocks.fairwinds.com/enabled: "true"
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -65,6 +67,13 @@ spec:
         ports:
         - containerPort: 8080
           name: web
+        resources:
+          limits:
+            cpu: 25m
+            memory: 308Mi
+          requests:
+            cpu: 25m
+            memory: 308Mi
         volumeMounts:
           - mountPath: /data
             name: storage
