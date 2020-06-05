@@ -20,3 +20,5 @@ spec:
   maxHistory: 4
   values:
     installVPA: true
+    dashboard:
+      replicaCount: 1

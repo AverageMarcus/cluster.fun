@@ -59,10 +59,10 @@ spec:
         resources:
           limits:
             cpu: 25m
-            memory: 250Mi
+            memory: 50Mi
           requests:
             cpu: 25m
-            memory: 250Mi
+            memory: 50Mi
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress

@@ -25,7 +25,7 @@ metadata:
   name: qr
   namespace: qr
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: qr
@@ -44,10 +44,10 @@ spec:
         resources:
           limits:
             cpu: 25m
-            memory: 250Mi
+            memory: 100Mi
           requests:
             cpu: 25m
-            memory: 250Mi
+            memory: 100Mi
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
