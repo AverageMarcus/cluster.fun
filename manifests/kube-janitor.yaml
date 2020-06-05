@@ -53,11 +53,11 @@ data:
   rules.yaml: |-
     rules:
       - id: tekton-tasks
-        # remove deployments and statefulsets without a label "application"
         resources:
           - pods
+          - pipelineruns
         jmespath: "(metadata.labels.\"tekton.dev/pipeline\")"
-        ttl: 1h
+        ttl: 3h
 
 ---
 
