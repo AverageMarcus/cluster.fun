@@ -34,6 +34,9 @@ spec:
   - port: 80
     targetPort: 8080
     name: web
+  - port: 8000
+    targetPort: 8000
+    name: noauth
   selector:
     app: website-to-remarkable
 ---
@@ -94,10 +97,8 @@ spec:
           protocol: TCP
         resources:
           limits:
-
             memory: 125Mi
           requests:
-
             memory: 125Mi
       - name: web
         image: docker.cluster.fun/averagemarcus/website-to-remarkable:latest
@@ -111,11 +112,6 @@ spec:
         ports:
         - containerPort: 8000
           name: web
-        resources:
-          limits:
-            memory: 125Mi
-          requests:
-            memory: 125Mi
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
