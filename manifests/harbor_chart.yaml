@@ -37,25 +37,25 @@ spec:
       resources:
         requests:
           memory: 64Mi
-          cpu: 10m
+
     core:
       resources:
         requests:
           memory: 64Mi
-          cpu: 10m
+
     jobservice:
       resources:
         requests:
           memory: 64Mi
-          cpu: 10m
+
     registry:
       registry:
         resources:
           requests:
             memory: 64Mi
-            cpu: 10m
+
       controller:
         resources:
           requests:
             memory: 64Mi
-            cpu: 10m
+

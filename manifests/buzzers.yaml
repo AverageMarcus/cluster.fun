@@ -2,8 +2,6 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: buzzers
-  labels:
-    goldilocks.fairwinds.com/enabled: "true"
 ---
 apiVersion: v1
 kind: Service
@@ -43,10 +41,8 @@ spec:
           name: web
         resources:
           limits:
-            cpu: 25m
             memory: 283Mi
           requests:
-            cpu: 25m
             memory: 283Mi
 ---
 apiVersion: extensions/v1beta1
