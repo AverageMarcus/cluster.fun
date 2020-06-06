@@ -37,23 +37,19 @@ spec:
       resources:
         requests:
           memory: 64Mi
-
     core:
       resources:
         requests:
           memory: 64Mi
-
     jobservice:
       resources:
         requests:
           memory: 64Mi
-
     registry:
       registry:
         resources:
           requests:
             memory: 64Mi
-
       controller:
         resources:
           requests:
