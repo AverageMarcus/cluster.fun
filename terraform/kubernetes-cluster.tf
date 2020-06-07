@@ -19,7 +19,7 @@ resource "scaleway_k8s_pool_beta" "k8s-cluster-pool-1" {
   node_type   = "DEV1-M"
   size        = 1
   min_size    = 1
-  max_size    = 2
+  max_size    = 3
   autoscaling = true
   autohealing = true
 
