@@ -22,7 +22,7 @@ spec:
   - apiVersion: tekton.dev/v1beta1
     kind: PipelineRun
     metadata:
-      generateName: project-tag-
+      generateName: tag-$(params.projectname)-
     spec:
       pipelineRef:
         name: project-tag

@@ -22,7 +22,7 @@ spec:
   - apiVersion: tekton.dev/v1beta1
     kind: PipelineRun
     metadata:
-      generateName: deploy-project-
+      generateName: deploy-$(params.projectname)-
     spec:
       pipelineRef:
         name: deploy-project
