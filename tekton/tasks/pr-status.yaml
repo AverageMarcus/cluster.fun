@@ -14,7 +14,7 @@ spec:
     default: "pending"
   steps:
   - name: pr-status-update
-    image: docker.cluster.fun/averagemarcus/gitea-pr-state:latest
+    image: docker.cluster.fun/averagemarcus/gitea-pr-status:latest
     env:
     - name: ACCESS_TOKEN
       valueFrom:
@@ -22,6 +22,6 @@ spec:
           name: gitea-access-token
           key: access-token
     args:
-    - "$(params.REPO)"
+    - "AverageMarcus/$(params.REPO)"
     - "$(params.SHA)"
     - "$(params.STATE)"
