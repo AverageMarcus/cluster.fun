@@ -4,6 +4,17 @@ metadata:
   name: twitter-profile-pic
 ---
 apiVersion: v1
+kind: Secret
+metadata:
+  name: twitter-profile-pic
+  namespace: twitter-profile-pic
+  annotations:
+    kube-1password: d2rt56v47q2wij47qgj27umrky
+    kube-1password/vault: Kubernetes
+    kube-1password/secret-text-key: .env
+type: Opaque
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: twitter-profile-pic
@@ -23,7 +34,7 @@ metadata:
   name: twitter-profile-pic
   namespace: twitter-profile-pic
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: twitter-profile-pic
@@ -44,6 +55,14 @@ spec:
             memory: 250Mi
           requests:
             memory: 250Mi
+        volumeMounts:
+          - name: dotenv
+            mountPath: /app/.env
+            subPath: .env
+      volumes:
+      - name: dotenv
+        secret:
+          secretName: twitter-profile-pic
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
