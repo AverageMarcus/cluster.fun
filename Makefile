@@ -17,7 +17,7 @@ format:
 
 .PHONY: run-tests # Runs all tests
 run-tests:
-	@echo "⚠️ 'run-tests' unimplemented"
+	@cd terraform && terraform plan
 
 .PHONY: fetch-deps # Fetch all project dependencies
 fetch-deps:
@@ -41,11 +41,9 @@ run:
 
 .PHONY: ci # Perform CI specific tasks to perform on a pull request
 ci:
-	@cd terraform
-	@PLAN=$(terraform plan)
-	@curl -X "POST" "https://git.cluster.fun/api/v1/repos/AverageMarcus/${REPO}/issues/${PR_ID}/comments?access_token=${ACCESS_TOKEN}" \
+	@PLAN=$(cd terraform && terraform plan ./terraform) && curl -X "POST" "https://git.cluster.fun/api/v1/repos/AverageMarcus/${REPO}/issues/${PR_ID}/comments?access_token=${ACCESS_TOKEN}" \
 		-H 'Content-Type: application/json; charset=utf-8' \
-		-d $'{"body": "<details><summary>Terraform Plan:</summary>'$PLAN'</details>"}'
+		-d $'{"body": "<details><summary>Terraform Plan:</summary>'"$PLAN"'</details>"}'
 
 .PHONY: release # Release the latest version of the application
 release:
@@ -60,4 +58,4 @@ help:
 	@echo "-----------------------------------"
 	@grep '^.PHONY: .* #' Makefile | sed 's/\.PHONY: \(.*\) # \(.*\)/\1	\2/' | expand -t20
 
-default: test build
+default: test
