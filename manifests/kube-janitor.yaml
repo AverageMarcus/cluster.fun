@@ -88,7 +88,7 @@ spec:
           - --interval=15
           - --rules-file=/config/rules.yaml
           - --include-namespaces=tekton-pipelines
-          - --include-resources=pods
+          - --include-resources=pods,pipelineruns,taskruns
         resources:
           limits:
             memory: 100Mi
