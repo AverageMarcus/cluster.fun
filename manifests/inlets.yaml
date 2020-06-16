@@ -126,3 +126,20 @@ spec:
         backend:
           serviceName: inlets
           servicePort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: downloads-rpc
+  namespace: inlets
+  labels:
+    app: inlets
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8000
+  selector:
+    app: inlets
+---
