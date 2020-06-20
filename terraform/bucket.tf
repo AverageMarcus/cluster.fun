@@ -15,3 +15,12 @@ resource "scaleway_object_bucket" "linx" {
 output "linx-bucket_id" {
   value = scaleway_object_bucket.linx.id
 }
+
+resource "scaleway_object_bucket" "octoprint_timelapse" {
+  name = "cluster.fun-octoprint"
+  acl  = "private"
+}
+
+output "octoprint-bucket_id" {
+  value = scaleway_object_bucket.octoprint_timelapse.id
+}
