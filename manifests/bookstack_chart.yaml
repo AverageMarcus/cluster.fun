@@ -1,0 +1,190 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: bookstack
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mariadb-config
+  namespace: bookstack
+  labels:
+    app: bookstack
+data:
+  my.cnf: |-
+    [mysqld]
+    skip-name-resolve
+    explicit_defaults_for_timestamp
+    basedir=/opt/bitnami/mariadb
+    port=3306
+    socket=/opt/bitnami/mariadb/tmp/mysql.sock
+    tmpdir=/opt/bitnami/mariadb/tmp
+    max_allowed_packet=16M
+    bind-address=0.0.0.0
+    pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
+    log-error=/opt/bitnami/mariadb/logs/mysqld.log
+    character-set-server=UTF8
+    collation-server=utf8_general_ci
+
+    [client]
+    port=3306
+    socket=/opt/bitnami/mariadb/tmp/mysql.sock
+    default-character-set=UTF8
+
+    [manager]
+    port=3306
+    socket=/opt/bitnami/mariadb/tmp/mysql.sock
+    pid-file=/opt/bitnami/mariadb/tmp/mysqld.pid
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bookstack
+  namespace: bookstack
+  labels:
+    app: bookstack
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: bookstack
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: bookstack
+  namespace: bookstack
+  labels:
+    app: "bookstack"
+spec:
+  serviceName: "bookstack"
+  replicas: 1
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: bookstack
+  template:
+    metadata:
+      labels:
+        app: bookstack
+    spec:
+      securityContext:
+        fsGroup: 1000
+      containers:
+      - name: bookstack
+        image: solidnerd/bookstack
+        imagePullPolicy: IfNotPresent
+        ports:
+          - name: http
+            containerPort: 8080
+            protocol: TCP
+        env:
+          - name: PID
+            value: "1000"
+          - name: PGID
+            value: "1000"
+          - name: DB_HOST
+            value: "127.0.0.1:3306"
+          - name: DB_DATABASE
+            value: "bookstack"
+          - name: DB_USERNAME
+            value: "bookstack"
+          - name: DB_PASSWORD
+            value: "bookstack"
+          - name: APP_URL
+            value: https://bookstack.cluster.fun
+        volumeMounts:
+        - name: bookstack-uploads
+          mountPath: /var/www/bookstack/public/uploads
+        - name: bookstack-storage
+          mountPath: /var/www/bookstack/storage/uploads
+      - name: "mariadb"
+        image: docker.io/bitnami/mariadb:10.1.35-debian-9
+        imagePullPolicy: "IfNotPresent"
+        env:
+        - name: MARIADB_ROOT_PASSWORD
+          value: "bookstack"
+        - name: MARIADB_USER
+          value: "bookstack"
+        - name: MARIADB_PASSWORD
+          value: "bookstack"
+        - name: MARIADB_DATABASE
+          value: "bookstack"
+        ports:
+        - name: mysql
+          containerPort: 3306
+        volumeMounts:
+        - name: bookstack-data
+          mountPath: /bitnami/mariadb/data
+        - name: config
+          mountPath: /opt/bitnami/mariadb/conf/my.cnf
+          subPath: my.cnf
+      volumes:
+        - name: config
+          configMap:
+            name: mariadb-config
+  volumeClaimTemplates:
+    - metadata:
+        name: bookstack-data
+        labels:
+          app: bookstack
+      spec:
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            storage: "5Gi"
+        storageClassName: "scw-bssd"
+    - metadata:
+        name: bookstack-storage
+        labels:
+          app: bookstack
+      spec:
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            storage: "2Gi"
+        storageClassName: "scw-bssd"
+    - metadata:
+        name: bookstack-uploads
+        labels:
+          app: bookstack
+      spec:
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            storage: "5Gi"
+        storageClassName: "scw-bssd"
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: bookstack
+  namespace: bookstack
+  labels:
+    app: bookstack
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+spec:
+  tls:
+    - hosts:
+        - bookstack.cluster.fun
+      secretName: bookstack-ingress
+  rules:
+    - host: bookstack.cluster.fun
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: bookstack
+              servicePort: http
