@@ -17,6 +17,18 @@ data:
   .dockerconfigjson: e30=
 ---
 apiVersion: v1
+kind: Secret
+metadata:
+  name: etsy-token
+  namespace: paradoxfox
+  annotations:
+    kube-1password: akkchysgrvhawconx63plt3xgy
+    kube-1password/vault: Kubernetes
+    kube-1password/secret-text-key: password
+stringData:
+  password: ""
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: paradoxfox
@@ -25,7 +37,7 @@ spec:
   type: ClusterIP
   ports:
   - port: 80
-    targetPort: 80
+    targetPort: 443
     name: web
   selector:
     app: paradoxfox
@@ -52,8 +64,14 @@ spec:
         image: docker.cluster.fun/private/paradoxfox:latest
         imagePullPolicy: Always
         ports:
-        - containerPort: 80
+        - containerPort: 443
           name: web
+        env:
+          - name: ETSY_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: etsy-token
+                key: password
         resources:
           limits:
             memory: 200Mi
