@@ -111,7 +111,7 @@ spec:
       permalinkPrefix: "https://chat.cluster.fun"
       image:
         repository: "vectorim/riot-web"
-        tag: v1.6.0
+        tag: v1.6.8
         pullPolicy: IfNotPresent
       service:
         type: ClusterIP
