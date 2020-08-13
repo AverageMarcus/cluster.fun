@@ -35,7 +35,7 @@ spec:
       optional: false
   values:
     image:
-      tag: 18-apache
+      tag: 19-apache
     ingress:
       enabled: true
       annotations:
