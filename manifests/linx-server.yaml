@@ -62,7 +62,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: andreimarcu/linx-server:version-2.3.5
+        image: andreimarcu/linx-server:version-2.3.6
         imagePullPolicy: Always
         args:
           - -config
