@@ -65,6 +65,12 @@ spec:
         ports:
         - containerPort: 8080
           name: web
+        livenessProbe:
+          httpGet:
+            path: /heroku
+            port: 8080
+          initialDelaySeconds: 3
+          periodSeconds: 3
         resources:
           limits:
             memory: 308Mi
