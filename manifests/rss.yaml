@@ -69,8 +69,8 @@ spec:
           httpGet:
             path: /heroku
             port: 8080
-          initialDelaySeconds: 3
-          periodSeconds: 3
+          initialDelaySeconds: 30
+          periodSeconds: 10
         resources:
           limits:
             memory: 308Mi
