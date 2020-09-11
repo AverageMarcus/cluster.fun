@@ -30,25 +30,25 @@ spec:
     - name: DOCKER_CONFIG
       value: /root/.docker
     command:
-      - buildctl-daemonless.sh
-      - --debug
-      - build
-      - --progress=plain
-      - --frontend=dockerfile.v0
-      - --opt
-      - filename=$(params.DOCKERFILE)
-      - --opt
-      - platform=linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64
-      - --local
-      - context=$(params.CONTEXT)
-      - --local
-      - dockerfile=.
-      - --output
-      - type=image,name=$(params.IMAGE),push=true
-      - --export-cache
-      - type=inline
-      - --import-cache
-      - type=registry,ref=$(params.IMAGE)
+      - sh
+      - -c
+      - |
+        PLATFORMS=$(grep 'PLATFORMS ?= ' Makefile | sed -E 's/^PLATFORMS \?= (.+)$/\1/')
+        if [ -z $PLATFORMS ]; then
+          PLATFORMS=linux/amd64
+        fi
+
+        buildctl-daemonless.sh --debug \
+          build \
+          --progress=plain \
+          --frontend=dockerfile.v0 \
+          --opt filename=$(params.DOCKERFILE) \
+          --opt platform=${PLATFORMS} \
+          --local context=$(params.CONTEXT) \
+          --local dockerfile=. \
+          --output type=image,name=$(params.IMAGE),push=true \
+          --export-cache type=inline \
+          --import-cache type=registry,ref=$(params.IMAGE)
     securityContext:
       privileged: true
     volumeMounts:
