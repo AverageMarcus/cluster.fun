@@ -8,17 +8,13 @@ spec:
   - name: DOCKERFILE
     type: string
     description: The path to the dockerfile to build
-    default: /Dockerfile
+    default: Dockerfile
   - name: CONTEXT
     type: string
     description: The build context used by Docker.
-    default: ./
+    default: .
   - name: IMAGE
     type: string
-    description: Name (reference) of the image to build.
-  - name: EXTRA_ARGS
-    type: string
-    default: ""
   resources:
     inputs:
     - name: src
@@ -29,24 +25,35 @@ spec:
   steps:
   - name: build-and-push
     workingDir: /workspace/src
-    image: gcr.io/kaniko-project/executor:latest
+    image: moby/buildkit:latest
     env:
     - name: DOCKER_CONFIG
-      value: /kaniko/.docker
+      value: /root/.docker
     command:
-    - /kaniko/executor
-    - $(params.EXTRA_ARGS)
-    - --dockerfile=/workspace/src/$(params.DOCKERFILE)
-    - --context=/workspace/src/$(params.CONTEXT)
-    - --destination=$(params.IMAGE)
-    - --oci-layout-path=/workspace/src/image-digest
-    - --digest-file=/tekton/results/IMAGE_DIGEST
-    - --cache=true
+      - buildctl-daemonless.sh
+      - --debug
+      - build
+      - --progress=plain
+      - --frontend=dockerfile.v0
+      - --opt
+      - filename=$(params.DOCKERFILE)
+      - --opt
+      - platform=linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64
+      - --local
+      - context=$(params.CONTEXT)
+      - --local
+      - dockerfile=.
+      - --output
+      - type=image,name=$(params.IMAGE),push=true
+      - --export-cache
+      - type=inline
+      - --import-cache
+      - type=registry,ref=$(params.IMAGE)
     securityContext:
-      runAsUser: 0
+      privileged: true
     volumeMounts:
       - name: docker-config
-        mountPath: /kaniko/.docker/config.json
+        mountPath: /root/.docker/config.json
         subPath: config.json
   volumes:
     - name: docker-config
