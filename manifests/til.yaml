@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: til
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: til
+  namespace: til
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: web
+    name: web
+  selector:
+    app: til
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: til
+  namespace: til
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: til
+  template:
+    metadata:
+      labels:
+        app: til
+    spec:
+      containers:
+      - name: web
+        image: docker.cluster.fun/averagemarcus/til:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          name: web
+        resources:
+          limits:
+            memory: 100Mi
+          requests:
+            memory: 100Mi
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: til
+  namespace: til
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+spec:
+  tls:
+  - hosts:
+    - til.marcusnoble.co.uk
+    secretName: til-ingress
+  rules:
+  - host: til.marcusnoble.co.uk
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: til
+          servicePort: 80
+
