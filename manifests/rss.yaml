@@ -55,6 +55,10 @@ spec:
       containers:
       - name: web
         image: mdswanson/stringer
+        command:
+        - bash
+        - -c
+        - /app/start.sh > /dev/null
         env:
         - name: SECRET_TOKEN
           value: inward-popcorn-decamp-epsilon

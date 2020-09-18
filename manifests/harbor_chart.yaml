@@ -33,6 +33,7 @@ spec:
       key: values.yaml
       optional: false
   values:
+    logLevel: warn
     portal:
       resources:
         requests:
@@ -54,4 +55,3 @@ spec:
         resources:
           requests:
             memory: 64Mi
-
