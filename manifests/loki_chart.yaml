@@ -13,6 +13,17 @@ metadata:
     kube-1password/vault: Kubernetes
 type: Opaque
 ---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: loki-values
+  namespace: logging
+  annotations:
+    kube-1password: 6u6ebtofcxbr5r4q7k5wkc5zea
+    kube-1password/vault: Kubernetes
+    kube-1password/secret-text-key: values.yaml
+type: Opaque
+---
 apiVersion: helm.fluxcd.io/v1
 kind: HelmRelease
 metadata:
@@ -22,18 +33,31 @@ spec:
   chart:
     repository: https://grafana.github.io/loki/charts
     name: loki-stack
-    version: 0.40.0
+    version: 0.40.1
   maxHistory: 4
   skipCRDs: false
+  valuesFrom:
+  - secretKeyRef:
+      name: loki-values
+      namespace: logging
+      key: values.yaml
+      optional: false
   values:
     fluent-bit:
       enabled: "true"
     promtail:
       enabled: "true"
     loki:
-      persistence:
-        enabled: "true"
-        size: 10Gi
+      config:
+        schema_config:
+          configs:
+          - from: "2018-04-15"
+            index:
+              period: 120h
+              prefix: index_
+            object_store: s3
+            schema: v9
+            store: boltdb
 
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -45,18 +69,16 @@ spec:
   chart:
     repository: https://kubernetes-charts.storage.googleapis.com
     name: grafana
-    version: 5.0.22
+    version: 5.5.7
   maxHistory: 4
   skipCRDs: false
   values:
     image:
-      tag: 7.0.0
+      tag: 7.1.1
     admin:
       existingSecret: "grafana-credentials"
       userKey: username
       passwordKey: password
-    persistence:
-      enabled: "false"
     datasources:
       datasources.yaml:
         apiVersion: 1
