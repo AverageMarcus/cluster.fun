@@ -1,0 +1,114 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sonarr
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: sonarr-auth
+  namespace: sonarr
+  annotations:
+    kube-1password: mr6spkkx7n3memkbute6ojaarm
+    kube-1password/vault: Kubernetes
+type: Opaque
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sonarr-auth
+  namespace: sonarr
+  labels:
+    app: sonarr-auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sonarr-auth
+  template:
+    metadata:
+      labels:
+        app: sonarr-auth
+    spec:
+      containers:
+      - args:
+        - --cookie-secure=false
+        - --provider=oidc
+        - --provider-display-name=Auth0
+        - --upstream=http://inlets.inlets.svc.cluster.local
+        - --http-address=$(HOST_IP):8080
+        - --redirect-url=https://sonarr.cluster.fun/oauth2/callback
+        - --email-domain=*
+        - --pass-basic-auth=false
+        - --pass-access-token=false
+        - --oidc-issuer-url=https://marcusnoble.eu.auth0.com/
+        - --cookie-secret=KDGD6rrK6cBmryyZ4wcJ9xAUNW9AQN
+        env:
+        - name: HOST_IP
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.podIP
+        - name: OAUTH2_PROXY_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: sonarr-auth
+        - name: OAUTH2_PROXY_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: sonarr-auth
+        image: quay.io/oauth2-proxy/oauth2-proxy:v5.1.1
+        name: oauth-proxy
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources:
+          limits:
+            memory: 50Mi
+          requests:
+            memory: 50Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sonarr-auth
+  namespace: sonarr
+  labels:
+    app: sonarr-auth
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: sonarr-auth
+  type: ClusterIP
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: sonarr-auth
+  namespace: sonarr
+  labels:
+    app: sonarr-auth
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+spec:
+  tls:
+  - hosts:
+    - sonarr.cluster.fun
+    secretName: sonarr-ingress
+  rules:
+  - host: sonarr.cluster.fun
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: sonarr-auth
+          servicePort: 80
