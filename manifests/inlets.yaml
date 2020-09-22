@@ -118,3 +118,26 @@ spec:
   selector:
     app: inlets
 ---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: vpn-check
+  namespace: inlets
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+spec:
+  tls:
+  - hosts:
+    - vpn-check.cluster.fun
+    secretName: vpn-check-ingress
+  rules:
+  - host: vpn-check.cluster.fun
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: inlets
+          servicePort: 80
