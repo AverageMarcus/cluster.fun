@@ -1,0 +1,85 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: anniversary
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: docker-config
+  namespace: anniversary
+  annotations:
+    kube-1password: i6ngbk5zf4k52xgwdwnfup5bby
+    kube-1password/vault: Kubernetes
+    kube-1password/secret-text-key: .dockerconfigjson
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: e30=
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: anniversary
+  namespace: anniversary
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: web
+    name: web
+  selector:
+    app: anniversary
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: anniversary
+  namespace: anniversary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: anniversary
+  template:
+    metadata:
+      labels:
+        app: anniversary
+    spec:
+      imagePullSecrets:
+        - name: docker-config
+      containers:
+      - name: web
+        image: docker.cluster.fun/private/11-year-anniversary:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          name: web
+        resources:
+          limits:
+            memory: 283Mi
+          requests:
+            memory: 283Mi
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: anniversary
+  namespace: anniversary
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+spec:
+  tls:
+  - hosts:
+    - 11-year-anniversary.marcusnoble.co.uk
+    secretName: anniversary-ingress
+  rules:
+  - host: 11-year-anniversary.marcusnoble.co.uk
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: anniversary
+          servicePort: 80
