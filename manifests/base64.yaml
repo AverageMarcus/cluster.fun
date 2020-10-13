@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: base64
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: base64
+  namespace: base64
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: web
+    name: web
+  selector:
+    app: base64
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: base64
+  namespace: base64
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: base64
+  template:
+    metadata:
+      labels:
+        app: base64
+    spec:
+      imagePullSecrets:
+        - name: docker-config
+      containers:
+      - name: web
+        image: docker.cluster.fun/averagemarcus/base64:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          name: web
+        resources:
+          limits:
+            memory: 10Mi
+          requests:
+            memory: 10Mi
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: base64
+  namespace: base64
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+spec:
+  tls:
+  - hosts:
+    - base64.cluster.fun
+    secretName: base64-ingress
+  rules:
+  - host: base64.cluster.fun
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: base64
+          servicePort: 80
