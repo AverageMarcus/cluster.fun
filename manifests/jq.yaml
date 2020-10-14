@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: jq
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jq
+  namespace: jq
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: web
+    name: web
+  selector:
+    app: jq
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jq
+  namespace: jq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jq
+  template:
+    metadata:
+      labels:
+        app: jq
+    spec:
+      imagePullSecrets:
+        - name: docker-config
+      containers:
+      - name: web
+        image: binlab/jqplay:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          name: web
+        resources:
+          limits:
+            memory: 100Mi
+          requests:
+            memory: 100Mi
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: jq
+  namespace: jq
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+spec:
+  tls:
+  - hosts:
+    - jq.cluster.fun
+    secretName: jq-ingress
+  rules:
+  - host: jq.cluster.fun
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: jq
+          servicePort: 80
