@@ -15,16 +15,38 @@ spec:
     requests:
       storage: 1Gi
 ---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: rss-db
+  namespace: rss
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: rss-auth
+  namespace: rss
+  annotations:
+    kube-1password: mr6spkkx7n3memkbute6ojaarm
+    kube-1password/vault: Kubernetes
+type: Opaque
+---
 apiVersion: v1
 kind: Service
 metadata:
-  name: rss
+  name: rss-new
   namespace: rss
 spec:
   type: ClusterIP
   ports:
   - port: 80
-    targetPort: 8080
+    targetPort: 8000
     name: web
   selector:
     app: rss
@@ -46,35 +68,59 @@ spec:
       labels:
         app: rss
     spec:
-      securityContext:
-        fsGroup: 1000
       dnsConfig:
         options:
           - name: ndots
             value: "2"
       containers:
-      - name: web
-        image: mdswanson/stringer
-        command:
-        - bash
-        - -c
-        - /app/start.sh > /dev/null
+      - args:
+        - --cookie-secure=false
+        - --provider=oidc
+        - --provider-display-name=Auth0
+        - --upstream=http://localhost:8080
+        - --http-address=$(HOST_IP):8000
+        - --redirect-url=https://rss.cluster.fun/oauth2/callback
+        - --email-domain=marcusnoble.co.uk
+        - --pass-basic-auth=false
+        - --pass-access-token=false
+        - --oidc-issuer-url=https://marcusnoble.eu.auth0.com/
+        - --cookie-secret=KDGD6rrK6cBmryyZ4wcJ9xAUNW9AQN
         env:
-        - name: SECRET_TOKEN
-          value: inward-popcorn-decamp-epsilon
+        - name: HOST_IP
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.podIP
+        - name: OAUTH2_PROXY_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: rss-auth
+        - name: OAUTH2_PROXY_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: rss-auth
+        image: quay.io/oauth2-proxy/oauth2-proxy:v5.1.1
+        name: oauth-proxy
+        ports:
+        - containerPort: 8000
+          protocol: TCP
+        resources:
+          limits:
+            memory: 125Mi
+          requests:
+            memory: 125Mi
+      - name: web
+        image: docker.cluster.fun/averagemarcus/gopherss:latest
+        env:
         - name: PORT
           value: "8080"
-        - name: DATABASE_URL
-          value: sqlite3:/data/stringer.db
+        - name: DB_PATH
+          value: /data/feeds.db
         ports:
         - containerPort: 8080
           name: web
-        livenessProbe:
-          httpGet:
-            path: /heroku
-            port: 8080
-          initialDelaySeconds: 30
-          periodSeconds: 10
         resources:
           limits:
             memory: 308Mi
@@ -86,7 +132,7 @@ spec:
       volumes:
       - name: storage
         persistentVolumeClaim:
-          claimName: rss
+          claimName: rss-db
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -109,7 +155,7 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: rss
+          serviceName: rss-new
           servicePort: 80
 
 ---
