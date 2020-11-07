@@ -23,7 +23,7 @@ spec:
   chart:
     repository: https://helm.goharbor.io
     name: harbor
-    version: 1.4.3
+    version: 1.5.1
   maxHistory: 4
   skipCRDs: false
   valuesFrom:
@@ -33,7 +33,8 @@ spec:
       key: values.yaml
       optional: false
   values:
-    logLevel: warn
+    updateStrategy:
+      type: Recreate
     portal:
       resources:
         requests:

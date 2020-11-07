@@ -24,7 +24,7 @@ resource "helm_release" "helm-operator" {
   repository = data.helm_repository.fluxcd.metadata[0].name
   chart      = "helm-operator"
 
-  max_history = 4
+  max_history = 3
 
   set {
     name  = "helm.versions"

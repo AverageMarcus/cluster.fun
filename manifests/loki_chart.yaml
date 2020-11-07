@@ -33,7 +33,7 @@ spec:
   chart:
     repository: https://grafana.github.io/loki/charts
     name: loki-stack
-    version: 0.40.1
+    version: 2.0.2
   maxHistory: 4
   skipCRDs: false
   valuesFrom:
@@ -47,17 +47,7 @@ spec:
       enabled: "true"
     promtail:
       enabled: "true"
-    loki:
-      config:
-        schema_config:
-          configs:
-          - from: "2018-04-15"
-            index:
-              period: 120h
-              prefix: index_
-            object_store: s3
-            schema: v9
-            store: boltdb
+
 
 ---
 apiVersion: helm.fluxcd.io/v1
@@ -67,14 +57,12 @@ metadata:
   namespace: logging
 spec:
   chart:
-    repository: https://kubernetes-charts.storage.googleapis.com
+    repository: https://grafana.github.io/helm-charts
     name: grafana
-    version: 5.5.7
+    version: 6.1.3
   maxHistory: 4
   skipCRDs: false
   values:
-    image:
-      tag: 7.1.1
     admin:
       existingSecret: "grafana-credentials"
       userKey: username

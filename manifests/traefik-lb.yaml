@@ -46,7 +46,7 @@ spec:
         - --defaultentrypoints=http,https
         - --entrypoints=Name:https Address::443 TLS
         - --entrypoints=Name:http Address::80
-        - --accesslog
+        - --accesslog=true
         - --accesslog.format=json
         image: docker.io/traefik:1.7
         imagePullPolicy: IfNotPresent
