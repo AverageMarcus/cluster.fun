@@ -14,7 +14,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
+      storage: 20Gi
 
 ---
 
@@ -41,10 +41,12 @@ spec:
       PHOTOPRISM_SITE_CAPTION: ""
     persistence:
       enabled: true
-      storagePath: /photoprism/storage
+      cachePath: /data/cache
+      originalsPath: /data/originals
+      storagePath: /data/storage
       volumeMounts:
       - name: storage
-        mountPath: /photoprism/storage
+        mountPath: /data
       volumes:
       - name: storage
         persistentVolumeClaim:
