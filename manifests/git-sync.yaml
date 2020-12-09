@@ -11,6 +11,7 @@ metadata:
   annotations:
     kube-1password: cfo2ufhgem57clbscxetxgevue
     kube-1password/vault: Kubernetes
+    kube-1password/password-key: token
 type: Opaque
 data:
 ---
@@ -22,6 +23,31 @@ metadata:
   annotations:
     kube-1password: b7kpdlcvt7y63bozu3i4j4lojm
     kube-1password/vault: Kubernetes
+    kube-1password/password-key: token
+type: Opaque
+data:
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: git-sync-gitlab
+  namespace: git-sync
+  annotations:
+    kube-1password: t47v3xdgadiifgoi4wmqibrlty
+    kube-1password/vault: Kubernetes
+    kube-1password/password-key: token
+type: Opaque
+data:
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: git-sync-bitbucket
+  namespace: git-sync
+  annotations:
+    kube-1password: adrki45krr2tq34sug7dhdk5iy
+    kube-1password/vault: Kubernetes
+    kube-1password/password-key: token
 type: Opaque
 data:
 ---
@@ -32,23 +58,37 @@ metadata:
   namespace: git-sync
 spec:
   schedule: "0 */1 * * *"
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 1
   jobTemplate:
     spec:
+      backoffLimit: 1
       template:
         spec:
           containers:
           - name: sync
             image: docker.cluster.fun/averagemarcus/git-sync:latest
-            imagePullPolicy: IfNotPresent
+            imagePullPolicy: Always
             env:
             - name: GITHUB_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: git-sync-github
-                  key: password
+                  key: token
             - name: GITEA_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: git-sync-gitea
-                  key: password
+                  key: token
+            - name: GITLAB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: git-sync-gitlab
+                  key: token
+            - name: BITBUCKET_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: git-sync-bitbucket
+                  key: token
           restartPolicy: Never
