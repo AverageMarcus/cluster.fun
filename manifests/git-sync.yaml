@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: git-sync
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: git-sync-github
+  namespace: git-sync
+  annotations:
+    kube-1password: cfo2ufhgem57clbscxetxgevue
+    kube-1password/vault: Kubernetes
+type: Opaque
+data:
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: git-sync-gitea
+  namespace: git-sync
+  annotations:
+    kube-1password: b7kpdlcvt7y63bozu3i4j4lojm
+    kube-1password/vault: Kubernetes
+type: Opaque
+data:
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: git-sync
+  namespace: git-sync
+spec:
+  schedule: "0 */1 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: sync
+            image: docker.cluster.fun/averagemarcus/git-sync:latest
+            imagePullPolicy: IfNotPresent
+            env:
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: git-sync-github
+                  key: password
+            - name: GITEA_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: git-sync-gitea
+                  key: password
+          restartPolicy: Never
