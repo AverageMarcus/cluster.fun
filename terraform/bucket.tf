@@ -24,12 +24,3 @@ resource "scaleway_object_bucket" "outline" {
 output "outline-bucket_id" {
   value = scaleway_object_bucket.outline.id
 }
-
-resource "scaleway_object_bucket" "logs" {
-  name = "cluster.fun-logs"
-  acl  = "private"
-}
-
-output "logs-bucket_id" {
-  value = scaleway_object_bucket.logs.id
-}

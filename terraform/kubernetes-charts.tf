@@ -9,11 +9,6 @@ provider "helm" {
   }
 }
 
-data "helm_repository" "stable" {
-  name = "stable"
-  url  = "https://kubernetes-charts.storage.googleapis.com"
-}
-
 data "helm_repository" "fluxcd" {
   name = "fluxcd"
   url  = "https://charts.fluxcd.io"
