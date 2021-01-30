@@ -21,13 +21,13 @@ spec:
       serverName: "matrix.cluster.fun"
       telemetry: false
       hostname: "matrix.cluster.fun"
-      presence: true
+      presence: "true"
       blockNonAdminInvites: false
-      search: true
+      enableSearch: "true"
       adminEmail: "matrix@marcusnoble.co.uk"
       uploads:
-        maxSize: 100M
-        maxPixels: 32M
+        maxSize: 500M
+        maxPixels: 64M
       federation:
         enabled: false
         allowPublicRooms: false
@@ -47,7 +47,7 @@ spec:
       urlPreviews:
         enabled: true
         rules:
-          maxSize: 4M
+          maxSize: 10M
           ip:
             blacklist:
               - '127.0.0.0/8'
@@ -111,7 +111,7 @@ spec:
       permalinkPrefix: "https://chat.cluster.fun"
       image:
         repository: "vectorim/riot-web"
-        tag: v1.6.8
+        tag: v1.7.18
         pullPolicy: IfNotPresent
       service:
         type: ClusterIP
