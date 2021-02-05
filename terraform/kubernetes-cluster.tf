@@ -1,7 +1,7 @@
 resource "scaleway_k8s_cluster_beta" "k8s-cluster" {
   name             = "cluster-fun"
   description      = ""
-  version          = "1.19"
+  version          = "1.20"
   cni              = "weave"
   enable_dashboard = false
   ingress          = "traefik"
