@@ -10,12 +10,6 @@ resource "scaleway_k8s_cluster_beta" "k8s-cluster" {
     "HPAScaleToZero",
     "TTLAfterFinished"
   ]
-
-  auto_upgrade {
-    enable                        = true
-    maintenance_window_start_hour = 2
-    maintenance_window_day        = "any"
-  }
 }
 
 
