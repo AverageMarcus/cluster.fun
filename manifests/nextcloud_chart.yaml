@@ -23,9 +23,9 @@ metadata:
   namespace: nextcloud
 spec:
   chart:
-    repository: https://kubernetes-charts.storage.googleapis.com
+    repository: https://nextcloud.github.io/helm/
     name: nextcloud
-    version: 1.12.0
+    version: 2.5.5
   maxHistory: 5
   valuesFrom:
   - secretKeyRef:
@@ -35,7 +35,8 @@ spec:
       optional: false
   values:
     image:
-      tag: 19-apache
+      tag: 19.0.8-apache
+      pullPolicy: Always
     ingress:
       enabled: true
       annotations:
