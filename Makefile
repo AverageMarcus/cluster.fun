@@ -47,7 +47,19 @@ ci:
 
 .PHONY: release # Release the latest version of the application
 release:
-	@cd terraform && terraform apply -auto-approve
+	@cd terraform && terraform apply -auto-approve && \
+		kubectx admin@clusterfun-scaleway && \
+		cd ../tekton && \
+		kubectl apply -f ./1-Install/ && \
+		kubectl apply -f ./2-Setup/ && \
+		kubectl apply -f ./bindings/ && \
+		kubectl apply -f ./conditions/ && \
+		kubectl apply -f ./eventlisteners/ && \
+		kubectl apply -f ./pipelines/ && \
+		kubectl apply -f ./tasks/ && \
+		kubectl apply -f ./triggertemplates/ && \
+		cd ../manifests && \
+		kubectl apply -f ./
 
 .PHONY: help # Show this list of commands
 help:
