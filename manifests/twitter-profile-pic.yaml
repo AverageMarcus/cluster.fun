@@ -111,3 +111,28 @@ spec:
         backend:
           serviceName: twitter-profile-pic
           servicePort: 80
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: twitter-profile-pic-cluster-fun
+  namespace: twitter-profile-pic
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+spec:
+  tls:
+  - hosts:
+    - twitter-profile-pic.cluster.fun
+    secretName: twitter-profile-pic-cluster-fun-ingress
+  rules:
+  - host: twitter-profile-pic.cluster.fun
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: twitter-profile-pic
+          servicePort: 80
