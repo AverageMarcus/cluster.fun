@@ -1,0 +1,69 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: feed-fetcher
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: feed-fetcher
+  namespace: feed-fetcher
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: web
+    name: web
+  selector:
+    app: feed-fetcher
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: feed-fetcher
+  namespace: feed-fetcher
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: feed-fetcher
+  template:
+    metadata:
+      labels:
+        app: feed-fetcher
+    spec:
+      containers:
+      - name: web
+        image: docker.cluster.fun/averagemarcus/feed-fetcher:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          name: web
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: feed-fetcher
+  namespace: feed-fetcher
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+spec:
+  tls:
+  - hosts:
+    - feed-fetcher.cluster.fun
+    secretName: feed-fetcher-ingress
+  rules:
+  - host: feed-fetcher.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: feed-fetcher
+            port:
+              number: 80
+
