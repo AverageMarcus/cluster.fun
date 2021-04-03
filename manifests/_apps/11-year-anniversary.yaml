@@ -1,14 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: 11-year-anniversary
+  name: anniversary
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster.fun
   destination:
-    namespace: 11-year-anniversary
+    namespace: anniversary
     name: cluster-fun (scaleway)
   source:
     path: manifests/11-year-anniversary
