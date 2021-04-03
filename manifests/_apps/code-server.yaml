@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: code-server
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster.fun
+  destination:
+    namespace: inlets
+    name: cluster-fun (scaleway)
+  source:
+    path: manifests/code-server
+    repoURL: "https://git.cluster.fun/AverageMarcus/cluster.fun.git"
+    targetRevision: HEAD
+  syncPolicy:
+    automated: {}
+    syncOptions:
+      - CreateNamespace=true
+  ignoreDifferences:
+  - kind: Secret
+    jsonPointers:
+    - /data
