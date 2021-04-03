@@ -1,9 +1,4 @@
 apiVersion: v1
-kind: Namespace
-metadata:
-  name: tweetsvg
----
-apiVersion: v1
 kind: Secret
 metadata:
   name: tweetsvg

@@ -1,9 +1,4 @@
 apiVersion: v1
-kind: Namespace
-metadata:
-  name: twitter-profile-pic
----
-apiVersion: v1
 kind: Secret
 metadata:
   name: twitter-profile-pic
