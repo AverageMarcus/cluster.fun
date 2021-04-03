@@ -9,7 +9,6 @@ spec:
   project: cluster.fun
   destination:
     namespace: cert-manager
-cert-manager
     name: cluster-fun (scaleway)
   source:
     path: manifests/certmanager_chart
