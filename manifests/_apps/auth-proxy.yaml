@@ -15,7 +15,7 @@ spec:
     repoURL: "https://git.cluster.fun/AverageMarcus/cluster.fun.git"
     targetRevision: HEAD
   syncPolicy:
-    # automated: {}
+    automated: {}
     syncOptions:
       - CreateNamespace=true
   ignoreDifferences:
