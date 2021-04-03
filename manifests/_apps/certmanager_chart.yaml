@@ -14,7 +14,7 @@ spec:
     path: manifests/certmanager_chart
     repoURL: "https://git.cluster.fun/AverageMarcus/cluster.fun.git"
     targetRevision: HEAD
-  syncPolicy:
+  # syncPolicy:
     # automated: {}
   ignoreDifferences:
   - kind: Secret
