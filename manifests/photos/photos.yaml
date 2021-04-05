@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: photos
+  namespace: inlets
+  labels:
+    app: photos
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+spec:
+  tls:
+  - hosts:
+    - photos.cluster.fun
+    secretName: photos-ingress
+  rules:
+  - host: photos.cluster.fun
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: auth-proxy
+          servicePort: 80
