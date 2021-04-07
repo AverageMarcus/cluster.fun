@@ -21,5 +21,5 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: inlets
+          serviceName: auth-proxy
           servicePort: 80
