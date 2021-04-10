@@ -48,6 +48,8 @@ spec:
       enabled: true
       storageClass: scw-bssd-retain
       size: 5Gi
+    redis:
+      enabled: true
     cronjob:
       enabled: true
     resources:
