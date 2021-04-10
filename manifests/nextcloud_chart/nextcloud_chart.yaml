@@ -29,8 +29,9 @@ spec:
       optional: false
   values:
     image:
-      tag: 19.0.8-apache
+      tag: 19.0.10-apache
       pullPolicy: Always
+    replicaCount: 2
     ingress:
       enabled: true
       annotations:
