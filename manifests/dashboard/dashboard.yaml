@@ -29,8 +29,8 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: 8000
-    targetPort: web
+  - port: 80
+    targetPort: auth
     name: web
   selector:
     app: dashboard
@@ -86,6 +86,7 @@ spec:
         ports:
         - containerPort: 8000
           protocol: TCP
+          name: auth
         resources:
           limits:
             memory: 125Mi
