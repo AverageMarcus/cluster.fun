@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: reloader
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  destination:
+    namespace: kube-system
+    server: 'https://kubernetes.default.svc'
+  source:
+    repoURL: 'https://stakater.github.io/stakater-charts'
+    targetRevision: v0.0.89
+    chart: reloader
+  syncPolicy:
+    automated: {}
+  ignoreDifferences:
+  - kind: Secret
+    jsonPointers:
+    - /data

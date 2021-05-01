@@ -64,6 +64,8 @@ metadata:
     version: v20.4.1
   name: kube-janitor
   namespace: kube-janitor
+  annotations:
+    reloader.stakater.com/auto: "true"
 spec:
   replicas: 1
   selector:
