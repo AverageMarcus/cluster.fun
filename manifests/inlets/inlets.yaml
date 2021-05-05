@@ -44,7 +44,7 @@ spec:
     spec:
       containers:
       - name: inlets
-        image: inlets/inlets:2.7.6
+        image: ghcr.io/inlets/inlets:2.7.12
         imagePullPolicy: Always
         command: ["inlets"]
         args:
