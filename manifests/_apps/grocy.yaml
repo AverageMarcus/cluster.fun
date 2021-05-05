@@ -6,17 +6,39 @@ metadata:
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
-  project: cluster.fun
+  project: default
   destination:
     namespace: grocy
     name: cluster-fun (scaleway)
   source:
-    path: manifests/grocy
-    repoURL: "https://git.cluster.fun/AverageMarcus/cluster.fun.git"
-    targetRevision: HEAD
+    repoURL: https://k8s-at-home.com/charts/
+    targetRevision: 6.3.1
+    chart: grocy
+    helm:
+      values: |
+        env:
+          TZ: Europe/London
+        ingress:
+          enabled: true
+          annotations:
+            cert-manager.io/cluster-issuer: letsencrypt
+            traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+            traefik.ingress.kubernetes.io/redirect-entry-point: https
+            traefik.ingress.kubernetes.io/redirect-permanent: "true"
+          hosts:
+          - host: grocy.cluster.fun
+            paths:
+            - path: /
+              pathType: Prefix
+          tls:
+          - hosts:
+            - grocy.cluster.fun
+            secretName: grocy
+        persistence:
+          config:
+            enabled: true
+
   syncPolicy:
-    syncOptions:
-      - CreateNamespace=true
     automated: {}
   ignoreDifferences:
   - kind: Secret
