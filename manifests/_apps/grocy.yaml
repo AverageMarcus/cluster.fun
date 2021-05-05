@@ -37,6 +37,9 @@ spec:
         persistence:
           config:
             enabled: true
+        probes:
+          startup:
+            enabled: false
 
   syncPolicy:
     automated: {}
