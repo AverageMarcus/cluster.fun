@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: grocy
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: grocy
+  namespace: grocy
+spec:
+  chart:
+    repository: https://k8s-at-home.com/charts/
+    name: grocy
+    version: 6.3.1
+  maxHistory: 4
+  skipCRDs: false
+  values:
+    env:
+      TZ: Europe/London
+    ingress:
+      enabled: true
+      hosts:
+      - host: grocy.cluster.fun
+        paths:
+        - path: /
+          pathType: Prefix
+    persistence:
+      config:
+        enabled: true
