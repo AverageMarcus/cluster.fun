@@ -39,7 +39,8 @@ spec:
             enabled: true
         probes:
           startup:
-            enabled: false
+            spec:
+              initialDelaySeconds: 120
 
   syncPolicy:
     automated: {}
