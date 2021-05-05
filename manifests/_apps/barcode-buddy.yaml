@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: barcode-buddy
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster.fun
+  destination:
+    namespace: grocy
+    name: cluster-fun (scaleway)
+  source:
+    path: manifests/barcode-buddy
+    repoURL: "https://git.cluster.fun/AverageMarcus/cluster.fun.git"
+    targetRevision: HEAD
+  syncPolicy:
+    automated: {}
+  ignoreDifferences:
+  - kind: Secret
+    jsonPointers:
+    - /data

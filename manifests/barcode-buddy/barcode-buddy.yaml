@@ -1,0 +1,83 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: barcode-buddy
+  namespace: grocy
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: barcode-buddy
+  namespace: grocy
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: web
+    name: web
+  selector:
+    app: barcode-buddy
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: barcode-buddy
+  namespace: grocy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: barcode-buddy
+  template:
+    metadata:
+      labels:
+        app: barcode-buddy
+    spec:
+      containers:
+      - name: web
+        image: f0rc3/barcodebuddy-docker:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+          name: web
+        env:
+        - name: BBUDDY_EXTERNAL_GROCY_URL
+          value: barcode-buddy.cluster.fun
+        volumeMounts:
+          - mountPath: /config
+            name: storage
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: barcode-buddy
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: barcode-buddy
+  namespace: grocy
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+spec:
+  tls:
+  - hosts:
+    - barcode-buddy.cluster.fun
+    secretName: barcode-buddy-ingress
+  rules:
+  - host: barcode-buddy.cluster.fun
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: barcode-buddy
+          servicePort: 80
+
