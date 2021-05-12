@@ -65,13 +65,16 @@ spec:
         - containerPort: 6379
           name: redis
       - name: outline
-        image: docker.cluster.fun/averagemarcus/outline:latest
+        image: outlinewiki/outline:version-0.55.0 # docker.cluster.fun/averagemarcus/outline:latest
         imagePullPolicy: Always
-        command:
-          - sh
-          - -c
-          - |
-            sleep 10 && yarn sequelize db:migrate && yarn build && yarn start
+        # command:
+        #   - sh
+        #   - -c
+        #   - |
+        #     sleep 10 && yarn sequelize db:migrate --env=production-ssl-disabled && yarn build && yarn start
+        env:
+        - name: PGSSLMODE
+          value: disable
         ports:
         - containerPort: 3000
           name: web
