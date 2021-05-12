@@ -15,3 +15,12 @@ resource "scaleway_object_bucket" "outline" {
 output "outline-bucket_id" {
   value = scaleway_object_bucket.outline.id
 }
+
+resource "scaleway_object_bucket" "notea" {
+  name = "cluster.fun-notea"
+  acl  = "private"
+}
+
+output "notea-bucket_id" {
+  value = scaleway_object_bucket.notea.id
+}
