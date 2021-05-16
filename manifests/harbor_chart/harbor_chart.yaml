@@ -35,19 +35,56 @@ spec:
   values:
     updateStrategy:
       type: Recreate
+    expose:
+      tls:
+        certSource: secret
+        secret:
+          secretName: harbor-harbor-ingress
     portal:
+      replicas: 2
       resources:
         requests:
           memory: 64Mi
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: component
+                operator: In
+                values:
+                - portal
+              - key: app
+                operator: In
+                values:
+                - harbor
+            topologyKey: kubernetes.io/hostname
     core:
+      replicas: 2
       resources:
         requests:
           memory: 64Mi
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: component
+                operator: In
+                values:
+                - core
+              - key: app
+                operator: In
+                values:
+                - harbor
+            topologyKey: kubernetes.io/hostname
     jobservice:
+      replicas: 1
       resources:
         requests:
           memory: 64Mi
     registry:
+      replicas: 2
       registry:
         resources:
           requests:
@@ -56,3 +93,17 @@ spec:
         resources:
           requests:
             memory: 64Mi
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: component
+                operator: In
+                values:
+                - registry
+              - key: app
+                operator: In
+                values:
+                - harbor
+            topologyKey: kubernetes.io/hostname
