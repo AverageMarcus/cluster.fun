@@ -98,18 +98,19 @@ spec:
         - feature_bridge_state
         - feature_presence_in_room_list
         - feature_custom_themes
+        - feature_new_spinner
       # Servers to show in the Explore menu (the current server is always shown)
       roomDirectoryServers: []
       # Prefix before permalinks generated when users share links to rooms, users, or messages. If running an unfederated Synapse, set the below to the URL of your Riot instance.
       permalinkPrefix: "https://chat.cluster.fun"
       image:
         repository: "vectorim/riot-web"
-        tag: v1.7.18
+        tag: v1.7.27
         pullPolicy: IfNotPresent
       service:
         type: ClusterIP
         port: 80
-      replicaCount: 1
+      replicaCount: 2
       resources: {}
 
     # Settings for Coturn TURN relay, used for routing voice calls
