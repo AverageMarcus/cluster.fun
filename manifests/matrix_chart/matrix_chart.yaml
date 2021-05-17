@@ -67,7 +67,7 @@ spec:
     synapse:
       image:
         repository: "matrixdotorg/synapse"
-        tag: v1.16.1
+        tag: v1.33.2
         pullPolicy: IfNotPresent
       service:
         type: ClusterIP
