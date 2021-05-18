@@ -31,7 +31,7 @@ spec:
     image:
       tag: 19.0.10-apache
       pullPolicy: Always
-    replicaCount: 2
+    replicaCount: 1
     ingress:
       enabled: true
       annotations:
