@@ -75,10 +75,11 @@ spec:
         resources:
           requests:
             memory: 400Mi
-
         volumeMounts:
         - mountPath: /data
           name: git-data
+        - mountPath: /data-new
+          name: git-data-pv
   volumeClaimTemplates:
   - metadata:
       name: git-data
@@ -88,6 +89,14 @@ spec:
       resources:
         requests:
           storage: 20Gi
+  - metadata:
+      name: git-data-pv
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: scw-bssd-retain
+      resources:
+        requests:
+          storage: 8Gi
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
