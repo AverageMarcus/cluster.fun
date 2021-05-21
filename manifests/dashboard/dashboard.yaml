@@ -89,11 +89,9 @@ spec:
           name: auth
         resources:
           limits:
-            memory: 125Mi
+            memory: 50Mi
           requests:
-            memory: 125Mi
-
-
+            memory: 50Mi
       - name: web
         image: docker.cluster.fun/private/dashboard:latest
         imagePullPolicy: Always

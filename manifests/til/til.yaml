@@ -36,9 +36,9 @@ spec:
           name: web
         resources:
           limits:
-            memory: 100Mi
+            memory: 20Mi
           requests:
-            memory: 100Mi
+            memory: 20Mi
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress

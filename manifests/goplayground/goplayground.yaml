@@ -34,6 +34,11 @@ spec:
         ports:
         - containerPort: 8000
           name: web
+        resources:
+          limits:
+            memory: 20Mi
+          requests:
+            memory: 20Mi
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress

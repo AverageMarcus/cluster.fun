@@ -220,6 +220,11 @@ spec:
         volumeMounts:
         - name: well-known
           mountPath: /usr/share/nginx/html/.well-known/matrix
+        resources:
+          limits:
+            memory: 5Mi
+          requests:
+            memory: 5Mi
       volumes:
       - name: well-known
         configMap:

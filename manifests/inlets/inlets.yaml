@@ -53,6 +53,11 @@ spec:
         volumeMounts:
           - name: inlets-token-volume
             mountPath: /var/inlets/
+        resources:
+          limits:
+            memory: 50Mi
+          requests:
+            memory: 50Mi
       volumes:
         - name: inlets-token-volume
           secret:

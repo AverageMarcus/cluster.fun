@@ -93,9 +93,9 @@ spec:
           protocol: TCP
         resources:
           limits:
-            memory: 125Mi
+            memory: 50Mi
           requests:
-            memory: 125Mi
+            memory: 50Mi
       - name: web
         image: docker.cluster.fun/averagemarcus/gopherss:latest
         env:
@@ -114,6 +114,11 @@ spec:
         volumeMounts:
           - mountPath: /data
             name: storage
+        resources:
+          limits:
+            memory: 100Mi
+          requests:
+            memory: 100Mi
       volumes:
       - name: storage
         persistentVolumeClaim:

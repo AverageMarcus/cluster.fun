@@ -92,9 +92,9 @@ spec:
           protocol: TCP
         resources:
           limits:
-            memory: 125Mi
+            memory: 50Mi
           requests:
-            memory: 125Mi
+            memory: 50Mi
       - name: web
         image: docker.cluster.fun/averagemarcus/website-to-remarkable:latest
         imagePullPolicy: Always
@@ -107,6 +107,11 @@ spec:
         ports:
         - containerPort: 8000
           name: web
+        resources:
+          limits:
+            memory: 50Mi
+          requests:
+            memory: 50Mi
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
