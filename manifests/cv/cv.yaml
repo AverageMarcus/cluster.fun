@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: docker-config
+  namespace: cv
+  annotations:
+    kube-1password: i6ngbk5zf4k52xgwdwnfup5bby
+    kube-1password/vault: Kubernetes
+    kube-1password/secret-text-key: .dockerconfigjson
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: e30=
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cv
+  namespace: cv
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: web
+    name: web
+  selector:
+    app: cv
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cv
+  namespace: cv
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cv
+  template:
+    metadata:
+      labels:
+        app: cv
+    spec:
+      imagePullSecrets:
+        - name: docker-config
+      containers:
+      - name: web
+        image: docker.cluster.fun/private/cv:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          name: web
+        resources:
+          limits:
+            memory: 10Mi
+          requests:
+            memory: 10Mi
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: cv
+  namespace: cv
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+spec:
+  tls:
+  - hosts:
+    - cv.marcusnoble.co.uk
+    secretName: cv-ingress
+  rules:
+  - host: cv.marcusnoble.co.uk
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: cv
+          servicePort: 80
