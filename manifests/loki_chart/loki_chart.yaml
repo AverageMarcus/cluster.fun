@@ -63,6 +63,10 @@ spec:
           access: proxy
           jsonData:
             maxLines: 1000
+        - name: Prometheus-local
+          type: prometheus
+          url: http://prometheus-local.logging:80
+          access: proxy
     grafana.ini:
       analytics:
         reporting_enabled: false
