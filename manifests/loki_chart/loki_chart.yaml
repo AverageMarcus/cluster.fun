@@ -199,3 +199,18 @@ spec:
               number: 80
         path: /
         pathType: ImplementationSpecific
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: prometheus-local
+  namespace: logging
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8000
+  selector:
+    app: inlets
