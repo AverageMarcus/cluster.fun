@@ -438,10 +438,6 @@ spec:
         app.kubernetes.io/name: prometheus
         app.kubernetes.io/component: server
     spec:
-      dnsConfig:
-        options:
-          - name: ndots
-            value: "2"
       serviceAccountName: prometheus-server
       containers:
         - name: prometheus-server-configmap-reload
