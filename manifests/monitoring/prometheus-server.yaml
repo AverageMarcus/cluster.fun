@@ -425,6 +425,8 @@ metadata:
   name: prometheus-server
   namespace: monitoring
 spec:
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app.kubernetes.io/name: prometheus
