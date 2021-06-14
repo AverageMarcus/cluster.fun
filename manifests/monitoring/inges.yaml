@@ -56,7 +56,7 @@ metadata:
   name: prometheus-credentials
   namespace: monitoring
   annotations:
-    kube-1password: wpynfxkdipeeacyfxkvtdsuj54
+    kube-1password: m7c2n5gqybiyxj6ylydju2nljm
     kube-1password/vault: Kubernetes
 type: Opaque
 ---
