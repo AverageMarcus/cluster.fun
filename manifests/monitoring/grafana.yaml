@@ -209,10 +209,7 @@ spec:
       labels:
         app.kubernetes.io/name: grafana
     spec:
-      dnsConfig:
-        options:
-          - name: ndots
-            value: "2"
+      dnsPolicy: ClusterFirst
       serviceAccountName: grafana
       securityContext:
         fsGroup: 472
