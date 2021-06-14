@@ -1,0 +1,51 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: grafana
+  namespace: inlets
+  labels:
+    app: grafana
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+spec:
+  tls:
+  - hosts:
+    - grafana.cluster.fun
+    secretName: grafana-ingress
+  rules:
+  - host: grafana.cluster.fun
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: auth-proxy
+          servicePort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: prometheus
+  namespace: inlets
+  labels:
+    app: prometheus
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+spec:
+  tls:
+  - hosts:
+    - prometheus.cluster.fun
+    secretName: prometheus-ingress
+  rules:
+  - host: prometheus.cluster.fun
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: auth-proxy
+          servicePort: 80

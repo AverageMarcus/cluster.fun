@@ -56,6 +56,8 @@ data:
       batchwait: 1s
       external_labels: {}
       timeout: 10s
+      external_labels:
+        kubernetes_cluster: scaleway
     positions:
       filename: /run/promtail/positions.yaml
     server:
@@ -396,7 +398,7 @@ spec:
           imagePullPolicy: IfNotPresent
           args:
             - "-config.file=/etc/promtail/promtail.yaml"
-            - "-client.url=http://loki:3100/loki/api/v1/push"
+            - "-client.url=http://loki.inlets.svc:80/loki/api/v1/push"
           volumeMounts:
             - name: config
               mountPath: /etc/promtail

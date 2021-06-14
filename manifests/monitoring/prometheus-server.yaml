@@ -306,20 +306,6 @@ data:
       - source_labels: [__meta_kubernetes_endpoints_name]
         regex: 'node-exporter'
         action: keep
-    - job_name: 'federated-clusters'
-      scrape_interval: 15s
-      honor_labels: true
-      params:
-        'match[]':
-          - '{job="prometheus"}'
-          - '{job="node"}'
-          - '{job="node_exporter"}'
-          - '{job="zfs_exporter"}'
-          - '{job=~"kubernetes.*"}'
-      metrics_path: '/federate'
-      static_configs:
-      - targets:
-        - 'prometheus-local.inlets.svc:80'
   recording_rules.yml: |
     {}
   rules: |

@@ -1,24 +1,24 @@
-# apiVersion: argoproj.io/v1alpha1
-# kind: Application
-# metadata:
-#   name: monitoring
-#   namespace: argocd
-#   finalizers:
-#   - resources-finalizer.argocd.argoproj.io
-# spec:
-#   project: cluster.fun
-#   destination:
-#     namespace: monitoring
-#     name: cluster-fun (scaleway)
-#   source:
-#     path: manifests/monitoring
-#     repoURL: "https://git.cluster.fun/AverageMarcus/cluster.fun.git"
-#     targetRevision: HEAD
-#   syncPolicy:
-#     automated: {}
-#     syncOptions:
-#       - CreateNamespace=true
-#   ignoreDifferences:
-#   - kind: Secret
-#     jsonPointers:
-#     - /data
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: monitoring
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster.fun
+  destination:
+    namespace: monitoring
+    name: cluster-fun (scaleway)
+  source:
+    path: manifests/monitoring
+    repoURL: "https://git.cluster.fun/AverageMarcus/cluster.fun.git"
+    targetRevision: HEAD
+  syncPolicy:
+    automated: {}
+    syncOptions:
+      - CreateNamespace=true
+  ignoreDifferences:
+  - kind: Secret
+    jsonPointers:
+    - /data

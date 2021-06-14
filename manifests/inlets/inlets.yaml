@@ -202,21 +202,7 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: prometheus-local
-  namespace: inlets
-spec:
-  type: ClusterIP
-  ports:
-    - port: 80
-      protocol: TCP
-      targetPort: 8000
-  selector:
-    app: inlets
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: loki-local
+  name: loki
   namespace: inlets
 spec:
   type: ClusterIP
