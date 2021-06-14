@@ -212,3 +212,17 @@ spec:
       targetPort: 8000
   selector:
     app: inlets
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: loki-local
+  namespace: inlets
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8000
+  selector:
+    app: inlets

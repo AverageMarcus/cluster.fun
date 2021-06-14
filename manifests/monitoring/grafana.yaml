@@ -1,0 +1,285 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: grafana-credentials
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: grafana
+  annotations:
+    kube-1password: wpynfxkdipeeacyfxkvtdsuj54
+    kube-1password/vault: Kubernetes
+type: Opaque
+---
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: grafana
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: grafana
+  annotations:
+    seccomp.security.alpha.kubernetes.io/allowedProfileNames: 'docker/default,runtime/default'
+    seccomp.security.alpha.kubernetes.io/defaultProfileName:  'docker/default'
+    apparmor.security.beta.kubernetes.io/allowedProfileNames: 'runtime/default'
+    apparmor.security.beta.kubernetes.io/defaultProfileName:  'runtime/default'
+spec:
+  privileged: false
+  allowPrivilegeEscalation: false
+  requiredDropCapabilities:
+    # Default set from Docker, without DAC_OVERRIDE or CHOWN
+    - FOWNER
+    - FSETID
+    - KILL
+    - SETGID
+    - SETUID
+    - SETPCAP
+    - NET_BIND_SERVICE
+    - NET_RAW
+    - SYS_CHROOT
+    - MKNOD
+    - AUDIT_WRITE
+    - SETFCAP
+  volumes:
+    - 'configMap'
+    - 'emptyDir'
+    - 'projected'
+    - 'csi'
+    - 'secret'
+    - 'downwardAPI'
+    - 'persistentVolumeClaim'
+  hostNetwork: false
+  hostIPC: false
+  hostPID: false
+  runAsUser:
+    rule: 'RunAsAny'
+  seLinux:
+    rule: 'RunAsAny'
+  supplementalGroups:
+    rule: 'RunAsAny'
+  fsGroup:
+    rule: 'RunAsAny'
+  readOnlyRootFilesystem: false
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: grafana
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: grafana
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: grafana
+data:
+  grafana.ini: |
+    [analytics]
+    check_for_updates = false
+    reporting_enabled = false
+    [auth.anonymous]
+    enabled = true
+    org_role = Admin
+    [dataproxy]
+    timeout = 300
+    [grafana_net]
+    url = https://grafana.net
+    [log]
+    mode = console
+    [paths]
+    data = /var/lib/grafana/data
+    logs = /var/log/grafana
+    plugins = /var/lib/grafana/plugins
+    provisioning = /etc/grafana/provisioning
+  datasources.yaml: |
+    apiVersion: 1
+    datasources:
+    - access: proxy
+      jsonData:
+        maxLines: 1000
+      name: Loki
+      type: loki
+      url: http://loki.monitoring:3100
+    - access: proxy
+      jsonData:
+        maxLines: 1000
+      name: Loki-local
+      type: loki
+      url: http://loki-local.inlets.svc:80
+    - access: proxy
+      name: Prometheus
+      type: prometheus
+      url: http://prometheus-server.monitoring:80
+  dashboardproviders.yaml: |
+    apiVersion: 1
+    providers:
+    - allowUiUpdates: true
+      disableDeletion: false
+      editable: true
+      folder: ""
+      name: default
+      options:
+        path: /var/lib/grafana/dashboards/default
+      orgId: 1
+      type: file
+  download_dashboards.sh: |
+    #!/usr/bin/env sh
+    set -euf
+    mkdir -p /var/lib/grafana/dashboards/default
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboards-default
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: grafana
+    dashboard-provider: default
+data:
+  analytics.json:
+    |-
+      {"annotations":{"list":[{"builtIn":1,"datasource":"-- Grafana --","enable":true,"hide":true,"iconColor":"rgba(0, 211, 255, 1)","name":"Annotations & Alerts","type":"dashboard"}]},"editable":true,"gnetId":null,"graphTooltip":0,"id":1,"iteration":1617614944424,"links":[],"panels":[{"datasource":"Loki","description":"","fieldConfig":{"defaults":{"custom":{"align":null,"filterable":false},"mappings":[],"thresholds":{"mode":"absolute","steps":[{"color":"green","value":null}]}},"overrides":[{"matcher":{"id":"byRegexp","options":"(4|5).+"},"properties":[{"id":"color","value":{"fixedColor":"red","mode":"fixed"}}]},{"matcher":{"id":"byRegexp","options":"3.+"},"properties":[{"id":"color","value":{"fixedColor":"light-blue","mode":"fixed"}}]},{"matcher":{"id":"byName","options":"Total Requests"},"properties":[{"id":"color","value":{"mode":"fixed"}},{"id":"links","value":[{"targetBlank":true,"title":"Show query","url":"https://grafana.cluster.fun/explore?orgId=1&left=%5B%22${__from}%22,%22${__to}%22,%22Loki%22,%7B%22expr%22:%22%7Bk8s_app%3D%5C%22traefik-ingress-lb%5C%22%7D%20%7C%20json%20%7C%20RequestHost%3D~%5C%22${host:text}%5C%22%20error%3D%5C%22%5C%22%22%7D%5D"}]}]},{"matcher":{"id":"byRegexp","options":"[0-9][0-9][0-9]"},"properties":[{"id":"links","value":[{"targetBlank":true,"title":"Show query","url":"https://grafana.cluster.fun/explore?orgId=1&left=%5B%22${__from}%22,%22${__to}%22,%22Loki%22,%7B%22expr%22:%22%7Bk8s_app%3D%5C%22traefik-ingress-lb%5C%22%7D%20%7C%20json%20%7C%20RequestHost%3D~%5C%22${host:text}%5C%22%20error%3D%5C%22%5C%22 DownstreamStatus%3D\\\"${__field.labels.DownstreamStatus}\\\"\"}]"}]}]}]},"gridPos":{"h":10,"w":9,"x":0,"y":0},"id":2,"options":{"colorMode":"value","graphMode":"none","justifyMode":"center","orientation":"auto","reduceOptions":{"calcs":["sum"],"fields":"","values":false},"textMode":"value_and_name"},"pluginVersion":"7.3.5","targets":[{"expr":"sum (count_over_time({k8s_app=\"traefik-ingress-lb\"} | json | RequestHost=~\"${host:text}\" error=\"\" [$__interval]))","legendFormat":"Total Requests","refId":"B"},{"expr":"sum by (DownstreamStatus) (count_over_time({k8s_app=\"traefik-ingress-lb\"} | json | RequestHost=~\"${host:text}\" error=\"\" [$__interval]))","legendFormat":"{{DownstreamStatus}}","queryType":"randomWalk","refId":"A"}],"timeFrom":null,"timeShift":null,"title":"Requests Per Status Code","transformations":[],"type":"stat"},{"datasource":"Loki","fieldConfig":{"defaults":{"custom":{"align":null,"filterable":false},"mappings":[],"thresholds":{"mode":"absolute","steps":[{"color":"green","value":null}]}},"overrides":[{"matcher":{"id":"byName","options":"Total"},"properties":[{"id":"custom.width","value":80}]},{"matcher":{"id":"byName","options":"Page"},"properties":[{"id":"links","value":[{"targetBlank":true,"title":"","url":"https://${host:text}${__data.fields.Page}"}]}]}]},"gridPos":{"h":10,"w":7,"x":9,"y":0},"id":6,"options":{"showHeader":true,"sortBy":[{"desc":true,"displayName":"Total"}]},"pluginVersion":"7.3.5","targets":[{"expr":"topk(25, sum by (RequestPath) (count_over_time({k8s_app=\"traefik-ingress-lb\"} | json | RequestHost=~\"${host:text}\" error=\"\" RequestPath=~\"^/([a-zA-Z0-9\\\\-_]+(/|(ht|x)ml?)?)?$\" DownstreamStatus=~\"2.+\" [$__interval])))","legendFormat":"{{RequestPath}}","queryType":"randomWalk","refId":"A"}],"timeFrom":null,"timeShift":null,"title":"Top Viewed Pages","transformations":[{"id":"reduce","options":{"reducers":["sum"]}},{"id":"organize","options":{"excludeByName":{},"indexByName":{},"renameByName":{"Field":"Page"}}}],"type":"table"},{"datasource":"Loki","fieldConfig":{"defaults":{"custom":{"align":null,"filterable":false},"mappings":[],"thresholds":{"mode":"absolute","steps":[{"color":"green","value":null}]}},"overrides":[{"matcher":{"id":"byName","options":"Total"},"properties":[{"id":"custom.width","value":80}]}]},"gridPos":{"h":10,"w":8,"x":16,"y":0},"id":5,"options":{"showHeader":true,"sortBy":[{"desc":true,"displayName":"Total"}]},"pluginVersion":"7.3.5","targets":[{"expr":"topk(25, sum by (request_Referer) (count_over_time({k8s_app=\"traefik-ingress-lb\"} | json | RequestHost=~\"${host:text}\" error=\"\" request_Referer!=\"\" request_Referer!~\"https?://.*${host:text}/?.*\" \n | label_format request_Referer=`{{ regexReplaceAll \"https?://(.*)google.co.uk\" .request_Referer \"Google UK\" }}`\n | label_format request_Referer=`{{ regexReplaceAll \"https?://(.*)google..+\" .request_Referer \"Google\" }}`\n | label_format request_Referer=`{{ regexReplaceAll \"https?://t.co/.*\" .request_Referer \"Twitter\" }}` \n | label_format request_Referer=`{{ regexReplaceAll \"https?://.*bing.com/.*\" .request_Referer \"Bing\" }}` \n | label_format request_Referer=`{{ regexReplaceAll \"https?://.*baidu.com/.*\" .request_Referer \"Baidu\" }}` \n | label_format request_Referer=`{{ regexReplaceAll \"https?://.*duckduckgo.com/?\" .request_Referer \"DuckDuckGo\" }}` \n[$__interval])))","legendFormat":"{{request_Referer}}","queryType":"randomWalk","refId":"A"}],"timeFrom":null,"timeShift":null,"title":"Top Referers","transformations":[{"id":"reduce","options":{"reducers":["sum"]}},{"id":"organize","options":{"excludeByName":{},"indexByName":{},"renameByName":{"Field":"Referer"}}}],"type":"table"},{"aliasColors":{},"bars":false,"dashLength":10,"dashes":false,"datasource":"Loki","decimals":0,"description":"","fieldConfig":{"defaults":{"custom":{"align":null,"filterable":false},"mappings":[],"thresholds":{"mode":"absolute","steps":[{"color":"green","value":null}]}},"overrides":[]},"fill":1,"fillGradient":10,"gridPos":{"h":10,"w":9,"x":0,"y":10},"hiddenSeries":false,"id":3,"interval":"30m","legend":{"avg":false,"current":false,"max":false,"min":false,"show":true,"total":true,"values":true},"lines":true,"linewidth":1,"nullPointMode":"null","options":{"alertThreshold":false},"percentage":false,"pluginVersion":"7.3.5","pointradius":1,"points":true,"renderer":"flot","seriesOverrides":[{}],"spaceLength":10,"stack":false,"steppedLine":false,"targets":[{"expr":"sum by (DownstreamStatus) (count_over_time({k8s_app=\"traefik-ingress-lb\"} | json | RequestHost=~\"${host:text}\" error=\"\" [$__interval]))","legendFormat":"{{DownstreamStatus}}","queryType":"randomWalk","refId":"A"}],"thresholds":[],"timeFrom":null,"timeRegions":[],"timeShift":null,"title":"Requests Per Status Code","tooltip":{"shared":true,"sort":0,"value_type":"individual"},"transformations":[],"type":"graph","xaxis":{"buckets":null,"mode":"time","name":null,"show":true,"values":[]},"yaxes":[{"decimals":0,"format":"short","label":"No. of Requests","logBase":1,"max":null,"min":null,"show":true},{"format":"short","label":null,"logBase":1,"max":null,"min":null,"show":false}],"yaxis":{"align":false,"alignLevel":null}},{"datasource":"Loki","fieldConfig":{"defaults":{"custom":{"align":null,"filterable":false},"mappings":[],"thresholds":{"mode":"absolute","steps":[{"color":"green","value":null}]}},"overrides":[{"matcher":{"id":"byName","options":"Total"},"properties":[{"id":"custom.width","value":80}]}]},"gridPos":{"h":10,"w":7,"x":9,"y":10},"id":8,"options":{"showHeader":true,"sortBy":[{"desc":true,"displayName":"Total"}]},"pluginVersion":"7.3.5","targets":[{"expr":"topk(25, sum by (RequestPath) (count_over_time({k8s_app=\"traefik-ingress-lb\"} | json | RequestHost=~\"${host:text}\" error=\"\" DownstreamStatus=\"404\" [$__interval])))","legendFormat":"{{RequestPath}}","queryType":"randomWalk","refId":"A"}],"timeFrom":null,"timeShift":null,"title":"Top 404","transformations":[{"id":"reduce","options":{"reducers":["sum"]}},{"id":"organize","options":{"excludeByName":{},"indexByName":{},"renameByName":{"Field":"Requests"}}}],"type":"table"},{"datasource":"Loki","fieldConfig":{"defaults":{"custom":{"align":null,"filterable":false},"mappings":[],"thresholds":{"mode":"absolute","steps":[{"color":"green","value":null}]}},"overrides":[{"matcher":{"id":"byName","options":"Total"},"properties":[{"id":"custom.width","value":80}]}]},"gridPos":{"h":10,"w":8,"x":16,"y":10},"id":7,"options":{"showHeader":true,"sortBy":[{"desc":true,"displayName":"Total"}]},"pluginVersion":"7.3.5","targets":[{"expr":"topk(25, sum by (request_User_Agent) (count_over_time({k8s_app=\"traefik-ingress-lb\"} | json | RequestHost=~\"${host:text}\" error=\"\" request_User_Agent!=\"\" [$__interval])))","legendFormat":"{{request_User_Agent}}","queryType":"randomWalk","refId":"A"}],"timeFrom":null,"timeShift":null,"title":"Top User Agents","transformations":[{"id":"reduce","options":{"reducers":["sum"]}},{"id":"organize","options":{"excludeByName":{},"indexByName":{},"renameByName":{"Field":"User Agent"}}}],"type":"table"},{"datasource":"Loki","description":"","fieldConfig":{"defaults":{"custom":{"align":null,"filterable":false},"mappings":[],"thresholds":{"mode":"absolute","steps":[{"color":"green","value":null}]}},"overrides":[{"matcher":{"id":"byName","options":"Total"},"properties":[{"id":"custom.width","value":116},{"id":"links","value":[]}]},{"matcher":{"id":"byName","options":"Requests"},"properties":[{"id":"custom.width","value":1132}]}]},"gridPos":{"h":12,"w":9,"x":0,"y":20},"id":9,"options":{"showHeader":true,"sortBy":[{"desc":true,"displayName":"Total"}]},"pluginVersion":"7.3.5","targets":[{"expr":"sum by (RequestMethod, RequestPath, DownstreamStatus) (count_over_time({k8s_app=\"traefik-ingress-lb\"} | json | RequestHost=~\"${host:text}\" error=\"\" [$__interval]))","legendFormat":"{{RequestMethod}} - {{RequestPath}} - {{DownstreamStatus}}","queryType":"randomWalk","refId":"A"}],"timeFrom":null,"timeShift":null,"title":"All Requests","transformations":[{"id":"reduce","options":{"reducers":["sum"]}},{"id":"organize","options":{"excludeByName":{},"indexByName":{},"renameByName":{"Field":"Requests"}}}],"type":"table"},{"datasource":"Loki","fieldConfig":{"defaults":{"custom":{"align":null,"filterable":false},"mappings":[],"thresholds":{"mode":"absolute","steps":[{"color":"green","value":null}]}},"overrides":[{"matcher":{"id":"byName","options":"Total"},"properties":[{"id":"custom.width","value":80}]}]},"gridPos":{"h":12,"w":7,"x":9,"y":20},"id":10,"options":{"showHeader":true,"sortBy":[{"desc":true,"displayName":"Total"}]},"pluginVersion":"7.3.5","targets":[{"expr":"topk(25, sum by (DownstreamStatus, RequestPath, downstream_Location) (count_over_time({k8s_app=\"traefik-ingress-lb\"} | json | RequestHost=~\"${host:text}\" error=\"\" DownstreamStatus=~\"3.+\" [$__interval])))","legendFormat":"{{DownstreamStatus}} - {{RequestPath}} => {{downstream_Location}}","queryType":"randomWalk","refId":"A"}],"timeFrom":null,"timeShift":null,"title":"Top Redirects","transformations":[{"id":"reduce","options":{"reducers":["sum"]}},{"id":"organize","options":{"excludeByName":{},"indexByName":{},"renameByName":{"Field":"Requests"}}}],"type":"table"},{"datasource":"Loki","fieldConfig":{"defaults":{"custom":{"align":null,"filterable":false},"mappings":[],"thresholds":{"mode":"absolute","steps":[{"color":"green","value":null}]}},"overrides":[{"matcher":{"id":"byName","options":"Total"},"properties":[{"id":"custom.width","value":80}]}]},"gridPos":{"h":12,"w":8,"x":16,"y":20},"id":11,"options":{"showHeader":true,"sortBy":[{"desc":true,"displayName":"Total"}]},"pluginVersion":"7.3.5","targets":[{"expr":"topk(25, sum by (RequestMethod, DownstreamStatus, RequestPath) (count_over_time({k8s_app=\"traefik-ingress-lb\"} | json | RequestHost=~\"${host:text}\" error=\"\" DownstreamStatus=~\"[54].+\"  DownstreamStatus!=\"404\" [$__interval])))","legendFormat":"{{DownstreamStatus}} - {{RequestMethod}} - {{RequestPath}}","queryType":"randomWalk","refId":"A"}],"timeFrom":null,"timeShift":null,"title":"Top Errors","transformations":[{"id":"reduce","options":{"reducers":["sum"]}},{"id":"organize","options":{"excludeByName":{},"indexByName":{},"renameByName":{"Field":"Requests"}}}],"type":"table"}],"refresh":false,"schemaVersion":26,"style":"dark","tags":[],"templating":{"list":[{"allValue":null,"current":{"selected":true,"text":"marcusnoble.co.uk","value":"marcusnoble.co.uk"},"error":null,"hide":0,"includeAll":false,"label":"Host","multi":false,"name":"host","options":[{"selected":false,"text":"marcusnoble.co.uk","value":"marcusnoble.co.uk"},{"selected":false,"text":"til.marcusnoble.co.uk","value":"til.marcusnoble.co.uk"},{"selected":false,"text":"dash.cluster.fun","value":"dash.cluster.fun"},{"selected":true,"text":"tweet.cluster.fun","value":"tweet.cluster.fun"},{"selected":false,"text":"base64.cluster.fun","value":"base64.cluster.fun"},{"selected":false,"text":"feed-fetcher.cluster.fun","value":"feed-fetcher.cluster.fun"},{"selected":false,"text":"cors-proxy.cluster.fun","value":"cors-proxy.cluster.fun"}],"query":"marcusnoble.co.uk,til.marcusnoble.co.uk,dash.cluster.fun,tweet.cluster.fun,base64.cluster.fun,feed-fetcher.cluster.fun,cors-proxy.cluster.fun","queryValue":"","skipUrlSync":false,"type":"custom"}]},"time":{"from":"now-24h","to":"now"},"timepicker":{},"timezone":"","title":"Analytics","uid":"3hJJhOLMz","version":9}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: grafana
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: grafana
+rules:
+- apiGroups:      ['extensions']
+  resources:      ['podsecuritypolicies']
+  verbs:          ['use']
+  resourceNames:  [grafana]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: grafana
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: grafana
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: grafana
+subjects:
+- kind: ServiceAccount
+  name: grafana
+  namespace: monitoring
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: grafana
+spec:
+  type: ClusterIP
+  ports:
+    - name: service
+      port: 80
+      protocol: TCP
+      targetPort: 3000
+  selector:
+    app.kubernetes.io/name: grafana
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: grafana
+    spec:
+      serviceAccountName: grafana
+      securityContext:
+        fsGroup: 472
+        runAsGroup: 472
+        runAsUser: 472
+      initContainers:
+        - name: download-dashboards
+          image: "curlimages/curl:7.73.0"
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh"]
+          args: [ "-c", "mkdir -p /var/lib/grafana/dashboards/default && /bin/sh /etc/grafana/download_dashboards.sh" ]
+          volumeMounts:
+            - name: config
+              mountPath: "/etc/grafana/download_dashboards.sh"
+              subPath: download_dashboards.sh
+            - name: storage
+              mountPath: "/var/lib/grafana"
+      containers:
+        - name: grafana
+          image: "grafana/grafana:8.0.1"
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: config
+              mountPath: "/etc/grafana/grafana.ini"
+              subPath: grafana.ini
+            - name: storage
+              mountPath: "/var/lib/grafana"
+            - name: dashboards-default
+              mountPath: "/var/lib/grafana/dashboards/default/analytics.json"
+              subPath: "analytics.json"
+            - name: config
+              mountPath: "/etc/grafana/provisioning/datasources/datasources.yaml"
+              subPath: datasources.yaml
+            - name: config
+              mountPath: "/etc/grafana/provisioning/dashboards/dashboardproviders.yaml"
+              subPath: dashboardproviders.yaml
+          ports:
+            - name: service
+              containerPort: 80
+              protocol: TCP
+            - name: grafana
+              containerPort: 3000
+              protocol: TCP
+          env:
+            - name: GF_SECURITY_ADMIN_USER
+              valueFrom:
+                secretKeyRef:
+                  name: grafana-credentials
+                  key: username
+            - name: GF_SECURITY_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: grafana-credentials
+                  key: password
+          livenessProbe:
+            failureThreshold: 10
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 60
+            timeoutSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+      volumes:
+        - name: config
+          configMap:
+            name: grafana
+        - name: dashboards-default
+          configMap:
+            name: grafana-dashboards-default
+        - name: storage
+          emptyDir: {}
+

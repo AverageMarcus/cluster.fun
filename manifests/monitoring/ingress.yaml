@@ -1,0 +1,222 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: proxy-auth
+  namespace: monitoring
+  annotations:
+    kube-1password: mr6spkkx7n3memkbute6ojaarm
+    kube-1password/vault: Kubernetes
+type: Opaque
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus-auth
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: prometheus
+    app.kubernetes.io/component: server-auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: prometheus
+      app.kubernetes.io/component: server-auth
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: prometheus
+        app.kubernetes.io/component: server-auth
+    spec:
+      containers:
+      - args:
+        - --cookie-secure=false
+        - --provider=oidc
+        - --provider-display-name=Auth0
+        - --upstream=http://prometheus-server.monitoring.svc.cluster.local
+        - --http-address=$(HOST_IP):8080
+        - --redirect-url=https://prometheus.cluster.fun/oauth2/callback
+        - --email-domain=marcusnoble.co.uk
+        - --pass-basic-auth=false
+        - --pass-access-token=false
+        - --oidc-issuer-url=https://marcusnoble.eu.auth0.com/
+        - --cookie-secret=KDGD6rrK6cBmryyZ4wcJ9xAUNW9AQN
+        env:
+        - name: HOST_IP
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.podIP
+        - name: OAUTH2_PROXY_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: proxy-auth
+        - name: OAUTH2_PROXY_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: proxy-auth
+        image: quay.io/oauth2-proxy/oauth2-proxy:v5.1.1
+        name: oauth-proxy
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-auth
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: prometheus
+    app.kubernetes.io/component: server-auth
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app.kubernetes.io/name: prometheus
+    app.kubernetes.io/component: server-auth
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: prometheus-auth
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: prometheus
+    app.kubernetes.io/component: server-auth
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+spec:
+  tls:
+  - hosts:
+    - prometheus.cluster.fun
+    secretName: prometheus-ingress
+  rules:
+  - host: prometheus.cluster.fun
+    http:
+      paths:
+      - backend:
+          service:
+            name: prometheus-auth
+            port:
+              number: 80
+        path: /
+        pathType: ImplementationSpecific
+
+
+---
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana-auth
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/component: server-auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
+      app.kubernetes.io/component: server-auth
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: grafana
+        app.kubernetes.io/component: server-auth
+    spec:
+      containers:
+      - args:
+        - --cookie-secure=false
+        - --provider=oidc
+        - --provider-display-name=Auth0
+        - --upstream=http://grafana.monitoring.svc.cluster.local
+        - --http-address=$(HOST_IP):8080
+        - --redirect-url=https://grafana.cluster.fun/oauth2/callback
+        - --email-domain=marcusnoble.co.uk
+        - --pass-basic-auth=false
+        - --pass-access-token=false
+        - --oidc-issuer-url=https://marcusnoble.eu.auth0.com/
+        - --cookie-secret=KDGD6rrK6cBmryyZ4wcJ9xAUNW9AQN
+        env:
+        - name: HOST_IP
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.podIP
+        - name: OAUTH2_PROXY_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: proxy-auth
+        - name: OAUTH2_PROXY_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: proxy-auth
+        image: quay.io/oauth2-proxy/oauth2-proxy:v5.1.1
+        name: oauth-proxy
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana-auth
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/component: server-auth
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/component: server-auth
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana-auth
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/component: server-auth
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+spec:
+  tls:
+  - hosts:
+    - grafana.cluster.fun
+    secretName: grafana-ingress
+  rules:
+  - host: grafana.cluster.fun
+    http:
+      paths:
+      - backend:
+          service:
+            name: grafana-auth
+            port:
+              number: 80
+        path: /
+        pathType: ImplementationSpecific
