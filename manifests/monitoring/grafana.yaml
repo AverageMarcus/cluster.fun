@@ -89,6 +89,7 @@ data:
     url = https://grafana.net
     [log]
     mode = console
+    level = debug
     [paths]
     data = /var/lib/grafana/data
     logs = /var/log/grafana
