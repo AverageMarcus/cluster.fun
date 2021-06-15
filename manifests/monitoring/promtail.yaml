@@ -63,6 +63,62 @@ data:
     target_config:
       sync_period: 10s
     scrape_configs:
+    - job_name: http-access-logs
+      kubernetes_sd_configs:
+      - role: pod
+      pipeline_stages:
+        - docker: {}
+        - match:
+            selector: '{k8s_app="traefik-ingress-lb"}'
+            stages:
+            - json:
+                expressions:
+                  RequestPath: RequestPath
+            - labels:
+                RequestPath:
+        - match:
+            selector: '{RequestPath="/healthz"}'
+            action: drop
+      relabel_configs:
+      - source_labels:
+        - __meta_kubernetes_pod_label_k8s_app
+        target_label: __service__
+      - source_labels:
+        - __meta_kubernetes_pod_node_name
+        target_label: __host__
+      - action: drop
+        regex: ''
+        source_labels:
+        - __service__
+      - action: labelmap
+        regex: __meta_kubernetes_pod_label_(.+)
+      - action: replace
+        replacement: $1
+        separator: /
+        source_labels:
+        - __meta_kubernetes_namespace
+        - __service__
+        target_label: job
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_namespace
+        target_label: namespace
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_pod_name
+        target_label: pod
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_pod_container_name
+        target_label: container
+      - replacement: /var/log/pods/*$1/*.log
+        separator: /
+        source_labels:
+        - __meta_kubernetes_pod_uid
+        - __meta_kubernetes_pod_container_name
+        target_label: __path__
+
+
     - job_name: kubernetes-pods-name
       pipeline_stages:
         - docker: {}
@@ -106,6 +162,7 @@ data:
         - __meta_kubernetes_pod_uid
         - __meta_kubernetes_pod_container_name
         target_label: __path__
+
     - job_name: kubernetes-pods-app
       pipeline_stages:
         - docker: {}
@@ -153,6 +210,7 @@ data:
         - __meta_kubernetes_pod_uid
         - __meta_kubernetes_pod_container_name
         target_label: __path__
+
     - job_name: kubernetes-pods-direct-controllers
       pipeline_stages:
         - docker: {}
@@ -206,6 +264,7 @@ data:
         - __meta_kubernetes_pod_uid
         - __meta_kubernetes_pod_container_name
         target_label: __path__
+
     - job_name: kubernetes-pods-indirect-controller
       pipeline_stages:
         - docker: {}
@@ -261,6 +320,7 @@ data:
         - __meta_kubernetes_pod_uid
         - __meta_kubernetes_pod_container_name
         target_label: __path__
+
     - job_name: kubernetes-pods-static
       pipeline_stages:
         - docker: {}
