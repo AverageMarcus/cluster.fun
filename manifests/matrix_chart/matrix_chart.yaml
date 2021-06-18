@@ -199,7 +199,7 @@ metadata:
   name: well-known
   namespace: chat
   annotations:
-    reloader.stakater.com/auto: "true"
+    reloader.stakater.com/match: "true"
 spec:
   replicas: 1
   selector:
