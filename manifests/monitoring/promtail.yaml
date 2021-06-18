@@ -68,8 +68,11 @@ data:
       - role: pod
       pipeline_stages:
       - drop:
-          source: "k8s_app"
-          expression: "(konnectivity-agent|weave|kube-dns)"
+          source: "__meta_kubernetes_pod_label_name"
+          expression: "weave-net"
+      - drop:
+          source: "__meta_kubernetes_pod_container_name"
+          expression: "konnectivity-agent"
       - drop:
           expression: ".*kube-probe.*"
       - json:
