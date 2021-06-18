@@ -72,6 +72,14 @@ data:
           expression: "(konnectivity-agent|weave|kube-dns)"
       - drop:
           expression: ".*kube-probe.*"
+      - json:
+          expressions:
+            RequestPath: RequestPath
+      - labels:
+          RequestPath:
+      - drop:
+          source: "RequestPath"
+          expression: "/healthz"
 
     - job_name: kubernetes-pods-name
       pipeline_stages:
@@ -116,6 +124,7 @@ data:
         - __meta_kubernetes_pod_uid
         - __meta_kubernetes_pod_container_name
         target_label: __path__
+
     - job_name: kubernetes-pods-app
       pipeline_stages:
         - docker: {}
@@ -163,6 +172,7 @@ data:
         - __meta_kubernetes_pod_uid
         - __meta_kubernetes_pod_container_name
         target_label: __path__
+
     - job_name: kubernetes-pods-direct-controllers
       pipeline_stages:
         - docker: {}
@@ -216,6 +226,7 @@ data:
         - __meta_kubernetes_pod_uid
         - __meta_kubernetes_pod_container_name
         target_label: __path__
+
     - job_name: kubernetes-pods-indirect-controller
       pipeline_stages:
         - docker: {}
@@ -271,6 +282,7 @@ data:
         - __meta_kubernetes_pod_uid
         - __meta_kubernetes_pod_container_name
         target_label: __path__
+
     - job_name: kubernetes-pods-static
       pipeline_stages:
         - docker: {}
