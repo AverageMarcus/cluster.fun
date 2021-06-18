@@ -63,30 +63,27 @@ data:
     target_config:
       sync_period: 10s
     scrape_configs:
-    - job_name: kubernetes-filtering
-      kubernetes_sd_configs:
-      - role: pod
-      pipeline_stages:
-      - drop:
-          source: "__meta_kubernetes_pod_label_name"
-          expression: "weave-net"
-      - drop:
-          source: "__meta_kubernetes_pod_container_name"
-          expression: "konnectivity-agent"
-      - drop:
-          expression: ".*kube-probe.*"
-      - json:
-          expressions:
-            RequestPath: RequestPath
-      - labels:
-          RequestPath:
-      - drop:
-          source: "RequestPath"
-          expression: "/healthz"
-
     - job_name: kubernetes-pods-name
       pipeline_stages:
         - docker: {}
+        - match:
+            selector: '{name="weave-net"}'
+            action: drop
+        - match:
+            selector: '{filename=~".*konnectivity.*"}'
+            action: drop
+        - match:
+            selector: '{name=~".*"} |~ ".*/healthz.*"'
+            action: drop
+        - match:
+            selector: '{name=~".*"} |~ ".*kube-probe/.*"'
+            action: drop
+        - match:
+            selector: '{app="inlets"}'
+            action: drop
+        - match:
+            selector: '{namespace="tekton-pipelines"}'
+            action: drop
       kubernetes_sd_configs:
       - role: pod
       relabel_configs:
@@ -131,6 +128,24 @@ data:
     - job_name: kubernetes-pods-app
       pipeline_stages:
         - docker: {}
+        - match:
+            selector: '{name="weave-net"}'
+            action: drop
+        - match:
+            selector: '{filename=~".*konnectivity.*"}'
+            action: drop
+        - match:
+            selector: '{name=~".*"} |~ ".*/healthz.*"'
+            action: drop
+        - match:
+            selector: '{name=~".*"} |~ ".*kube-probe/.*"'
+            action: drop
+        - match:
+            selector: '{app="inlets"}'
+            action: drop
+        - match:
+            selector: '{namespace="tekton-pipelines"}'
+            action: drop
       kubernetes_sd_configs:
       - role: pod
       relabel_configs:
@@ -179,6 +194,24 @@ data:
     - job_name: kubernetes-pods-direct-controllers
       pipeline_stages:
         - docker: {}
+        - match:
+            selector: '{name="weave-net"}'
+            action: drop
+        - match:
+            selector: '{filename=~".*konnectivity.*"}'
+            action: drop
+        - match:
+            selector: '{name=~".*"} |~ ".*/healthz.*"'
+            action: drop
+        - match:
+            selector: '{name=~".*"} |~ ".*kube-probe/.*"'
+            action: drop
+        - match:
+            selector: '{app="inlets"}'
+            action: drop
+        - match:
+            selector: '{namespace="tekton-pipelines"}'
+            action: drop
       kubernetes_sd_configs:
       - role: pod
       relabel_configs:
@@ -233,6 +266,24 @@ data:
     - job_name: kubernetes-pods-indirect-controller
       pipeline_stages:
         - docker: {}
+        - match:
+            selector: '{name="weave-net"}'
+            action: drop
+        - match:
+            selector: '{filename=~".*konnectivity.*"}'
+            action: drop
+        - match:
+            selector: '{name=~".*"} |~ ".*/healthz.*"'
+            action: drop
+        - match:
+            selector: '{name=~".*"} |~ ".*kube-probe/.*"'
+            action: drop
+        - match:
+            selector: '{app="inlets"}'
+            action: drop
+        - match:
+            selector: '{namespace="tekton-pipelines"}'
+            action: drop
       kubernetes_sd_configs:
       - role: pod
       relabel_configs:
@@ -289,6 +340,24 @@ data:
     - job_name: kubernetes-pods-static
       pipeline_stages:
         - docker: {}
+        - match:
+            selector: '{name="weave-net"}'
+            action: drop
+        - match:
+            selector: '{filename=~".*konnectivity.*"}'
+            action: drop
+        - match:
+            selector: '{name=~".*"} |~ ".*/healthz.*"'
+            action: drop
+        - match:
+            selector: '{name=~".*"} |~ ".*kube-probe/.*"'
+            action: drop
+        - match:
+            selector: '{app="inlets"}'
+            action: drop
+        - match:
+            selector: '{namespace="tekton-pipelines"}'
+            action: drop
       kubernetes_sd_configs:
       - role: pod
       relabel_configs:
@@ -334,6 +403,7 @@ data:
         - __meta_kubernetes_pod_annotation_kubernetes_io_config_mirror
         - __meta_kubernetes_pod_container_name
         target_label: __path__
+
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
