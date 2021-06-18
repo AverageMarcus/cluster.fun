@@ -65,7 +65,7 @@ metadata:
   name: kube-janitor
   namespace: kube-janitor
   annotations:
-    reloader.stakater.com/match: "true"
+    configmap.reloader.stakater.com/reload: "kube-janitor"
 spec:
   replicas: 1
   selector:
