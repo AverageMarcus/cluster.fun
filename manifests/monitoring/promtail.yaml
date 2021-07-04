@@ -90,8 +90,17 @@ data:
             - json:
                 expressions:
                   request_host: RequestHost
+                  request_path: RequestPath
+                  error: error
+            - drop:
+                source: "request_path"
+                value:  "/healthz"
+            - template:
+                source: has_error
+                template: '{{ if .error }}true{{ else }}false{{ end }}'
             - labels:
                 request_host:
+                has_error:
       kubernetes_sd_configs:
       - role: pod
       relabel_configs:
@@ -160,8 +169,17 @@ data:
             - json:
                 expressions:
                   request_host: RequestHost
+                  request_path: RequestPath
+                  error: error
+            - drop:
+                source: "request_path"
+                value:  "/healthz"
+            - template:
+                source: has_error
+                template: '{{ if .error }}true{{ else }}false{{ end }}'
             - labels:
                 request_host:
+                has_error:
       kubernetes_sd_configs:
       - role: pod
       relabel_configs:
@@ -234,8 +252,17 @@ data:
             - json:
                 expressions:
                   request_host: RequestHost
+                  request_path: RequestPath
+                  error: error
+            - drop:
+                source: "request_path"
+                value:  "/healthz"
+            - template:
+                source: has_error
+                template: '{{ if .error }}true{{ else }}false{{ end }}'
             - labels:
                 request_host:
+                has_error:
       kubernetes_sd_configs:
       - role: pod
       relabel_configs:
@@ -314,8 +341,17 @@ data:
             - json:
                 expressions:
                   request_host: RequestHost
+                  request_path: RequestPath
+                  error: error
+            - drop:
+                source: "request_path"
+                value:  "/healthz"
+            - template:
+                source: has_error
+                template: '{{ if .error }}true{{ else }}false{{ end }}'
             - labels:
                 request_host:
+                has_error:
       kubernetes_sd_configs:
       - role: pod
       relabel_configs:
@@ -396,8 +432,17 @@ data:
             - json:
                 expressions:
                   request_host: RequestHost
+                  request_path: RequestPath
+                  error: error
+            - drop:
+                source: "request_path"
+                value:  "/healthz"
+            - template:
+                source: has_error
+                template: '{{ if .error }}true{{ else }}false{{ end }}'
             - labels:
                 request_host:
+                has_error:
       kubernetes_sd_configs:
       - role: pod
       relabel_configs:
