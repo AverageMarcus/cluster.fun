@@ -84,6 +84,14 @@ data:
         - match:
             selector: '{namespace="tekton-pipelines"}'
             action: drop
+        - match:
+            selector: '{k8s_app="traefik-ingress-lb"}'
+            stages:
+            - json:
+                expressions:
+                  request_host: RequestHost
+            - labels:
+                request_host:
       kubernetes_sd_configs:
       - role: pod
       relabel_configs:
@@ -146,6 +154,14 @@ data:
         - match:
             selector: '{namespace="tekton-pipelines"}'
             action: drop
+        - match:
+            selector: '{k8s_app="traefik-ingress-lb"}'
+            stages:
+            - json:
+                expressions:
+                  request_host: RequestHost
+            - labels:
+                request_host:
       kubernetes_sd_configs:
       - role: pod
       relabel_configs:
@@ -212,6 +228,14 @@ data:
         - match:
             selector: '{namespace="tekton-pipelines"}'
             action: drop
+        - match:
+            selector: '{k8s_app="traefik-ingress-lb"}'
+            stages:
+            - json:
+                expressions:
+                  request_host: RequestHost
+            - labels:
+                request_host:
       kubernetes_sd_configs:
       - role: pod
       relabel_configs:
@@ -284,6 +308,14 @@ data:
         - match:
             selector: '{namespace="tekton-pipelines"}'
             action: drop
+        - match:
+            selector: '{k8s_app="traefik-ingress-lb"}'
+            stages:
+            - json:
+                expressions:
+                  request_host: RequestHost
+            - labels:
+                request_host:
       kubernetes_sd_configs:
       - role: pod
       relabel_configs:
@@ -358,6 +390,14 @@ data:
         - match:
             selector: '{namespace="tekton-pipelines"}'
             action: drop
+        - match:
+            selector: '{k8s_app="traefik-ingress-lb"}'
+            stages:
+            - json:
+                expressions:
+                  request_host: RequestHost
+            - labels:
+                request_host:
       kubernetes_sd_configs:
       - role: pod
       relabel_configs:
