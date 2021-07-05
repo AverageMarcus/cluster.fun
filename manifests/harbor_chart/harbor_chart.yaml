@@ -23,7 +23,7 @@ spec:
   chart:
     repository: https://helm.goharbor.io
     name: harbor
-    version: 1.5.3
+    version: 1.7.0
   maxHistory: 4
   skipCRDs: false
   valuesFrom:
@@ -42,6 +42,7 @@ spec:
           secretName: harbor-harbor-ingress
     portal:
       replicas: 2
+      priorityClassName: system-cluster-critical
       resources:
         requests:
           memory: 64Mi
@@ -61,6 +62,7 @@ spec:
             topologyKey: kubernetes.io/hostname
     core:
       replicas: 2
+      priorityClassName: system-cluster-critical
       resources:
         requests:
           memory: 64Mi
@@ -85,6 +87,7 @@ spec:
           memory: 64Mi
     registry:
       replicas: 2
+      priorityClassName: system-cluster-critical
       registry:
         resources:
           requests:
