@@ -33,13 +33,28 @@ spec:
       key: values.yaml
       optional: false
   values:
+    fullnameOverride: harbor-harbor-harbor
+    externalURL: https://docker.cluster.fun
     updateStrategy:
       type: Recreate
     expose:
+      type: ingress
       tls:
+        enabled: true
         certSource: secret
         secret:
           secretName: harbor-harbor-ingress
+      ingress:
+        hosts:
+          core: docker.cluster.fun
+        annotations:
+          cert-manager.io/cluster-issuer: letsencrypt
+          traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+          traefik.ingress.kubernetes.io/redirect-entry-point: https
+          traefik.ingress.kubernetes.io/redirect-permanent: "true"
+          traefik.ingress.kubernetes.io/buffering: |
+            maxrequestbodybytes: "0"
+            maxresponsebodybytes: "0"
     portal:
       replicas: 2
       priorityClassName: system-cluster-critical
@@ -85,6 +100,8 @@ spec:
       resources:
         requests:
           memory: 64Mi
+      jobLoggers:
+      - stdout
     registry:
       replicas: 2
       priorityClassName: system-cluster-critical
@@ -110,3 +127,11 @@ spec:
                 values:
                 - harbor
             topologyKey: kubernetes.io/hostname
+    chartmuseum:
+      enabled: false
+    notary:
+      enabled: false
+    trivy:
+      enabled: false
+    metrics:
+      enabled: true
