@@ -17,7 +17,7 @@ output "outline-bucket_id" {
 }
 
 resource "scaleway_object_bucket" "notea" {
-  name = "cluster.fun-notea"
+  name = "cluster.fun-notes"
   acl  = "private"
 }
 
