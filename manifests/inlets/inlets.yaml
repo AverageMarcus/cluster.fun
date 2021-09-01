@@ -45,7 +45,7 @@ spec:
       containers:
       - name: inlets
         image: docker.cluster.fun/averagemarcus/inlets:3.0.3
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         command: ["inlets"]
         args:
         - "server"
