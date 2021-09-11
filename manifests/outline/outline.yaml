@@ -76,7 +76,11 @@ spec:
         - name: PGSSLMODE
           value: disable
         - name: ALLOWED_DOMAINS
-          value: marcusnoble.co.uk
+          value: marcusnoble.co.uk,marcusnoble.eu.auth0.com
+        - name: DEBUG
+          value: "true"
+        - name: OIDC_SCOPES
+          value: "openid profile email"
         ports:
         - containerPort: 3000
           name: web
