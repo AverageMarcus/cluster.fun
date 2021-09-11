@@ -65,8 +65,8 @@ spec:
         - containerPort: 6379
           name: redis
       - name: outline
-        image: docker.cluster.fun/averagemarcus/outline:latest # outlinewiki/outline:0.59.0
-        imagePullPolicy: Always
+        image: outlinewiki/outline:0.59.0
+        imagePullPolicy: IfNotPresent
         # command:
         #   - sh
         #   - -c
@@ -76,9 +76,7 @@ spec:
         - name: PGSSLMODE
           value: disable
         - name: ALLOWED_DOMAINS
-          value: marcusnoble.co.uk,marcusnoble.eu.auth0.com
-        - name: DEBUG
-          value: "true"
+          value: marcusnoble.co.uk
         - name: OIDC_SCOPES
           value: "openid profile email"
         ports:
