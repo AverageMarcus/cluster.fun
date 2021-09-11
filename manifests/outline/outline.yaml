@@ -67,14 +67,16 @@ spec:
       - name: outline
         image: outlinewiki/outline:0.59.0
         imagePullPolicy: IfNotPresent
-        command:
-          - sh
-          - -c
-          - |
-            sleep 10 && yarn sequelize db:migrate --env=production-ssl-disabled && yarn build && yarn start
+        # command:
+        #   - sh
+        #   - -c
+        #   - |
+        #     sleep 10 && yarn sequelize db:migrate --env=production-ssl-disabled && yarn build && yarn start
         env:
         - name: PGSSLMODE
           value: disable
+        - name: ALLOWED_DOMAINS
+          value: marcusnoble.co.uk,marcusnoble.eu.auth0.com
         ports:
         - containerPort: 3000
           name: web
