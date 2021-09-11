@@ -65,8 +65,8 @@ spec:
         - containerPort: 6379
           name: redis
       - name: outline
-        image: outlinewiki/outline:0.59.0
-        imagePullPolicy: IfNotPresent
+        image: docker.cluster.fun/averagemarcus/outline:latest # outlinewiki/outline:0.59.0
+        imagePullPolicy: Always
         # command:
         #   - sh
         #   - -c
