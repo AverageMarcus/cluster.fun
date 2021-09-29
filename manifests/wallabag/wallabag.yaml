@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: wallabag-deps
+  namespace: wallabag
+spec:
+  type: ClusterIP
+  ports:
+  - port: 5432
+    targetPort: db
+    name: db
+  - port: 6379
+    targetPort: redis
+    name: redis
+  selector:
+    app: wallabag-deps
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: wallabag-deps
+  namespace: wallabag
+spec:
+  selector:
+    matchLabels:
+      app: wallabag-deps
+  serviceName: wallabag-deps
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: wallabag-deps
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:9-alpine
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5432
+          name: db
+        env:
+        - name: POSTGRES_USER
+          value: user
+        - name: POSTGRES_PASSWORD
+          value: pass
+        - name: POSTGRES_DB
+          value: wallabag
+        - name: PGDATA
+          value: /var/lib/postgresql/data/wallabag
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/postgresql/data
+      - name: redis
+        image: redis:6
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 6379
+          name: redis
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 5Gi
+---
