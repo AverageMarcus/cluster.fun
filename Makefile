@@ -41,9 +41,7 @@ run:
 
 .PHONY: ci # Perform CI specific tasks to perform on a pull request
 ci:
-	@PLAN=$(cd terraform && terraform plan ./terraform) && curl -X "POST" "https://git.cluster.fun/api/v1/repos/AverageMarcus/${REPO}/issues/${PR_ID}/comments?access_token=${ACCESS_TOKEN}" \
-		-H 'Content-Type: application/json; charset=utf-8' \
-		-d $'{"body": "<details><summary>Terraform Plan:</summary>'"$PLAN"'</details>"}'
+	@echo "⚠️ 'ci' unimplemented"
 
 .PHONY: release # Release the latest version of the application
 release:
@@ -63,7 +61,7 @@ release:
 
 .PHONY: help # Show this list of commands
 help:
-	@echo "${REPO_NAME}"
+	@echo "cluster.fun"
 	@echo "Usage: make [target]"
 	@echo ""
 	@echo "target	description" | expand -t20
