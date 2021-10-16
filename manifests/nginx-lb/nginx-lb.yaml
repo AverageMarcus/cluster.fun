@@ -40,7 +40,6 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   annotations:
-    deprecated.daemonset.template.generation: "2"
     meta.helm.sh/release-name: kapsule-ingress
     meta.helm.sh/release-namespace: kube-system
   labels:
