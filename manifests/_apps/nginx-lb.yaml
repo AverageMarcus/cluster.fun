@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: traefik-lb
+  name: nginx-lb
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
@@ -11,7 +11,7 @@ spec:
     namespace: kube-system
     name: cluster-fun (scaleway)
   source:
-    path: manifests/traefik-lb
+    path: manifests/nginx-lb
     repoURL: "https://git.cluster.fun/AverageMarcus/cluster.fun.git"
     targetRevision: HEAD
   syncPolicy:

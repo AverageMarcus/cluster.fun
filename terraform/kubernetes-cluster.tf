@@ -4,7 +4,7 @@ resource "scaleway_k8s_cluster_beta" "k8s-cluster" {
   version          = "1.22.2"
   cni              = "weave"
   enable_dashboard = false
-  ingress          = "traefik"
+  ingress          = "nginx"
 
   feature_gates = [
     "HPAScaleToZero",

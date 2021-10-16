@@ -70,7 +70,6 @@ metadata:
   namespace: inlets
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
-    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
 spec:
   tls:
   - hosts:
@@ -95,9 +94,7 @@ metadata:
   namespace: inlets
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
-    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
-    traefik.ingress.kubernetes.io/redirect-entry-point: https
-    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
   tls:
   - hosts:
@@ -138,9 +135,7 @@ metadata:
   namespace: inlets
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
-    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
-    traefik.ingress.kubernetes.io/redirect-entry-point: https
-    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
   tls:
   - hosts:
@@ -165,9 +160,7 @@ metadata:
   namespace: inlets
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
-    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
-    traefik.ingress.kubernetes.io/redirect-entry-point: https
-    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
   tls:
   - hosts:
@@ -193,9 +186,7 @@ metadata:
   namespace: inlets
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
-    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
-    traefik.ingress.kubernetes.io/redirect-entry-point: https
-    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
   tls:
   - hosts:
@@ -221,9 +212,7 @@ metadata:
   namespace: inlets
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
-    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
-    traefik.ingress.kubernetes.io/redirect-entry-point: https
-    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
   tls:
   - hosts:

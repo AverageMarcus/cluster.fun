@@ -7,10 +7,9 @@ metadata:
     app: grafana
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
-    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
-    traefik.ingress.kubernetes.io/redirect-entry-point: https
-    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
+  ingressClassName: nginx
   tls:
   - hosts:
     - grafana.cluster.fun
@@ -36,10 +35,9 @@ metadata:
     app: prometheus
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
-    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
-    traefik.ingress.kubernetes.io/redirect-entry-point: https
-    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
+  ingressClassName: nginx
   tls:
   - hosts:
     - prometheus.cluster.fun
@@ -75,12 +73,11 @@ metadata:
     app: prometheus-cloud
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
-    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
-    traefik.ingress.kubernetes.io/redirect-entry-point: https
-    traefik.ingress.kubernetes.io/redirect-permanent: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     ingress.kubernetes.io/auth-type: basic
     ingress.kubernetes.io/auth-secret: prometheus-credentials
 spec:
+  ingressClassName: nginx
   tls:
   - hosts:
     - prometheus-cloud.cluster.fun
