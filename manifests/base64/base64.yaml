@@ -42,7 +42,7 @@ spec:
           requests:
             memory: 5Mi
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: base64
@@ -62,6 +62,9 @@ spec:
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: base64
-          servicePort: 80
+          service:
+            name: base64
+            port:
+              number: 80

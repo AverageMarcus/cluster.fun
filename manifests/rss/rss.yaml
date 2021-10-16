@@ -124,7 +124,7 @@ spec:
         persistentVolumeClaim:
           claimName: rss-db
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: rss
@@ -144,8 +144,11 @@ spec:
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: rss-new
-          servicePort: 80
+          service:
+            name: rss-new
+            port:
+              number: 80
 
 ---

@@ -63,7 +63,7 @@ spec:
           secret:
             secretName: inlets
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: inlets
@@ -81,11 +81,14 @@ spec:
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: inlets
-          servicePort: 80
+          service:
+            name: inlets
+            port:
+              number: 80
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: home-assistant
@@ -105,9 +108,12 @@ spec:
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: inlets
-          servicePort: 80
+          service:
+            name: inlets
+            port:
+              number: 80
 ---
 apiVersion: v1
 kind: Service
@@ -125,7 +131,7 @@ spec:
   selector:
     app: inlets
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: vpn-check
@@ -145,11 +151,14 @@ spec:
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: inlets
-          servicePort: 80
+          service:
+            name: inlets
+            port:
+              number: 80
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: adguard
@@ -169,12 +178,15 @@ spec:
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: inlets
-          servicePort: 80
+          service:
+            name: inlets
+            port:
+              number: 80
 
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: podify
@@ -194,12 +206,15 @@ spec:
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: inlets
-          servicePort: 80
+          service:
+            name: inlets
+            port:
+              number: 80
 
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: photos
@@ -219,9 +234,12 @@ spec:
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: inlets
-          servicePort: 80
+          service:
+            name: inlets
+            port:
+              number: 80
 
 ---
 kind: Service

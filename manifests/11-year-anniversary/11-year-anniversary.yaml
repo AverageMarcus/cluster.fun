@@ -55,7 +55,7 @@ spec:
           requests:
             memory: 5Mi
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: anniversary
@@ -75,6 +75,9 @@ spec:
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: anniversary
-          servicePort: 80
+          service:
+            name: anniversary
+            port:
+              number: 80

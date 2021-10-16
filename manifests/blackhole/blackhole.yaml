@@ -41,7 +41,7 @@ spec:
             memory: 10Mi
 
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: black-hole
@@ -51,6 +51,9 @@ spec:
   - http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: black-hole
-          servicePort: 80
+          service:
+            name: black-hole
+            port:
+              number: 80

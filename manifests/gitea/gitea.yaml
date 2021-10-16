@@ -89,7 +89,7 @@ spec:
         requests:
           storage: 20Gi
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: git
@@ -109,6 +109,9 @@ spec:
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: git
-          servicePort: 80
+          service:
+            name: git
+            port:
+              number: 80

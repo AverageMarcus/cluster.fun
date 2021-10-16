@@ -40,7 +40,7 @@ spec:
           requests:
             memory: 20Mi
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: goplayground
@@ -60,7 +60,10 @@ spec:
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: goplayground
-          servicePort: 80
+          service:
+            name: goplayground
+            port:
+              number: 80
 

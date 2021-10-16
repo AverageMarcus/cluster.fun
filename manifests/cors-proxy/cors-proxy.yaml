@@ -35,7 +35,7 @@ spec:
         - containerPort: 8000
           name: web
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: cors-proxy
@@ -55,12 +55,15 @@ spec:
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: cors-proxy
-          servicePort: 80
+          service:
+            name: cors-proxy
+            port:
+              number: 80
 
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: cors-proxy-mn
@@ -80,6 +83,9 @@ spec:
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: cors-proxy
-          servicePort: 80
+          service:
+            name: cors-proxy
+            port:
+              number: 80

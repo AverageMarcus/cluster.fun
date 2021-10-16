@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: transmission
@@ -20,6 +20,9 @@ spec:
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: auth-proxy
-          servicePort: 80
+          service:
+            name: auth-proxy
+            port:
+              number: 80

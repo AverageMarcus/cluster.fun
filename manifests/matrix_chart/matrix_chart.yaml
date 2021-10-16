@@ -137,7 +137,7 @@ spec:
       enabled: false
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: matrix
@@ -157,17 +157,23 @@ spec:
     http:
       paths:
       - path: /.well-known/matrix
+        pathType: ImplementationSpecific
         backend:
-          serviceName: well-known
-          servicePort: 80
+          service:
+            name: well-known
+            port:
+              number: 80
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: chat-matrix-synapse
-          servicePort: 80
+          service:
+            name: chat-matrix-synapse
+            port:
+              number: 80
 
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: riot
@@ -187,9 +193,12 @@ spec:
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: chat-matrix-riot
-          servicePort: 80
+          service:
+            name: chat-matrix-riot
+            port:
+              number: 80
 
 ---
 
