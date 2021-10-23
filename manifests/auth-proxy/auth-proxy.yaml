@@ -1,10 +1,25 @@
 apiVersion: v1
+kind: Namespace
+metadata:
+  name: auth-proxy
+---
+apiVersion: v1
 kind: Secret
 metadata:
   name: auth-proxy
-  namespace: inlets
+  namespace: auth-proxy
   annotations:
     kube-1password: mr6spkkx7n3memkbute6ojaarm
+    kube-1password/vault: Kubernetes
+type: Opaque
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: tailscale-auth
+  namespace: auth-proxy
+  annotations:
+    kube-1password: 2cqycmsgv5r7vcyvjpblcl2l4y
     kube-1password/vault: Kubernetes
 type: Opaque
 ---
@@ -12,7 +27,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: auth-proxy
-  namespace: inlets
+  namespace: auth-proxy
   labels:
     app: auth-proxy
 spec:
@@ -25,13 +40,19 @@ spec:
       labels:
         app: auth-proxy
     spec:
+      dnsPolicy: None
+      dnsConfig:
+        nameservers:
+          - 100.100.100.100
       containers:
-      - args:
+      - name: oauth-proxy
+        image: quay.io/oauth2-proxy/oauth2-proxy:v7.2.0
+        args:
         - --cookie-secure=false
         - --provider=oidc
         - --provider-display-name=Auth0
-        - --upstream=http://inlets.inlets.svc.cluster.local
-        - --http-address=$(HOST_IP):8080
+        - --upstream=http://talos.averagemarcus.github.beta.tailscale.net
+        - --http-address=0.0.0.0:8080
         - --email-domain=*
         - --pass-basic-auth=false
         - --pass-access-token=false
@@ -54,8 +75,6 @@ spec:
             secretKeyRef:
               key: password
               name: auth-proxy
-        image: quay.io/oauth2-proxy/oauth2-proxy:v6.1.1
-        name: oauth-proxy
         ports:
         - containerPort: 8080
           protocol: TCP
@@ -64,12 +83,43 @@ spec:
             memory: 50Mi
           requests:
             memory: 50Mi
+      - name: tailscale
+        image: ghcr.io/tailscale/tailscale:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: AUTH_KEY
+          valueFrom:
+            secretKeyRef:
+              name: tailscale-auth
+              key: password
+        securityContext:
+          capabilities:
+            add:
+            - NET_ADMIN
+        command:
+        - sh
+        - -c
+        - |
+          export PATH=$PATH:/tailscale/bin
+          if [[ ! -d /dev/net ]]; then mkdir -p /dev/net; fi
+          if [[ ! -c /dev/net/tun ]]; then mknod /dev/net/tun c 10 200; fi
+          echo "Starting tailscaled"
+          tailscaled --socket=/tmp/tailscaled.sock &
+          PID=$!
+          echo "Running tailscale up"
+          tailscale --socket=/tmp/tailscaled.sock up \
+            --accept-dns=true \
+            --authkey=${AUTH_KEY} \
+            --hostname=auth-proxy
+          echo "Re-enabling incoming traffic from the cluster"
+          iptables -D ts-input -s 100.64.0.0/10 ! -i tailscale0 -j DROP
+          wait ${PID}
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: auth-proxy
-  namespace: inlets
+  namespace: auth-proxy
   labels:
     app: auth-proxy
 spec:

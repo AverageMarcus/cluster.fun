@@ -8,7 +8,7 @@ metadata:
 spec:
   project: cluster.fun
   destination:
-    namespace: inlets
+    namespace: auth-proxy
     name: cluster-fun (scaleway)
   source:
     path: manifests/auth-proxy

@@ -1,0 +1,135 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: auth-proxy
+  namespace: auth-proxy
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - downloads.cluster.fun
+    - argo.cluster.fun
+    - code.cluster.fun
+    - home.cluster.fun
+    - adguard.cluster.fun
+    - podify.cluster.fun
+    - jackett.cluster.fun
+    - printer.cluster.fun
+    - radarr.cluster.fun
+    - sonarr.cluster.fun
+    - transmission.cluster.fun
+    secretName: auth-proxy-ingress
+  rules:
+  - host: downloads.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: auth-proxy
+            port:
+              name: http
+  - host: argo.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: auth-proxy
+            port:
+              name: http
+  - host: code.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: auth-proxy
+            port:
+              name: http
+  - host: home.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: auth-proxy
+            port:
+              name: http
+  - host: adguard.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: auth-proxy
+            port:
+              name: http
+  - host: podify.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: auth-proxy
+            port:
+              name: http
+  - host: jackett.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: auth-proxy
+            port:
+              name: http
+  - host: printer.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: auth-proxy
+            port:
+              name: http
+  - host: radarr.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: auth-proxy
+            port:
+              name: http
+  - host: sonarr.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: auth-proxy
+            port:
+              name: http
+  - host: transmission.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: auth-proxy
+            port:
+              name: http
