@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: grafana
-  namespace: inlets
+  namespace: auth-proxy
   labels:
     app: grafana
   annotations:
@@ -30,7 +30,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: prometheus
-  namespace: inlets
+  namespace: auth-proxy
   labels:
     app: prometheus
   annotations:
