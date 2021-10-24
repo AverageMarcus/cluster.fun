@@ -112,7 +112,6 @@ spec:
             --authkey=${AUTH_KEY} \
             --hostname=auth-proxy
           echo "Re-enabling incoming traffic from the cluster"
-          iptables -D ts-input -s 100.64.0.0/10 ! -i tailscale0 -j DROP
           wait ${PID}
 ---
 apiVersion: v1
