@@ -6,7 +6,7 @@ metadata:
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
-  project: default
+  project: cluster.fun
   destination:
     namespace: kube-system
     name: cluster-fun (scaleway)
