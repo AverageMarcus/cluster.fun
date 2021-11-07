@@ -13,7 +13,6 @@ spec:
     - downloads.cluster.fun
     - argo.cluster.fun
     - code.cluster.fun
-    - home.cluster.fun
     - adguard.cluster.fun
     - podify.cluster.fun
     - jackett.cluster.fun
@@ -21,6 +20,7 @@ spec:
     - radarr.cluster.fun
     - sonarr.cluster.fun
     - transmission.cluster.fun
+    - tekton.cluster.fun
     secretName: auth-proxy-ingress
   rules:
   - host: downloads.cluster.fun
@@ -44,16 +44,6 @@ spec:
             port:
               name: http
   - host: code.cluster.fun
-    http:
-      paths:
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: auth-proxy
-            port:
-              name: http
-  - host: home.cluster.fun
     http:
       paths:
       - path: /
@@ -124,6 +114,16 @@ spec:
             port:
               name: http
   - host: transmission.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: auth-proxy
+            port:
+              name: http
+  - host: tekton.cluster.fun
     http:
       paths:
       - path: /

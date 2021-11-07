@@ -8,7 +8,9 @@ metadata:
 data:
   mapping.json: |
     {
-      "tekton-el.auth-proxy.svc": "tekton-el.cluster.local"
+      "tekton-el.auth-proxy.svc": "tekton-el.cluster.local",
+      "home.auth-proxy.svc": "home.cluster.local",
+      "home.cluster.fun": "home.cluster.local"
     }
 
 ---
@@ -99,3 +101,47 @@ spec:
     app: proxy
   type: ClusterIP
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: home
+  namespace: auth-proxy
+  labels:
+    app: proxy
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: proxy
+  type: ClusterIP
+---
+
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: non-auth-proxy
+  namespace: auth-proxy
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - home.cluster.fun
+    secretName: non-auth-proxy-ingress
+  rules:
+  - host: home.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: home
+            port:
+              name: http
