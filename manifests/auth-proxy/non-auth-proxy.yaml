@@ -21,6 +21,8 @@ metadata:
   namespace: auth-proxy
   labels:
     app: proxy
+  annotations:
+    configmap.reloader.stakater.com/reload: "host-mappings"
 spec:
   replicas: 1
   selector:
