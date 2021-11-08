@@ -12,26 +12,25 @@ data:
       "home.auth-proxy.svc": "home.cluster.local",
       "home.cluster.fun": "home.cluster.local"
     }
-
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: proxy
+  name: internal-proxy
   namespace: auth-proxy
   labels:
-    app: proxy
+    app: internal-proxy
   annotations:
     configmap.reloader.stakater.com/reload: "host-mappings"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: proxy
+      app: internal-proxy
   template:
     metadata:
       labels:
-        app: proxy
+        app: internal-proxy
     spec:
       dnsPolicy: None
       dnsConfig:
@@ -92,7 +91,7 @@ metadata:
   name: tekton-el
   namespace: auth-proxy
   labels:
-    app: proxy
+    app: internal-proxy
 spec:
   ports:
   - name: http
@@ -100,16 +99,110 @@ spec:
     protocol: TCP
     targetPort: 8080
   selector:
-    app: proxy
+    app: internal-proxy
   type: ClusterIP
+---
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: non-auth-proxy
+  namespace: auth-proxy
+  labels:
+    app: non-auth-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: non-auth-proxy
+  template:
+    metadata:
+      labels:
+        app: non-auth-proxy
+    spec:
+      dnsPolicy: None
+      dnsConfig:
+        nameservers:
+          - 100.100.100.100
+      containers:
+      - name: oauth-proxy
+        image: quay.io/oauth2-proxy/oauth2-proxy:v7.2.0
+        args:
+        - --cookie-secure=false
+        - --provider=oidc
+        - --provider-display-name=Auth0
+        - --upstream=http://talos.averagemarcus.github.beta.tailscale.net
+        - --http-address=0.0.0.0:8080
+        - --email-domain=*
+        - --pass-basic-auth=false
+        - --pass-access-token=false
+        - --oidc-issuer-url=https://marcusnoble.eu.auth0.com/
+        - --cookie-secret=KDGD6rrK6cBmryyZ4wcJ9xAUNW9AQNFT
+        - --cookie-expire=336h0m0s
+        - --trusted-ip=0.0.0.0/0
+        env:
+        - name: HOST_IP
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.podIP
+        - name: OAUTH2_PROXY_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: auth-proxy
+        - name: OAUTH2_PROXY_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: auth-proxy
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources:
+          limits:
+            memory: 50Mi
+          requests:
+            memory: 50Mi
+      - name: tailscale
+        image: ghcr.io/tailscale/tailscale:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: AUTH_KEY
+          valueFrom:
+            secretKeyRef:
+              name: tailscale-auth
+              key: password
+        securityContext:
+          capabilities:
+            add:
+            - NET_ADMIN
+        command:
+        - sh
+        - -c
+        - |
+          export PATH=$PATH:/tailscale/bin
+          if [[ ! -d /dev/net ]]; then mkdir -p /dev/net; fi
+          if [[ ! -c /dev/net/tun ]]; then mknod /dev/net/tun c 10 200; fi
+          echo "Starting tailscaled"
+          tailscaled --socket=/tmp/tailscaled.sock &
+          PID=$!
+          echo "Running tailscale up"
+          tailscale --socket=/tmp/tailscaled.sock up \
+            --accept-dns=true \
+            --authkey=${AUTH_KEY} \
+            --hostname=auth-proxy
+          echo "Re-enabling incoming traffic from the cluster"
+          wait ${PID}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: home
+  name: non-auth-proxy
   namespace: auth-proxy
   labels:
-    app: proxy
+    app: non-auth-proxy
 spec:
   ports:
   - name: http
@@ -117,10 +210,9 @@ spec:
     protocol: TCP
     targetPort: 8080
   selector:
-    app: proxy
+    app: non-auth-proxy
   type: ClusterIP
 ---
-
 
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -144,6 +236,6 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: home
+            name: non-auth-proxy
             port:
               name: http
