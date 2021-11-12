@@ -65,13 +65,17 @@ spec:
         - containerPort: 6379
           name: redis
       - name: outline
-        image: outlinewiki/outline:0.59.0
+        image: outlinewiki/outline:0.60.1
         imagePullPolicy: IfNotPresent
         # command:
         #   - sh
         #   - -c
         #   - |
-        #     sleep 10 && yarn sequelize db:migrate --env=production-ssl-disabled && yarn build && yarn start
+        #     sleep 10
+        #     yarn db:migrate --env=production-ssl-disabled
+        #     echo "Done"
+        #     sleep 300
+        #     exit 1
         env:
         - name: PGSSLMODE
           value: disable
