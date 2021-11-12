@@ -64,7 +64,7 @@ spec:
         - --pass-basic-auth=false
         - --pass-access-token=false
         - --oidc-issuer-url=https://marcusnoble.eu.auth0.com/
-        - --cookie-secret=KDGD6rrK6cBmryyZ4wcJ9xAUNW9AQN
+        - --cookie-secret=KDGD6rrK6cBmryyZ4wcJ9xAUNW9AQNFT
         env:
         - name: HOST_IP
           valueFrom:
