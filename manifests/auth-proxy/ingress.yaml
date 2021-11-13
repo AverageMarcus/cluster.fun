@@ -18,6 +18,7 @@ spec:
     - jackett.cluster.fun
     - printer.cluster.fun
     - radarr.cluster.fun
+    - readarr.cluster.fun
     - sonarr.cluster.fun
     - transmission.cluster.fun
     - tekton.cluster.fun
@@ -94,6 +95,16 @@ spec:
             port:
               name: http
   - host: radarr.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: auth-proxy
+            port:
+              name: http
+  - host: readarr.cluster.fun
     http:
       paths:
       - path: /
