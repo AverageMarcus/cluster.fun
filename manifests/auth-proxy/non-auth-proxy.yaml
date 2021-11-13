@@ -227,9 +227,20 @@ spec:
   tls:
   - hosts:
     - home.cluster.fun
+    - podify.cluster.fun
     secretName: non-auth-proxy-ingress
   rules:
   - host: home.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: non-auth-proxy
+            port:
+              name: http
+  - host: podify.cluster.fun
     http:
       paths:
       - path: /

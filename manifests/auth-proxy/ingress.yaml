@@ -13,8 +13,6 @@ spec:
     - downloads.cluster.fun
     - argo.cluster.fun
     - code.cluster.fun
-    - adguard.cluster.fun
-    - podify.cluster.fun
     - jackett.cluster.fun
     - printer.cluster.fun
     - radarr.cluster.fun
@@ -45,26 +43,6 @@ spec:
             port:
               name: http
   - host: code.cluster.fun
-    http:
-      paths:
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: auth-proxy
-            port:
-              name: http
-  - host: adguard.cluster.fun
-    http:
-      paths:
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: auth-proxy
-            port:
-              name: http
-  - host: podify.cluster.fun
     http:
       paths:
       - path: /
