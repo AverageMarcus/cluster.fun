@@ -10,7 +10,8 @@ data:
     {
       "tekton-el.auth-proxy.svc": "tekton-el.cluster.local",
       "home.auth-proxy.svc": "home.cluster.local",
-      "home.cluster.fun": "home.cluster.local"
+      "home.cluster.fun": "home.cluster.local",
+      "podify.cluster.fun": "podify.cluster.local"
     }
 ---
 apiVersion: apps/v1
