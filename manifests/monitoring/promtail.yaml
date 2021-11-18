@@ -578,7 +578,7 @@ spec:
           imagePullPolicy: IfNotPresent
           args:
             - "-config.file=/etc/promtail/promtail.yaml"
-            - "-client.url=http://loki.inlets.svc:80/loki/api/v1/push"
+            - "-client.url=http://loki.auth-proxy.svc:80/loki/api/v1/push"
             - "-client.external-labels=kubernetes_cluster=scaleway"
           volumeMounts:
             - name: config
