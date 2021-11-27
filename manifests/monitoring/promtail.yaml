@@ -80,10 +80,16 @@ data:
             selector: '{name=~".*"} |~ ".*/healthz.*"'
             action: drop
         - match:
+            selector: '{name=~".*"} |~ ".*/api/health.*"'
+            action: drop
+        - match:
             selector: '{name=~".*"} |~ ".*kube-probe/.*"'
             action: drop
         - match:
             selector: '{app="internal-proxy"}'
+            action: drop
+        - match:
+            selector: '{app="promtail"}'
             action: drop
       kubernetes_sd_configs:
         - role: pod
