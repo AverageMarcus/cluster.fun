@@ -12,7 +12,8 @@ data:
       "home.auth-proxy.svc": "home.cluster.local",
       "home.cluster.fun": "home.cluster.local",
       "prometheus.auth-proxy.svc": "prometheus.cluster.local",
-      "loki.auth-proxy.svc": "loki.cluster.local"
+      "loki.auth-proxy.svc": "loki.cluster.local",
+      "loki.auth-proxy.svc:80": "loki.cluster.local"
     }
 ---
 apiVersion: apps/v1
