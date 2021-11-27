@@ -62,6 +62,7 @@ metadata:
   annotations:
     kube-1password: m7c2n5gqybiyxj6ylydju2nljm
     kube-1password/vault: Kubernetes
+    kube-1password/password-key: auth
 type: Opaque
 ---
 apiVersion: networking.k8s.io/v1
@@ -74,8 +75,8 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    ingress.kubernetes.io/auth-type: basic
-    ingress.kubernetes.io/auth-secret: prometheus-credentials
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: prometheus-credentials
 spec:
   ingressClassName: nginx
   tls:

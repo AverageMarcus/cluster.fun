@@ -11,7 +11,6 @@ data:
       "tekton-el.auth-proxy.svc": "tekton-el.cluster.local",
       "home.auth-proxy.svc": "home.cluster.local",
       "home.cluster.fun": "home.cluster.local",
-      "podify.cluster.fun": "podify.cluster.local",
       "prometheus.auth-proxy.svc": "prometheus.cluster.local",
       "loki.auth-proxy.svc": "loki.cluster.local"
     }
@@ -92,6 +91,40 @@ apiVersion: v1
 kind: Service
 metadata:
   name: tekton-el
+  namespace: auth-proxy
+  labels:
+    app: internal-proxy
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: internal-proxy
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: loki
+  namespace: auth-proxy
+  labels:
+    app: internal-proxy
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: internal-proxy
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
   namespace: auth-proxy
   labels:
     app: internal-proxy
@@ -230,20 +263,9 @@ spec:
   tls:
   - hosts:
     - home.cluster.fun
-    - podify.cluster.fun
     secretName: non-auth-proxy-ingress
   rules:
   - host: home.cluster.fun
-    http:
-      paths:
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: non-auth-proxy
-            port:
-              name: http
-  - host: podify.cluster.fun
     http:
       paths:
       - path: /
