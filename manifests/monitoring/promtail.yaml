@@ -71,7 +71,7 @@ data:
       pipeline_stages:
         - docker: {}
         - match:
-            selector: '{name="weave-net"}'
+            selector: '{app="weave-net"}'
             action: drop
         - match:
             selector: '{filename=~".*konnectivity.*"}'
