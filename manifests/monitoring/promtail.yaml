@@ -60,6 +60,10 @@ data:
       filename: /run/promtail/positions.yaml
     server:
       http_listen_port: 3101
+    clients:
+    - url: http://loki.auth-proxy.svc:80/loki/api/v1/push
+      external_labels:
+        kubernetes_cluster: scaleway
     target_config:
       sync_period: 10s
     scrape_configs:
@@ -578,8 +582,6 @@ spec:
           imagePullPolicy: IfNotPresent
           args:
             - "-config.file=/etc/promtail/promtail.yaml"
-            - "-client.url=http://loki.auth-proxy.svc:80/loki/api/v1/push"
-            - "-client.external-labels=kubernetes_cluster=scaleway"
           volumeMounts:
             - name: config
               mountPath: /etc/promtail
