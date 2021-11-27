@@ -83,28 +83,25 @@ data:
             selector: '{name=~".*"} |~ ".*kube-probe/.*"'
             action: drop
         - match:
-            selector: '{app="inlets"}'
+            selector: '{name=~".*"} |~ ".*internal-proxy.*"'
             action: drop
-        - match:
-            selector: '{namespace="tekton-pipelines"}'
-            action: drop
-        - match:
-            selector: '{k8s_app="traefik-ingress-lb"}'
-            stages:
-            - json:
-                expressions:
-                  request_host: RequestHost
-                  request_path: RequestPath
-                  error: error
-            - drop:
-                source: "request_path"
-                value:  "/healthz"
-            - template:
-                source: has_error
-                template: '{{ if .error }}true{{ else }}false{{ end }}'
-            - labels:
-                request_host:
-                has_error:
+        # - match:
+        #     selector: '{k8s_app="traefik-ingress-lb"}'
+        #     stages:
+        #     - json:
+        #         expressions:
+        #           request_host: RequestHost
+        #           request_path: RequestPath
+        #           error: error
+        #     - drop:
+        #         source: "request_path"
+        #         value:  "/healthz"
+        #     - template:
+        #         source: has_error
+        #         template: '{{ if .error }}true{{ else }}false{{ end }}'
+        #     - labels:
+        #         request_host:
+        #         has_error:
       kubernetes_sd_configs:
       - role: pod
       relabel_configs:
@@ -162,28 +159,25 @@ data:
             selector: '{name=~".*"} |~ ".*kube-probe/.*"'
             action: drop
         - match:
-            selector: '{app="inlets"}'
+            selector: '{name=~".*"} |~ ".*internal-proxy.*"'
             action: drop
-        - match:
-            selector: '{namespace="tekton-pipelines"}'
-            action: drop
-        - match:
-            selector: '{k8s_app="traefik-ingress-lb"}'
-            stages:
-            - json:
-                expressions:
-                  request_host: RequestHost
-                  request_path: RequestPath
-                  error: error
-            - drop:
-                source: "request_path"
-                value:  "/healthz"
-            - template:
-                source: has_error
-                template: '{{ if .error }}true{{ else }}false{{ end }}'
-            - labels:
-                request_host:
-                has_error:
+        # - match:
+        #     selector: '{k8s_app="traefik-ingress-lb"}'
+        #     stages:
+        #     - json:
+        #         expressions:
+        #           request_host: RequestHost
+        #           request_path: RequestPath
+        #           error: error
+        #     - drop:
+        #         source: "request_path"
+        #         value:  "/healthz"
+        #     - template:
+        #         source: has_error
+        #         template: '{{ if .error }}true{{ else }}false{{ end }}'
+        #     - labels:
+        #         request_host:
+        #         has_error:
       kubernetes_sd_configs:
       - role: pod
       relabel_configs:
@@ -245,28 +239,25 @@ data:
             selector: '{name=~".*"} |~ ".*kube-probe/.*"'
             action: drop
         - match:
-            selector: '{app="inlets"}'
+            selector: '{name=~".*"} |~ ".*internal-proxy.*"'
             action: drop
-        - match:
-            selector: '{namespace="tekton-pipelines"}'
-            action: drop
-        - match:
-            selector: '{k8s_app="traefik-ingress-lb"}'
-            stages:
-            - json:
-                expressions:
-                  request_host: RequestHost
-                  request_path: RequestPath
-                  error: error
-            - drop:
-                source: "request_path"
-                value:  "/healthz"
-            - template:
-                source: has_error
-                template: '{{ if .error }}true{{ else }}false{{ end }}'
-            - labels:
-                request_host:
-                has_error:
+        # - match:
+        #     selector: '{k8s_app="traefik-ingress-lb"}'
+        #     stages:
+        #     - json:
+        #         expressions:
+        #           request_host: RequestHost
+        #           request_path: RequestPath
+        #           error: error
+        #     - drop:
+        #         source: "request_path"
+        #         value:  "/healthz"
+        #     - template:
+        #         source: has_error
+        #         template: '{{ if .error }}true{{ else }}false{{ end }}'
+        #     - labels:
+        #         request_host:
+        #         has_error:
       kubernetes_sd_configs:
       - role: pod
       relabel_configs:
@@ -334,28 +325,25 @@ data:
             selector: '{name=~".*"} |~ ".*kube-probe/.*"'
             action: drop
         - match:
-            selector: '{app="inlets"}'
+            selector: '{name=~".*"} |~ ".*internal-proxy.*"'
             action: drop
-        - match:
-            selector: '{namespace="tekton-pipelines"}'
-            action: drop
-        - match:
-            selector: '{k8s_app="traefik-ingress-lb"}'
-            stages:
-            - json:
-                expressions:
-                  request_host: RequestHost
-                  request_path: RequestPath
-                  error: error
-            - drop:
-                source: "request_path"
-                value:  "/healthz"
-            - template:
-                source: has_error
-                template: '{{ if .error }}true{{ else }}false{{ end }}'
-            - labels:
-                request_host:
-                has_error:
+        # - match:
+        #     selector: '{k8s_app="traefik-ingress-lb"}'
+        #     stages:
+        #     - json:
+        #         expressions:
+        #           request_host: RequestHost
+        #           request_path: RequestPath
+        #           error: error
+        #     - drop:
+        #         source: "request_path"
+        #         value:  "/healthz"
+        #     - template:
+        #         source: has_error
+        #         template: '{{ if .error }}true{{ else }}false{{ end }}'
+        #     - labels:
+        #         request_host:
+        #         has_error:
       kubernetes_sd_configs:
       - role: pod
       relabel_configs:
@@ -425,28 +413,25 @@ data:
             selector: '{name=~".*"} |~ ".*kube-probe/.*"'
             action: drop
         - match:
-            selector: '{app="inlets"}'
+            selector: '{name=~".*"} |~ ".*internal-proxy.*"'
             action: drop
-        - match:
-            selector: '{namespace="tekton-pipelines"}'
-            action: drop
-        - match:
-            selector: '{k8s_app="traefik-ingress-lb"}'
-            stages:
-            - json:
-                expressions:
-                  request_host: RequestHost
-                  request_path: RequestPath
-                  error: error
-            - drop:
-                source: "request_path"
-                value:  "/healthz"
-            - template:
-                source: has_error
-                template: '{{ if .error }}true{{ else }}false{{ end }}'
-            - labels:
-                request_host:
-                has_error:
+        # - match:
+        #     selector: '{k8s_app="traefik-ingress-lb"}'
+        #     stages:
+        #     - json:
+        #         expressions:
+        #           request_host: RequestHost
+        #           request_path: RequestPath
+        #           error: error
+        #     - drop:
+        #         source: "request_path"
+        #         value:  "/healthz"
+        #     - template:
+        #         source: has_error
+        #         template: '{{ if .error }}true{{ else }}false{{ end }}'
+        #     - labels:
+        #         request_host:
+        #         has_error:
       kubernetes_sd_configs:
       - role: pod
       relabel_configs:
@@ -554,81 +539,81 @@ subjects:
   name: promtail
 ---
 
-# apiVersion: apps/v1
-# kind: DaemonSet
-# metadata:
-#   name: promtail
-#   namespace: monitoring
-#   labels:
-#     app.kubernetes.io/name: promtail
-#   annotations:
-#     configmap.reloader.stakater.com/reload: "promtail"
-# spec:
-#   selector:
-#     matchLabels:
-#       app.kubernetes.io/name: promtail
-#   template:
-#     metadata:
-#       labels:
-#         app.kubernetes.io/name: promtail
-#       annotations:
-#         prometheus.io/port: http-metrics
-#         prometheus.io/scrape: "true"
-#     spec:
-#       serviceAccountName: promtail
-#       containers:
-#         - name: promtail
-#           image: "grafana/promtail:2.2.1"
-#           imagePullPolicy: IfNotPresent
-#           args:
-#             - "-config.file=/etc/promtail/promtail.yaml"
-#           volumeMounts:
-#             - name: config
-#               mountPath: /etc/promtail
-#             - name: run
-#               mountPath: /run/promtail
-#             - mountPath: /var/lib/docker/containers
-#               name: docker
-#               readOnly: true
-#             - mountPath: /var/log/pods
-#               name: pods
-#               readOnly: true
-#           env:
-#             - name: HOSTNAME
-#               valueFrom:
-#                 fieldRef:
-#                   fieldPath: spec.nodeName
-#           ports:
-#             - containerPort: 3101
-#               name: http-metrics
-#           securityContext:
-#             readOnlyRootFilesystem: true
-#             runAsGroup: 0
-#             runAsUser: 0
-#           readinessProbe:
-#             failureThreshold: 5
-#             httpGet:
-#               path: /ready
-#               port: http-metrics
-#             initialDelaySeconds: 10
-#             periodSeconds: 10
-#             successThreshold: 1
-#             timeoutSeconds: 1
-#       tolerations:
-#         - effect: NoSchedule
-#           key: node-role.kubernetes.io/master
-#           operator: Exists
-#       volumes:
-#         - name: config
-#           configMap:
-#             name: promtail
-#         - name: run
-#           hostPath:
-#             path: /run/promtail
-#         - hostPath:
-#             path: /var/lib/docker/containers
-#           name: docker
-#         - hostPath:
-#             path: /var/log/pods
-#           name: pods
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: promtail
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: promtail
+  annotations:
+    configmap.reloader.stakater.com/reload: "promtail"
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: promtail
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: promtail
+      annotations:
+        prometheus.io/port: http-metrics
+        prometheus.io/scrape: "true"
+    spec:
+      serviceAccountName: promtail
+      containers:
+        - name: promtail
+          image: "grafana/promtail:2.2.1"
+          imagePullPolicy: IfNotPresent
+          args:
+            - "-config.file=/etc/promtail/promtail.yaml"
+          volumeMounts:
+            - name: config
+              mountPath: /etc/promtail
+            - name: run
+              mountPath: /run/promtail
+            - mountPath: /var/lib/docker/containers
+              name: docker
+              readOnly: true
+            - mountPath: /var/log/pods
+              name: pods
+              readOnly: true
+          env:
+            - name: HOSTNAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          ports:
+            - containerPort: 3101
+              name: http-metrics
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsGroup: 0
+            runAsUser: 0
+          readinessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /ready
+              port: http-metrics
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+          operator: Exists
+      volumes:
+        - name: config
+          configMap:
+            name: promtail
+        - name: run
+          hostPath:
+            path: /run/promtail
+        - hostPath:
+            path: /var/lib/docker/containers
+          name: docker
+        - hostPath:
+            path: /var/log/pods
+          name: pods
 ---
