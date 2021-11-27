@@ -83,7 +83,7 @@ data:
             selector: '{name=~".*"} |~ ".*kube-probe/.*"'
             action: drop
         - match:
-            selector: '{name=~".*"} |~ ".*internal-proxy.*"'
+            selector: '{app="internal-proxy"}'
             action: drop
         # - match:
         #     selector: '{k8s_app="traefik-ingress-lb"}'
@@ -159,7 +159,7 @@ data:
             selector: '{name=~".*"} |~ ".*kube-probe/.*"'
             action: drop
         - match:
-            selector: '{name=~".*"} |~ ".*internal-proxy.*"'
+            selector: '{app="internal-proxy"}'
             action: drop
         # - match:
         #     selector: '{k8s_app="traefik-ingress-lb"}'
@@ -239,7 +239,7 @@ data:
             selector: '{name=~".*"} |~ ".*kube-probe/.*"'
             action: drop
         - match:
-            selector: '{name=~".*"} |~ ".*internal-proxy.*"'
+            selector: '{app="internal-proxy"}'
             action: drop
         # - match:
         #     selector: '{k8s_app="traefik-ingress-lb"}'
@@ -325,7 +325,7 @@ data:
             selector: '{name=~".*"} |~ ".*kube-probe/.*"'
             action: drop
         - match:
-            selector: '{name=~".*"} |~ ".*internal-proxy.*"'
+            selector: '{app="internal-proxy"}'
             action: drop
         # - match:
         #     selector: '{k8s_app="traefik-ingress-lb"}'
@@ -413,7 +413,7 @@ data:
             selector: '{name=~".*"} |~ ".*kube-probe/.*"'
             action: drop
         - match:
-            selector: '{name=~".*"} |~ ".*internal-proxy.*"'
+            selector: '{app="internal-proxy"}'
             action: drop
         # - match:
         #     selector: '{k8s_app="traefik-ingress-lb"}'
