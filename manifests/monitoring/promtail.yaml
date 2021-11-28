@@ -91,6 +91,22 @@ data:
         - match:
             selector: '{app="promtail"}'
             action: drop
+        - match:
+            selector: '{app="ingress-nginx"}'
+            stages:
+            - json:
+                expressions:
+                  request_host: host
+                  request_path: path
+                  request_method: method
+                  response_status: status
+            - drop:
+                source: "request_path"
+                value:  "/healthz"
+            - labels:
+                request_host:
+                request_method:
+                response_status:
       kubernetes_sd_configs:
         - role: pod
       relabel_configs:
@@ -152,6 +168,8 @@ data:
             - __meta_kubernetes_pod_annotation_kubernetes_io_config_hash
             - __meta_kubernetes_pod_container_name
           target_label: __path__
+        - action: labelmap
+          regex: __meta_kubernetes_pod_label_(.+)
 
     # - job_name: kubernetes-pods-name
     #   pipeline_stages:
