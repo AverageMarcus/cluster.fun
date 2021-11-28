@@ -1,3 +1,15 @@
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: maxmind-license-key
+  namespace: kube-system
+  annotations:
+    kube-1password: lijyujx6ixvpkzxjx4f6xuwkue
+    kube-1password/vault: Kubernetes
+type: Opaque
+
+---
 kind: Service
 apiVersion: v1
 metadata:
@@ -33,10 +45,13 @@ metadata:
   name: ingress-nginx-configuration
   namespace: kube-system
 data:
-  log-format-upstream: '{"time": "$time_iso8601", "remote_addr": "$proxy_protocol_addr", "x_forward_for": "$proxy_add_x_forwarded_for", "request_id": "$req_id", "remote_user": "$remote_user", "bytes_sent": $bytes_sent, "request_time": $request_time, "status": $status, "host": "$host", "request_proto": "$server_protocol", "path": "$uri", "request_query": "$args", "request_length": $request_length, "duration": $request_time,"method": "$request_method", "http_referrer": "$http_referer", "http_user_agent": "$http_user_agent", "redirect_location": "$redirect_location" }'
+  log-format-upstream: '{"time": "$time_iso8601", "request_id": "$req_id", "remote_user": "$remote_user", "bytes_sent": $bytes_sent, "request_time": $request_time, "status": $status, "host": "$host", "request_proto": "$server_protocol", "path": "$uri", "request_query": "$args", "request_length": $request_length, "duration": $request_time,"method": "$request_method", "http_referrer": "$http_referer", "http_user_agent": "$http_user_agent", "redirect_location": "$redirect_location", "country_code": "$geoip2_city_country_code", "country_name": "$geoip2_city_country_name" }'
+  use-geoip2: "true"
   plugins: "redirect_location"
   location-snippet: |
     set $redirect_location '';
+  enable-real-ip: "true"
+  use-forwarded-headers: "true"
 
 ---
 apiVersion: v1
@@ -70,6 +85,7 @@ metadata:
   annotations:
     meta.helm.sh/release-name: kapsule-ingress
     meta.helm.sh/release-namespace: kube-system
+    configmap.reloader.stakater.com/reload: "ingress-nginx-configuration"
   labels:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ingress-nginx
@@ -104,6 +120,7 @@ spec:
         - --annotations-prefix=nginx.ingress.kubernetes.io
         - --watch-ingress-without-class
         - --enable-metrics
+        - --maxmind-license-key=$(MAXMIND_KEY)
         env:
         - name: POD_NAME
           valueFrom:
@@ -115,6 +132,11 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.namespace
+        - name: MAXMIND_KEY
+          valueFrom:
+            secretKeyRef:
+              name: maxmind-license-key
+              key: password
         image: k8s.gcr.io/ingress-nginx/controller:v1.0.0-beta.1
         imagePullPolicy: IfNotPresent
         name: nginx-ingress-controller
