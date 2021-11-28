@@ -89,6 +89,9 @@ spec:
       labels:
         app.kubernetes.io/name: ingress-nginx
         app.kubernetes.io/part-of: ingress-nginx
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "http-metrics"
     spec:
       containers:
       - args:
@@ -100,6 +103,7 @@ spec:
         - --udp-services-configmap=$(POD_NAMESPACE)/ingress-nginx-udp-services
         - --annotations-prefix=nginx.ingress.kubernetes.io
         - --watch-ingress-without-class
+        - --enable-metrics
         env:
         - name: POD_NAME
           valueFrom:
@@ -113,16 +117,6 @@ spec:
               fieldPath: metadata.namespace
         image: k8s.gcr.io/ingress-nginx/controller:v1.0.0-beta.1
         imagePullPolicy: IfNotPresent
-        livenessProbe:
-          failureThreshold: 3
-          httpGet:
-            path: /healthz
-            port: 10254
-            scheme: HTTP
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          successThreshold: 1
-          timeoutSeconds: 10
         name: nginx-ingress-controller
         ports:
         - containerPort: 80
@@ -133,6 +127,19 @@ spec:
           hostPort: 443
           name: https
           protocol: TCP
+        - containerPort: 10254
+          name: http-metrics
+          protocol: TCP
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthz
+            port: 10254
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 10
         readinessProbe:
           failureThreshold: 3
           httpGet:
