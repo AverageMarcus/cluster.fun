@@ -33,7 +33,35 @@ metadata:
   name: ingress-nginx-configuration
   namespace: kube-system
 data:
-  log-format-upstream: '{"time": "$time_iso8601", "remote_addr": "$proxy_protocol_addr", "x_forward_for": "$proxy_add_x_forwarded_for", "request_id": "$req_id", "remote_user": "$remote_user", "bytes_sent": $bytes_sent, "request_time": $request_time, "status": $status, "host": "$host", "request_proto": "$server_protocol", "path": "$uri", "request_query": "$args", "request_length": $request_length, "duration": $request_time,"method": "$request_method", "http_referrer": "$http_referer", "http_user_agent": "$http_user_agent" }'
+  log-format-upstream: '{"time": "$time_iso8601", "remote_addr": "$proxy_protocol_addr", "x_forward_for": "$proxy_add_x_forwarded_for", "request_id": "$req_id", "remote_user": "$remote_user", "bytes_sent": $bytes_sent, "request_time": $request_time, "status": $status, "host": "$host", "request_proto": "$server_protocol", "path": "$uri", "request_query": "$args", "request_length": $request_length, "duration": $request_time,"method": "$request_method", "http_referrer": "$http_referer", "http_user_agent": "$http_user_agent", "redirect_location": "$redirect_location" }'
+  plugins: "redirect_location"
+  location-snippet: |
+    set $redirect_location '';
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  annotations:
+    meta.helm.sh/release-name: kapsule-ingress
+    meta.helm.sh/release-namespace: kube-system
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+    k8s.scw.cloud/ingress: nginx
+    k8s.scw.cloud/object: ConfigMap
+    k8s.scw.cloud/system: ingress
+  name: ingress-nginx-plugin-redirect-location
+  namespace: kube-system
+data:
+  main.lua: |
+    local ngx = ngx
+    local _M = {}
+    function _M.header_filter()
+      ngx.var.redirect_location = ngx.resp.get_headers()["Location"]
+    end
+    return _M
 
 ---
 apiVersion: apps/v1
@@ -122,3 +150,10 @@ spec:
             drop:
             - ALL
           runAsUser: 101
+        volumeMounts:
+        - name: plugins
+          mountPath: /etc/nginx/lua/plugins/redirect_location
+      volumes:
+      - name: plugins
+        configMap:
+          name: ingress-nginx-plugin-redirect-location
