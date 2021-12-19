@@ -57,6 +57,9 @@ spec:
   failedJobsHistoryLimit: 1
   successfulJobsHistoryLimit: 1
   jobTemplate:
+    metadata:
+      labels:
+        cronjob: git-sync
     spec:
       backoffLimit: 1
       template:
