@@ -17,6 +17,24 @@ spec:
   type: LoadBalancer
 
 ---
+kind: Service
+apiVersion: v1
+metadata:
+  name: nginx-ingress-service-metrics
+  namespace: kube-system
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "10254"
+spec:
+  selector:
+    app.kubernetes.io/name: ingress-nginx
+  ports:
+    - protocol: TCP
+      port: 10254
+      targetPort: 10254
+      name: metrics
+
+---
 
 apiVersion: v1
 kind: ConfigMap
@@ -91,9 +109,6 @@ spec:
       labels:
         app.kubernetes.io/name: ingress-nginx
         app.kubernetes.io/part-of: ingress-nginx
-      annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "http-metrics"
     spec:
       containers:
       - args:
