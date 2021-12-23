@@ -85,7 +85,7 @@ spec:
             memory: 50Mi
       - name: tailscale
         image: ghcr.io/tailscale/tailscale:latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         env:
         - name: AUTH_KEY
           valueFrom:
