@@ -39,7 +39,7 @@ spec:
     name: cluster-fun (scaleway)
   source:
     repoURL: 'https://dacruz21.github.io/helm-charts'
-    targetRevision: 1.1.2
+    targetRevision: 2.7.0
     chart: matrix
     helm:
       version: v3
@@ -101,7 +101,7 @@ spec:
         synapse:
           image:
             repository: "matrixdotorg/synapse"
-            tag: v1.33.2
+            tag: v1.43.0
             pullPolicy: IfNotPresent
           service:
             type: ClusterIP
@@ -138,8 +138,8 @@ spec:
           # Prefix before permalinks generated when users share links to rooms, users, or messages. If running an unfederated Synapse, set the below to the URL of your Riot instance.
           permalinkPrefix: "https://chat.cluster.fun"
           image:
-            repository: "vectorim/riot-web"
-            tag: v1.7.27
+            repository: "vectorim/element-web"
+            tag: v1.9.8
             pullPolicy: IfNotPresent
           service:
             type: ClusterIP
