@@ -81,7 +81,7 @@ spec:
           tailscale --socket=/tmp/tailscaled.sock up \
             --accept-dns=true \
             --authkey=${AUTH_KEY} \
-            --hostname=auth-proxy
+            --hostname=auth-proxy-internal-proxy
           wait ${PID}
       volumes:
       - name: host-mappings
@@ -229,7 +229,7 @@ spec:
           tailscale --socket=/tmp/tailscaled.sock up \
             --accept-dns=true \
             --authkey=${AUTH_KEY} \
-            --hostname=auth-proxy
+            --hostname=non-auth-proxy
           echo "Re-enabling incoming traffic from the cluster"
           wait ${PID}
 ---

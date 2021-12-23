@@ -110,7 +110,7 @@ spec:
           tailscale --socket=/tmp/tailscaled.sock up \
             --accept-dns=true \
             --authkey=${AUTH_KEY} \
-            --hostname=auth-proxy
+            --hostname=auth-proxy-oauth2
           echo "Re-enabling incoming traffic from the cluster"
           wait ${PID}
 ---
