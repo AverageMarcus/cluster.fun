@@ -20,3 +20,32 @@ spec:
   - kind: Secret
     jsonPointers:
     - /data
+---
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager-cert-manager
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster.fun
+  destination:
+    namespace: cert-manager
+    name: cluster-fun (scaleway)
+  source:
+    repoURL: 'https://charts.jetstack.io'
+    targetRevision: 1.5.4
+    chart: cert-manager
+    helm:
+      version: v3
+      values: |-
+        installCRDs: "true"
+        resources:
+          requests:
+            memory: 32Mi
+          limits:
+            memory: 64Mi
+  syncPolicy:
+    automated: {}

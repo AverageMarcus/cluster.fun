@@ -7,27 +7,6 @@ metadata:
 
 ---
 
-apiVersion: helm.fluxcd.io/v1
-kind: HelmRelease
-metadata:
-  name: cert-manager
-  namespace: cert-manager
-spec:
-  chart:
-    repository: https://charts.jetstack.io
-    name: cert-manager
-    version: v1.5.4
-  maxHistory: 3
-  values:
-    installCRDs: "true"
-    resources:
-      requests:
-        memory: 32Mi
-      limits:
-        memory: 64Mi
-
----
-
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
