@@ -1,14 +1,13 @@
 resource "scaleway_k8s_cluster_beta" "k8s-cluster" {
   name             = "cluster-fun"
   description      = ""
-  version          = "1.22.2"
+  version          = "1.23.0"
   cni              = "weave"
   enable_dashboard = false
   ingress          = "nginx"
 
   feature_gates = [
-    "HPAScaleToZero",
-    "TTLAfterFinished"
+    "HPAScaleToZero"
   ]
 }
 
