@@ -41,7 +41,7 @@ spec:
           - 100.100.100.100
       containers:
       - name: proxy
-        image: harbor.cluster.fun/averagemarcus/proxy:latest
+        image: docker.cluster.fun/averagemarcus/proxy:latest
         imagePullPolicy: Always
         env:
         - name: PROXY_DESTINATION

@@ -40,7 +40,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: harbor.cluster.fun/averagemarcus/tweetsvg:latest
+        image: docker.cluster.fun/averagemarcus/tweetsvg:latest
         imagePullPolicy: Always
         # env:
         # - name: DOTENV_DIR

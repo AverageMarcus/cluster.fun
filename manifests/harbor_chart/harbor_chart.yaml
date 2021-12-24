@@ -34,7 +34,7 @@ spec:
       optional: false
   values:
     fullnameOverride: harbor-harbor-harbor
-    externalURL: https://harbor.cluster.fun
+    externalURL: https://docker.cluster.fun
     updateStrategy:
       type: Recreate
     expose:
@@ -46,7 +46,7 @@ spec:
           secretName: harbor-harbor-ingress
       ingress:
         hosts:
-          core: harbor.cluster.fun
+          core: docker.cluster.fun
         annotations:
           cert-manager.io/cluster-issuer: letsencrypt
           nginx.ingress.kubernetes.io/force-ssl-redirect: "true"

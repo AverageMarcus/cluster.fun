@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: harbor.cluster.fun/averagemarcus/cors-proxy:latest
+        image: docker.cluster.fun/averagemarcus/cors-proxy:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8000
