@@ -56,7 +56,7 @@ spec:
         - name: docker-config
       containers:
       - name: web
-        image: docker.cluster.fun/private/paradoxfox:latest
+        image: harbor.cluster.fun/private/paradoxfox:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 443

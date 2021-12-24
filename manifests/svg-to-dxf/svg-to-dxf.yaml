@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: docker.cluster.fun/averagemarcus/svg-to-dxf:latest
+        image: harbor.cluster.fun/averagemarcus/svg-to-dxf:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

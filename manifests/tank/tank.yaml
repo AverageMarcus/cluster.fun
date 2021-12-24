@@ -42,7 +42,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: docker.cluster.fun/averagemarcus/tank:latest
+        image: harbor.cluster.fun/averagemarcus/tank:latest
         imagePullPolicy: Always
         envFrom:
           - secretRef:

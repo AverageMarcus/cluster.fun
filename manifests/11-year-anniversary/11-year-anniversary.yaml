@@ -44,7 +44,7 @@ spec:
         - name: docker-config
       containers:
       - name: web
-        image: docker.cluster.fun/private/11-year-anniversary:latest
+        image: harbor.cluster.fun/private/11-year-anniversary:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 80
