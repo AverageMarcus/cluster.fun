@@ -385,6 +385,8 @@ roleRef:
 apiVersion: v1
 kind: Service
 metadata:
+  annotations:
+    prometheus.io/scrape: "true"
   labels:
     app.kubernetes.io/name: prometheus
     app.kubernetes.io/component: server
