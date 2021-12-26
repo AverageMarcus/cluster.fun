@@ -70,6 +70,7 @@ data:
     - job_name: kubernetes-pods
       pipeline_stages:
         - docker: {}
+        - cri: {}
         - match:
             selector: '{app="weave-net"}'
             action: drop
