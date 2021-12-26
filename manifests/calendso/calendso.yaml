@@ -57,8 +57,6 @@ spec:
           value: calendso
         - name: DATABASE_HOST
           value: localhost:5432
-        - name: DATABASE_URL
-          value: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}/${POSTGRES_DB}"
         envFrom:
         - secretRef:
             name: calendso
