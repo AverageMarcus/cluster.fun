@@ -43,6 +43,7 @@ spec:
       containers:
       - name: skooner
         image: ghcr.io/skooner-k8s/skooner:stable
+        imagePullPolicy: Always
         ports:
         - containerPort: 4654
         livenessProbe:
@@ -80,6 +81,12 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
 spec:
   ingressClassName: nginx
   tls:
