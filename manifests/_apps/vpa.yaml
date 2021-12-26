@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vpa
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster.fun
+  destination:
+    namespace: kube-system
+    name: cluster-fun (scaleway)
+  source:
+    repoURL: 'https://charts.fairwinds.com/stable'
+    targetRevision: 0.5.0
+    chart: vpa
+    helm:
+      version: v3
+      values: |-
+        recommender:
+          extraArgs:
+            prometheus-address: "http://prometheus-server.monitoring.svc:80"
+            storage: prometheus
+        admissionController:
+          enabled: true
+  syncPolicy:
+    automated: {}
