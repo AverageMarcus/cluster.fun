@@ -40,7 +40,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: calendso/calendso:latest
+        image: docker.cluster.fun/averagemarcus/calendso:latest
         imagePullPolicy: Always
         env:
         - name: NEXT_PUBLIC_LICENSE_CONSENT
