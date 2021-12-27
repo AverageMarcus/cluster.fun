@@ -16,6 +16,8 @@ spec:
     targetRevision: HEAD
   syncPolicy:
     automated: {}
+    syncOptions:
+      - CreateNamespace=true
   ignoreDifferences:
   - kind: Secret
     jsonPointers:
