@@ -1,0 +1,926 @@
+---
+# Source: nextcloud/charts/redis/templates/secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: nextcloud-nextcloud-redis
+  namespace: nextcloud
+  labels:
+    app: redis
+    chart: redis-11.0.5
+    release: "nextcloud-nextcloud"
+    heritage: "Helm"
+  annotations:
+    kube-1password: u54jxidod7tlnpwva37f5hcu5y
+    kube-1password/vault: Kubernetes
+    kube-1password/secret-text-parse: "true"
+type: Opaque
+
+---
+# Source: nextcloud/templates/secrets.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: nextcloud-nextcloud
+  labels:
+    app.kubernetes.io/name: nextcloud
+    helm.sh/chart: nextcloud-2.6.3
+    app.kubernetes.io/instance: nextcloud-nextcloud
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    kube-1password: iaz4xmtr2czpsjl6xirhryzfia
+    kube-1password/vault: Kubernetes
+    kube-1password/secret-text-parse: "true"
+type: Opaque
+
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: nextcloud-s3
+  labels:
+    app.kubernetes.io/name: nextcloud
+    helm.sh/chart: nextcloud-2.6.3
+    app.kubernetes.io/instance: nextcloud-nextcloud
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    kube-1password: 7zanxzbyzfctc5d2yqfq6e5zcy
+    kube-1password/vault: Kubernetes
+    kube-1password/secret-text-key: s3.config.php
+type: Opaque
+
+---
+# Source: nextcloud/charts/redis/templates/configmap-scripts.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nextcloud-nextcloud-redis-scripts
+  namespace: nextcloud
+  labels:
+    app: redis
+    chart: redis-11.0.5
+    heritage: Helm
+    release: nextcloud-nextcloud
+data:
+  start-master.sh: |
+    #!/bin/bash
+    if [[ -n $REDIS_PASSWORD_FILE ]]; then
+      password_aux=`cat ${REDIS_PASSWORD_FILE}`
+      export REDIS_PASSWORD=$password_aux
+    fi
+    if [[ ! -f /opt/bitnami/redis/etc/master.conf ]];then
+      cp /opt/bitnami/redis/mounted-etc/master.conf /opt/bitnami/redis/etc/master.conf
+    fi
+    if [[ ! -f /opt/bitnami/redis/etc/redis.conf ]];then
+      cp /opt/bitnami/redis/mounted-etc/redis.conf /opt/bitnami/redis/etc/redis.conf
+    fi
+    ARGS=("--port" "${REDIS_PORT}")
+    ARGS+=("--requirepass" "${REDIS_PASSWORD}")
+    ARGS+=("--masterauth" "${REDIS_PASSWORD}")
+    ARGS+=("--include" "/opt/bitnami/redis/etc/redis.conf")
+    ARGS+=("--include" "/opt/bitnami/redis/etc/master.conf")
+    exec /run.sh "${ARGS[@]}"
+  start-slave.sh: |
+    #!/bin/bash
+    if [[ -n $REDIS_PASSWORD_FILE ]]; then
+      password_aux=`cat ${REDIS_PASSWORD_FILE}`
+      export REDIS_PASSWORD=$password_aux
+    fi
+    if [[ -n $REDIS_MASTER_PASSWORD_FILE ]]; then
+      password_aux=`cat ${REDIS_MASTER_PASSWORD_FILE}`
+      export REDIS_MASTER_PASSWORD=$password_aux
+    fi
+    if [[ ! -f /opt/bitnami/redis/etc/replica.conf ]];then
+      cp /opt/bitnami/redis/mounted-etc/replica.conf /opt/bitnami/redis/etc/replica.conf
+    fi
+    if [[ ! -f /opt/bitnami/redis/etc/redis.conf ]];then
+      cp /opt/bitnami/redis/mounted-etc/redis.conf /opt/bitnami/redis/etc/redis.conf
+    fi
+    ARGS=("--port" "${REDIS_PORT}")
+    ARGS+=("--slaveof" "${REDIS_MASTER_HOST}" "${REDIS_MASTER_PORT_NUMBER}")
+    ARGS+=("--requirepass" "${REDIS_PASSWORD}")
+    ARGS+=("--masterauth" "${REDIS_MASTER_PASSWORD}")
+    ARGS+=("--include" "/opt/bitnami/redis/etc/redis.conf")
+    ARGS+=("--include" "/opt/bitnami/redis/etc/replica.conf")
+    exec /run.sh "${ARGS[@]}"
+---
+# Source: nextcloud/charts/redis/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nextcloud-nextcloud-redis
+  namespace: nextcloud
+  labels:
+    app: redis
+    chart: redis-11.0.5
+    heritage: Helm
+    release: nextcloud-nextcloud
+data:
+  redis.conf: |-
+    # User-supplied configuration:
+    # Enable AOF https://redis.io/topics/persistence#append-only-file
+    appendonly yes
+    # Disable RDB persistence, AOF persistence already enabled.
+    save ""
+  master.conf: |-
+    dir /data
+    rename-command FLUSHDB ""
+    rename-command FLUSHALL ""
+  replica.conf: |-
+    dir /data
+    slave-read-only yes
+    rename-command FLUSHDB ""
+    rename-command FLUSHALL ""
+---
+# Source: nextcloud/charts/redis/templates/health-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nextcloud-nextcloud-redis-health
+  namespace: nextcloud
+  labels:
+    app: redis
+    chart: redis-11.0.5
+    heritage: Helm
+    release: nextcloud-nextcloud
+data:
+  ping_readiness_local.sh: |-
+    #!/bin/bash
+    no_auth_warning=$([[ "$(redis-cli --version)" =~ (redis-cli 5.*) ]] && echo --no-auth-warning)
+    response=$(
+        timeout -s 3 $1 \
+      redis-cli \
+        -a $REDIS_PASSWORD $no_auth_warning \
+        -h localhost \
+        -p $REDIS_PORT \
+        ping
+    )
+    if [ "$response" != "PONG" ]; then
+      echo "$response"
+      exit 1
+    fi
+  ping_liveness_local.sh: |-
+    #!/bin/bash
+    no_auth_warning=$([[ "$(redis-cli --version)" =~ (redis-cli 5.*) ]] && echo --no-auth-warning)
+    response=$(
+        timeout -s 3 $1 \
+      redis-cli \
+        -a $REDIS_PASSWORD $no_auth_warning \
+        -h localhost \
+        -p $REDIS_PORT \
+        ping
+    )
+    if [ "$response" != "PONG" ] && [ "$response" != "LOADING Redis is loading the dataset in memory" ]; then
+      echo "$response"
+      exit 1
+    fi
+  ping_readiness_master.sh: |-
+    #!/bin/bash
+    no_auth_warning=$([[ "$(redis-cli --version)" =~ (redis-cli 5.*) ]] && echo --no-auth-warning)
+     response=$(
+        timeout -s 3 $1 \
+      redis-cli \
+        -a $REDIS_MASTER_PASSWORD $no_auth_warning \
+        -h $REDIS_MASTER_HOST \
+        -p $REDIS_MASTER_PORT_NUMBER \
+        ping
+    )
+    if [ "$response" != "PONG" ]; then
+      echo "$response"
+      exit 1
+    fi
+  ping_liveness_master.sh: |-
+    #!/bin/bash
+    no_auth_warning=$([[ "$(redis-cli --version)" =~ (redis-cli 5.*) ]] && echo --no-auth-warning)
+    response=$(
+        timeout -s 3 $1 \
+      redis-cli \
+        -a $REDIS_MASTER_PASSWORD $no_auth_warning \
+        -h $REDIS_MASTER_HOST \
+        -p $REDIS_MASTER_PORT_NUMBER \
+        ping
+    )
+    if [ "$response" != "PONG" ] && [ "$response" != "LOADING Redis is loading the dataset in memory" ]; then
+      echo "$response"
+      exit 1
+    fi
+  ping_readiness_local_and_master.sh: |-
+    script_dir="$(dirname "$0")"
+    exit_status=0
+    "$script_dir/ping_readiness_local.sh" $1 || exit_status=$?
+    "$script_dir/ping_readiness_master.sh" $1 || exit_status=$?
+    exit $exit_status
+  ping_liveness_local_and_master.sh: |-
+    script_dir="$(dirname "$0")"
+    exit_status=0
+    "$script_dir/ping_liveness_local.sh" $1 || exit_status=$?
+    "$script_dir/ping_liveness_master.sh" $1 || exit_status=$?
+    exit $exit_status
+---
+# Source: nextcloud/templates/config.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nextcloud-nextcloud-config
+  labels:
+    app.kubernetes.io/name: nextcloud
+    helm.sh/chart: nextcloud-2.6.3
+    app.kubernetes.io/instance: nextcloud-nextcloud
+    app.kubernetes.io/managed-by: Helm
+data:
+  general.config.php: |-
+    <?php
+    $CONFIG = array (
+        'overwriteprotocol' => 'https'
+    );
+  .htaccess: |-
+    # line below if for Apache 2.4
+    <ifModule mod_authz_core.c>
+    Require all denied
+    </ifModule>
+    # line below if for Apache 2.2
+    <ifModule !mod_authz_core.c>
+    deny from all
+    </ifModule>
+    # section for Apache 2.2 and 2.4
+    <ifModule mod_autoindex.c>
+    IndexIgnore *
+    </ifModule>
+  redis.config.php: |-
+    <?php
+    if (getenv('REDIS_HOST')) {
+        $CONFIG = array (
+          'memcache.distributed' => '\\OC\\Memcache\\Redis',
+        'memcache.locking' => '\\OC\\Memcache\\Redis',
+        'redis' => array(
+            'host' => getenv('REDIS_HOST'),
+          'port' => getenv('REDIS_HOST_PORT') ?: 6379,
+          'password' => getenv('REDIS_HOST_PASSWORD'),
+        ),
+      );
+    }
+  apache-pretty-urls.config.php: |-
+    <?php
+    $CONFIG = array (
+        'htaccess.RewriteBase' => '/',
+    );
+  apcu.config.php: |-
+    <?php
+    $CONFIG = array (
+        'memcache.local' => '\\OC\\Memcache\\APCu',
+    );
+  apps.config.php: |-
+    <?php
+    $CONFIG = array (
+        "apps_paths" => array (
+            0 => array (
+                    "path"     => OC::$SERVERROOT."/apps",
+                  "url"      => "/apps",
+                  "writable" => false,
+          ),
+          1 => array (
+                    "path"     => OC::$SERVERROOT."/custom_apps",
+                  "url"      => "/custom_apps",
+                  "writable" => true,
+          ),
+      ),
+    );
+  autoconfig.php: |-
+    <?php
+    $autoconfig_enabled = false;
+    if (getenv('SQLITE_DATABASE')) {
+          $AUTOCONFIG["dbtype"] = "sqlite";
+        $AUTOCONFIG["dbname"] = getenv('SQLITE_DATABASE');
+        $autoconfig_enabled = true;
+    } elseif (getenv('MYSQL_DATABASE') && getenv('MYSQL_USER') && getenv('MYSQL_PASSWORD') && getenv('MYSQL_HOST')) {
+          $AUTOCONFIG["dbtype"] = "mysql";
+        $AUTOCONFIG["dbname"] = getenv('MYSQL_DATABASE');
+        $AUTOCONFIG["dbuser"] = getenv('MYSQL_USER');
+        $AUTOCONFIG["dbpass"] = getenv('MYSQL_PASSWORD');
+        $AUTOCONFIG["dbhost"] = getenv('MYSQL_HOST');
+        $autoconfig_enabled = true;
+    } elseif (getenv('POSTGRES_DB') && getenv('POSTGRES_USER') && getenv('POSTGRES_PASSWORD') && getenv('POSTGRES_HOST')) {
+          $AUTOCONFIG["dbtype"] = "pgsql";
+        $AUTOCONFIG["dbname"] = getenv('POSTGRES_DB');
+        $AUTOCONFIG["dbuser"] = getenv('POSTGRES_USER');
+        $AUTOCONFIG["dbpass"] = getenv('POSTGRES_PASSWORD');
+        $AUTOCONFIG["dbhost"] = getenv('POSTGRES_HOST');
+        $autoconfig_enabled = true;
+    }
+    if ($autoconfig_enabled) {
+          $AUTOCONFIG["directory"] = getenv('NEXTCLOUD_DATA_DIR') ?: "/var/www/html/data";
+    }
+  smtp.config.php: |-
+    <?php
+    if (getenv('SMTP_HOST') && getenv('MAIL_FROM_ADDRESS') && getenv('MAIL_DOMAIN')) {
+        $CONFIG = array (
+          'mail_smtpmode' => 'smtp',
+        'mail_smtphost' => getenv('SMTP_HOST'),
+        'mail_smtpport' => getenv('SMTP_PORT') ?: (getenv('SMTP_SECURE') ? 465 : 25),
+        'mail_smtpsecure' => getenv('SMTP_SECURE') ?: '',
+        'mail_smtpauth' => getenv('SMTP_NAME') && getenv('SMTP_PASSWORD'),
+        'mail_smtpauthtype' => getenv('SMTP_AUTHTYPE') ?: 'LOGIN',
+        'mail_smtpname' => getenv('SMTP_NAME') ?: '',
+        'mail_smtppassword' => getenv('SMTP_PASSWORD') ?: '',
+        'mail_from_address' => getenv('MAIL_FROM_ADDRESS'),
+        'mail_domain' => getenv('MAIL_DOMAIN'),
+      );
+    }
+---
+# Source: nextcloud/templates/nextcloud-pvc.yaml
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: nextcloud-nextcloud-nextcloud
+  labels:
+    app.kubernetes.io/name: nextcloud
+    helm.sh/chart: nextcloud-2.6.3
+    app.kubernetes.io/instance: nextcloud-nextcloud
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: app
+spec:
+  accessModes:
+    - "ReadWriteOnce"
+  resources:
+    requests:
+      storage: "5Gi"
+  storageClassName: "scw-bssd-retain"
+---
+# Source: nextcloud/charts/redis/templates/headless-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nextcloud-nextcloud-redis-headless
+  namespace: nextcloud
+  labels:
+    app: redis
+    chart: redis-11.0.5
+    release: nextcloud-nextcloud
+    heritage: Helm
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: redis
+      port: 6379
+      targetPort: redis
+  selector:
+    app: redis
+    release: nextcloud-nextcloud
+---
+# Source: nextcloud/charts/redis/templates/redis-master-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nextcloud-nextcloud-redis-master
+  namespace: nextcloud
+  labels:
+    app: redis
+    chart: redis-11.0.5
+    release: nextcloud-nextcloud
+    heritage: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - name: redis
+      port: 6379
+      targetPort: redis
+  selector:
+    app: redis
+    release: nextcloud-nextcloud
+    role: master
+---
+# Source: nextcloud/charts/redis/templates/redis-slave-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nextcloud-nextcloud-redis-slave
+  namespace: nextcloud
+  labels:
+    app: redis
+    chart: redis-11.0.5
+    release: nextcloud-nextcloud
+    heritage: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - name: redis
+      port: 6379
+      targetPort: redis
+  selector:
+    app: redis
+    release: nextcloud-nextcloud
+    role: slave
+---
+# Source: nextcloud/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nextcloud-nextcloud
+  labels:
+    app.kubernetes.io/name: nextcloud
+    helm.sh/chart: nextcloud-2.6.3
+    app.kubernetes.io/instance: nextcloud-nextcloud
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: app
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app.kubernetes.io/name: nextcloud
+    app.kubernetes.io/component: app
+---
+# Source: nextcloud/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nextcloud-nextcloud
+  labels:
+    app.kubernetes.io/name: nextcloud
+    helm.sh/chart: nextcloud-2.6.3
+    app.kubernetes.io/instance: nextcloud-nextcloud
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: app
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: nextcloud
+      app.kubernetes.io/instance: nextcloud-nextcloud
+      app.kubernetes.io/component: app
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: nextcloud
+        app.kubernetes.io/instance: nextcloud-nextcloud
+        app.kubernetes.io/component: app
+        nextcloud-nextcloud-redis-client: "true"
+    spec:
+      containers:
+      - name: nextcloud
+        image: "nextcloud:21.0.1-apache"
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: SQLITE_DATABASE
+          value: "nextcloud"
+        - name: NEXTCLOUD_ADMIN_USER
+          valueFrom:
+            secretKeyRef:
+              name: nextcloud-nextcloud
+              key: nextcloud-username
+        - name: NEXTCLOUD_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: nextcloud-nextcloud
+              key: nextcloud-password
+        - name: NEXTCLOUD_TRUSTED_DOMAINS
+          value: nextcloud.cluster.fun
+        - name: NEXTCLOUD_DATA_DIR
+          value: "/var/www/html/data"
+        - name: REDIS_HOST
+          value: nextcloud-nextcloud-redis-master
+        - name: REDIS_HOST_PORT
+          value: "6379"
+        - name: REDIS_HOST_PASSWORD
+          value: changeme
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /status.php
+            port: http
+            httpHeaders:
+            - name: Host
+              value: "nextcloud.cluster.fun"
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /status.php
+            port: http
+            httpHeaders:
+            - name: Host
+              value: "nextcloud.cluster.fun"
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+        resources:
+          requests:
+            memory: 500Mi
+        volumeMounts:
+        - name: nextcloud-data
+          mountPath: /var/www/
+          subPath: root
+        - name: nextcloud-data
+          mountPath: /var/www/html
+          subPath: html
+        - name: nextcloud-data
+          mountPath: /var/www/html/data
+          subPath: data
+        - name: nextcloud-data
+          mountPath: /var/www/html/config
+          subPath: config
+        - name: nextcloud-data
+          mountPath: /var/www/html/custom_apps
+          subPath: custom_apps
+        - name: nextcloud-data
+          mountPath: /var/www/tmp
+          subPath: tmp
+        - name: nextcloud-data
+          mountPath: /var/www/html/themes
+          subPath: themes
+        - name: nextcloud-config
+          mountPath: /var/www/html/config/general.config.php
+          subPath: general.config.php
+        - name: nextcloud-s3
+          mountPath: /var/www/html/config/s3.config.php
+          subPath: s3.config.php
+        - name: nextcloud-config
+          mountPath: /var/www/html/config/.htaccess
+          subPath: .htaccess
+        - name: nextcloud-config
+          mountPath: /var/www/html/config/apache-pretty-urls.config.php
+          subPath: apache-pretty-urls.config.php
+        - name: nextcloud-config
+          mountPath: /var/www/html/config/apcu.config.php
+          subPath: apcu.config.php
+        - name: nextcloud-config
+          mountPath: /var/www/html/config/apps.config.php
+          subPath: apps.config.php
+        - name: nextcloud-config
+          mountPath: /var/www/html/config/autoconfig.php
+          subPath: autoconfig.php
+        - name: nextcloud-config
+          mountPath: /var/www/html/config/redis.config.php
+          subPath: redis.config.php
+        - name: nextcloud-config
+          mountPath: /var/www/html/config/smtp.config.php
+          subPath: smtp.config.php
+      volumes:
+      - name: nextcloud-data
+        persistentVolumeClaim:
+          claimName: nextcloud-nextcloud-nextcloud
+      - name: nextcloud-config
+        configMap:
+          name: nextcloud-nextcloud-config
+      - name: nextcloud-s3
+        secret:
+          secretName: nextcloud-s3
+      # Will mount configuration files as www-data (id: 33) for nextcloud
+      securityContext:
+        fsGroup: 33
+---
+# Source: nextcloud/charts/redis/templates/redis-master-statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nextcloud-nextcloud-redis-master
+  namespace: nextcloud
+  labels:
+    app: redis
+    chart: redis-11.0.5
+    release: nextcloud-nextcloud
+    heritage: Helm
+spec:
+  selector:
+    matchLabels:
+      app: redis
+      release: nextcloud-nextcloud
+      role: master
+  serviceName: nextcloud-nextcloud-redis-headless
+  template:
+    metadata:
+      labels:
+        app: redis
+        chart: redis-11.0.5
+        release: nextcloud-nextcloud
+        role: master
+      annotations:
+        checksum/health: c0aae3fbf6b70535e576f3897c60cf19bbfa814f584e599380329bda59b56da1
+        checksum/configmap: f8ab8ce93e6b4e78f477182c06db788d39b372cbb49261bf85c85cdfea869df5
+        checksum/secret: 79779a23e0c21d77248d142206b297f89fa5241bb156f83be3705dbb0de0d6e8
+    spec:
+
+      securityContext:
+        fsGroup: 1001
+      serviceAccountName: default
+      containers:
+        - name: redis
+          image: docker.io/bitnami/redis:6.0.8-debian-10-r0
+          imagePullPolicy: "IfNotPresent"
+          securityContext:
+            runAsUser: 1001
+          command:
+            - /bin/bash
+            - -c
+            - /opt/bitnami/scripts/start-scripts/start-master.sh
+          env:
+            - name: REDIS_REPLICATION_MODE
+              value: master
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: nextcloud-nextcloud-redis
+                  key: redis-password
+            - name: REDIS_TLS_ENABLED
+              value: "no"
+            - name: REDIS_PORT
+              value: "6379"
+          ports:
+            - name: redis
+              containerPort: 6379
+          livenessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            # One second longer than command timeout should prevent generation of zombie processes.
+            timeoutSeconds: 6
+            successThreshold: 1
+            failureThreshold: 5
+            exec:
+              command:
+                - sh
+                - -c
+                - /health/ping_liveness_local.sh 5
+          readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 2
+            successThreshold: 1
+            failureThreshold: 5
+            exec:
+              command:
+                - sh
+                - -c
+                - /health/ping_readiness_local.sh 1
+          resources:
+            null
+          volumeMounts:
+            - name: start-scripts
+              mountPath: /opt/bitnami/scripts/start-scripts
+            - name: health
+              mountPath: /health
+            - name: redis-data
+              mountPath: /data
+              subPath:
+            - name: config
+              mountPath: /opt/bitnami/redis/mounted-etc
+            - name: redis-tmp-conf
+              mountPath: /opt/bitnami/redis/etc/
+      volumes:
+        - name: start-scripts
+          configMap:
+            name: nextcloud-nextcloud-redis-scripts
+            defaultMode: 0755
+        - name: health
+          configMap:
+            name: nextcloud-nextcloud-redis-health
+            defaultMode: 0755
+        - name: config
+          configMap:
+            name: nextcloud-nextcloud-redis
+        - name: redis-tmp-conf
+          emptyDir: {}
+  volumeClaimTemplates:
+    - metadata:
+        name: redis-data
+        labels:
+          app: redis
+          release: nextcloud-nextcloud
+          heritage: Helm
+          component: master
+      spec:
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            storage: "8Gi"
+
+        selector:
+  updateStrategy:
+    type: RollingUpdate
+---
+# Source: nextcloud/charts/redis/templates/redis-slave-statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nextcloud-nextcloud-redis-slave
+  namespace: nextcloud
+  labels:
+    app: redis
+    chart: redis-11.0.5
+    release: nextcloud-nextcloud
+    heritage: Helm
+spec:
+  replicas: 2
+  serviceName: nextcloud-nextcloud-redis-headless
+  selector:
+    matchLabels:
+      app: redis
+      release: nextcloud-nextcloud
+      role: slave
+  template:
+    metadata:
+      labels:
+        app: redis
+        release: nextcloud-nextcloud
+        chart: redis-11.0.5
+        role: slave
+      annotations:
+        checksum/health: c0aae3fbf6b70535e576f3897c60cf19bbfa814f584e599380329bda59b56da1
+        checksum/configmap: f8ab8ce93e6b4e78f477182c06db788d39b372cbb49261bf85c85cdfea869df5
+        checksum/secret: 79779a23e0c21d77248d142206b297f89fa5241bb156f83be3705dbb0de0d6e8
+    spec:
+
+      securityContext:
+        fsGroup: 1001
+      serviceAccountName: default
+      containers:
+        - name: redis
+          image: docker.io/bitnami/redis:6.0.8-debian-10-r0
+          imagePullPolicy: "IfNotPresent"
+          securityContext:
+            runAsUser: 1001
+          command:
+            - /bin/bash
+            - -c
+            - /opt/bitnami/scripts/start-scripts/start-slave.sh
+          env:
+            - name: REDIS_REPLICATION_MODE
+              value: slave
+            - name: REDIS_MASTER_HOST
+              value: nextcloud-nextcloud-redis-master-0.nextcloud-nextcloud-redis-headless.nextcloud.svc.cluster.local
+            - name: REDIS_MASTER_PORT_NUMBER
+              value: "6379"
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: nextcloud-nextcloud-redis
+                  key: redis-password
+            - name: REDIS_MASTER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: nextcloud-nextcloud-redis
+                  key: redis-password
+            - name: REDIS_TLS_ENABLED
+              value: "no"
+            - name: REDIS_PORT
+              value: "6379"
+          ports:
+            - name: redis
+              containerPort: 6379
+          livenessProbe:
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 6
+            successThreshold: 1
+            failureThreshold: 5
+            exec:
+              command:
+                - sh
+                - -c
+                - /health/ping_liveness_local_and_master.sh 5
+          readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 11
+            successThreshold: 1
+            failureThreshold: 5
+            exec:
+              command:
+                - sh
+                - -c
+                - /health/ping_readiness_local_and_master.sh 10
+          resources:
+            null
+          volumeMounts:
+            - name: start-scripts
+              mountPath: /opt/bitnami/scripts/start-scripts
+            - name: health
+              mountPath: /health
+            - name: redis-data
+              mountPath: /data
+            - name: config
+              mountPath: /opt/bitnami/redis/mounted-etc
+            - name: redis-tmp-conf
+              mountPath: /opt/bitnami/redis/etc
+      volumes:
+        - name: start-scripts
+          configMap:
+            name: nextcloud-nextcloud-redis-scripts
+            defaultMode: 0755
+        - name: health
+          configMap:
+            name: nextcloud-nextcloud-redis-health
+            defaultMode: 0755
+        - name: config
+          configMap:
+            name: nextcloud-nextcloud-redis
+        - name: redis-tmp-conf
+          emptyDir: {}
+  volumeClaimTemplates:
+    - metadata:
+        name: redis-data
+        labels:
+          app: redis
+          release: nextcloud-nextcloud
+          heritage: Helm
+          component: slave
+      spec:
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            storage: "8Gi"
+
+        selector:
+  updateStrategy:
+    type: RollingUpdate
+---
+# Source: nextcloud/templates/cronjob.yaml
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: nextcloud-nextcloud-cron
+  labels:
+    app.kubernetes.io/name: nextcloud
+    helm.sh/chart: nextcloud-2.6.3
+    app.kubernetes.io/instance: nextcloud-nextcloud
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    {}
+spec:
+  schedule: "*/5 * * * *"
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 5
+  successfulJobsHistoryLimit: 2
+  jobTemplate:
+    metadata:
+      labels:
+        app.kubernetes.io/name: nextcloud
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: nextcloud
+            app.kubernetes.io/managed-by: Helm
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: nextcloud
+              image: "nextcloud:21.0.1-apache"
+              imagePullPolicy: IfNotPresent
+              command: [ "curl" ]
+              args:
+                - "--fail"
+                - "-L"
+                - "https://nextcloud.cluster.fun/cron.php"
+              resources:
+                requests:
+                  memory: 500Mi
+---
+# Source: nextcloud/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nextcloud-nextcloud
+  labels:
+    app.kubernetes.io/name: nextcloud
+    helm.sh/chart: nextcloud-2.6.3
+    app.kubernetes.io/instance: nextcloud-nextcloud
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: app
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+spec:
+  rules:
+  - host: nextcloud.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nextcloud-nextcloud
+            port:
+              number: 8080
+  tls:
+    - hosts:
+      - nextcloud.cluster.fun
+      secretName: nextcloud-ingress
