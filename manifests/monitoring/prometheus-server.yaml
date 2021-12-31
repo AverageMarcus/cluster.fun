@@ -306,6 +306,14 @@ data:
       - source_labels: [__meta_kubernetes_endpoints_name]
         regex: 'node-exporter'
         action: keep
+
+    - job_name: "synapse"
+      scrape_interval: 15s
+      metrics_path: "/_synapse/metrics"
+      static_configs:
+      - targets: ["chat-matrix-synapse.chat.svc:9092"]
+
+
   recording_rules.yml: |
     {}
   rules: |

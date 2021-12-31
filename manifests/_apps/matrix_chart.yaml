@@ -108,6 +108,10 @@ spec:
             port: 80
           replicaCount: 1
           resources: {}
+          metrics:
+            enabled: true
+            port: 9000
+            annotations: true
 
         riot:
           enabled: true
