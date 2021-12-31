@@ -1,0 +1,120 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: calendso
+  namespace: calendso
+  annotations:
+    kube-1password: shgjmetsq7fcizmzzdn5ishzxu
+    kube-1password/vault: Kubernetes
+    kube-1password/secret-text-parse: "true"
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: calendso
+  namespace: calendso
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: web
+    name: web
+  selector:
+    app: calendso
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: calendso
+  namespace: calendso
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: calendso
+  template:
+    metadata:
+      labels:
+        app: calendso
+    spec:
+      containers:
+      - name: web
+        image: calendso/calendso:latest
+        imagePullPolicy: Always
+        command:
+        - sh
+        - -c
+        - |
+          apt update && apt install -y netcat
+          /app/scripts/start.sh
+        env:
+        - name: NEXT_PUBLIC_LICENSE_CONSENT
+          value: agree
+        - name: NEXT_PUBLIC_TELEMETRY_KEY
+          value: ""
+        - name: BASE_URL
+          value: "https://meet.marcusnoble.co.uk"
+        - name: NEXT_PUBLIC_APP_URL
+          value: "https://meet.marcusnoble.co.uk"
+        - name: NODE_ENV
+          value: production
+        - name: POSTGRES_DB
+          value: calendso
+        - name: DATABASE_HOST
+          value: localhost:5432
+        envFrom:
+        - secretRef:
+            name: calendso
+        ports:
+        - containerPort: 3000
+          name: web
+      - name: postgres
+        image: postgres:9-alpine
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5432
+          name: db
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: calendso
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: calendso
+              key: POSTGRES_PASSWORD
+        - name: POSTGRES_DB
+          value: calendso
+        - name: PGDATA
+          value: /var/lib/postgresql/data/calendso
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: calendso
+  namespace: calendso
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - meet.marcusnoble.co.uk
+    secretName: calendso-ingress
+  rules:
+  - host: meet.marcusnoble.co.uk
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: calendso
+            port:
+              number: 80
