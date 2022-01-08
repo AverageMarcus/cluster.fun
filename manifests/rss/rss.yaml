@@ -114,11 +114,6 @@ spec:
         volumeMounts:
           - mountPath: /data
             name: storage
-        resources:
-          limits:
-            memory: 100Mi
-          requests:
-            memory: 100Mi
       volumes:
       - name: storage
         persistentVolumeClaim:
