@@ -31,7 +31,7 @@ metadata:
   name: anniversary
   namespace: anniversary
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: anniversary
