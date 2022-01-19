@@ -7,8 +7,8 @@ metadata:
     app: link
 data:
   urls.yaml: |
-    
----
+   mn: https://marcusnoble.co.uk
+
 ---
 apiVersion: v1
 kind: Service
