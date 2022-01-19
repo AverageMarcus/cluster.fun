@@ -56,7 +56,7 @@ spec:
             subPath: urls.yaml
       volumes:
         - name: config
-          configmap:
+          configMap:
             name: urls-map
 ---
 apiVersion: networking.k8s.io/v1
