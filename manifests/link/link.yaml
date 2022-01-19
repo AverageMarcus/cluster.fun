@@ -52,8 +52,7 @@ spec:
           name: web
         volumeMounts:
           - name: config
-            mountPath: /app/urls.yaml
-            subPath: urls.yaml
+            mountPath: /config
       volumes:
         - name: config
           configMap:
