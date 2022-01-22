@@ -11,8 +11,8 @@ data:
       "tekton-el.auth-proxy.svc": "tekton-el.cluster.local",
       "home.auth-proxy.svc": "home.cluster.local",
       "home.cluster.fun": "home.cluster.local",
-      "tasks.cluster.fun": "tasks.cluster.local"
-      "api.tasks.cluster.fun": "api.tasks.cluster.local"
+      "tasks.cluster.fun": "tasks.cluster.local",
+      "api.tasks.cluster.fun": "api.tasks.cluster.local",
       "prometheus.auth-proxy.svc": "prometheus.cluster.local",
       "loki.auth-proxy.svc": "loki.cluster.local",
       "loki.auth-proxy.svc:80": "loki.cluster.local"
