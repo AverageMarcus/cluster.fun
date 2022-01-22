@@ -11,6 +11,7 @@ data:
       "tekton-el.auth-proxy.svc": "tekton-el.cluster.local",
       "home.auth-proxy.svc": "home.cluster.local",
       "home.cluster.fun": "home.cluster.local",
+      "tasks.cluster.fun": "tasks.cluster.local"
       "prometheus.auth-proxy.svc": "prometheus.cluster.local",
       "loki.auth-proxy.svc": "loki.cluster.local",
       "loki.auth-proxy.svc:80": "loki.cluster.local"
@@ -264,9 +265,20 @@ spec:
   tls:
   - hosts:
     - home.cluster.fun
+    - tasks.cluster.fun
     secretName: non-auth-proxy-ingress
   rules:
   - host: home.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: non-auth-proxy
+            port:
+              name: http
+  - host: tasks.cluster.fun
     http:
       paths:
       - path: /
