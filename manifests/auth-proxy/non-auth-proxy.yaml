@@ -13,6 +13,7 @@ data:
       "home.cluster.fun": "home.cluster.local",
       "tasks.cluster.fun": "tasks.cluster.local",
       "api.tasks.cluster.fun": "api.tasks.cluster.local",
+      "mealie.cluster.fun": "mealie.cluster.local",
       "prometheus.auth-proxy.svc": "prometheus.cluster.local",
       "loki.auth-proxy.svc": "loki.cluster.local",
       "loki.auth-proxy.svc:80": "loki.cluster.local"
@@ -268,6 +269,7 @@ spec:
     - home.cluster.fun
     - tasks.cluster.fun
     - api.tasks.cluster.fun
+    - mealie.cluster.fun
     secretName: non-auth-proxy-ingress
   rules:
   - host: home.cluster.fun
@@ -291,6 +293,16 @@ spec:
             port:
               name: http
   - host: api.tasks.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: non-auth-proxy
+            port:
+              name: http
+  - host: mealie.cluster.fun
     http:
       paths:
       - path: /
