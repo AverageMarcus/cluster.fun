@@ -539,7 +539,7 @@ spec:
       terminationGracePeriodSeconds: 120
       containers:
       - name: core
-        image: goharbor/harbor-core:v2.3.0
+        image: goharbor/harbor-core:v2.4.1
         imagePullPolicy: IfNotPresent
         startupProbe:
           httpGet:
@@ -668,7 +668,7 @@ spec:
       automountServiceAccountToken: false
       containers:
       - name: exporter
-        image: goharbor/harbor-exporter:v2.3.0
+        image: goharbor/harbor-exporter:v2.4.1
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -738,7 +738,7 @@ spec:
       terminationGracePeriodSeconds: 120
       containers:
       - name: jobservice
-        image: goharbor/harbor-jobservice:v2.3.0
+        image: goharbor/harbor-jobservice:v2.4.1
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -816,7 +816,7 @@ spec:
       automountServiceAccountToken: false
       containers:
       - name: portal
-        image: goharbor/harbor-portal:v2.3.0
+        image: goharbor/harbor-portal:v2.4.1
         imagePullPolicy: IfNotPresent
         resources:
           requests:
@@ -903,7 +903,7 @@ spec:
       terminationGracePeriodSeconds: 120
       containers:
       - name: registry
-        image: goharbor/registry-photon:v2.3.0
+        image: goharbor/registry-photon:v2.4.1
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -941,7 +941,7 @@ spec:
           mountPath: /etc/registry/config.yml
           subPath: config.yml
       - name: registryctl
-        image: goharbor/harbor-registryctl:v2.3.0
+        image: goharbor/harbor-registryctl:v2.4.1
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -1055,7 +1055,7 @@ spec:
       # for more detail.
       # we may remove it after several releases
       - name: "data-migrator"
-        image: goharbor/harbor-db:v2.3.0
+        image: goharbor/harbor-db:v2.4.1
         imagePullPolicy: IfNotPresent
         command: ["/bin/sh"]
         args: ["-c", "[ -e /var/lib/postgresql/data/postgresql.conf ] && [ ! -d /var/lib/postgresql/data/pgdata ] && mkdir -m 0700 /var/lib/postgresql/data/pgdata && mv /var/lib/postgresql/data/* /var/lib/postgresql/data/pgdata/ || true"]
@@ -1068,7 +1068,7 @@ spec:
       # use this init container to correct the permission
       # as "fsGroup" applied before the init container running, the container has enough permission to execute the command
       - name: "data-permissions-ensurer"
-        image: goharbor/harbor-db:v2.3.0
+        image: goharbor/harbor-db:v2.4.1
         imagePullPolicy: IfNotPresent
         command: ["/bin/sh"]
         args: ["-c", "chmod -R 700 /var/lib/postgresql/data/pgdata || true"]
@@ -1078,7 +1078,7 @@ spec:
             subPath:
       containers:
       - name: database
-        image: goharbor/harbor-db:v2.3.0
+        image: goharbor/harbor-db:v2.4.1
         imagePullPolicy: IfNotPresent
         livenessProbe:
           exec:
@@ -1160,7 +1160,7 @@ spec:
       terminationGracePeriodSeconds: 120
       containers:
       - name: redis
-        image: goharbor/redis-photon:v2.3.0
+        image: goharbor/redis-photon:v2.4.1
         imagePullPolicy: IfNotPresent
         livenessProbe:
           tcpSocket:
