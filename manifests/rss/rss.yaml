@@ -108,9 +108,9 @@ spec:
           name: web
         resources:
           limits:
-            memory: 308Mi
+            memory: 500Mi
           requests:
-            memory: 308Mi
+            memory: 500Mi
         volumeMounts:
           - mountPath: /data
             name: storage
