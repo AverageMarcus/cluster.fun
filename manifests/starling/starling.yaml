@@ -17,9 +17,9 @@ metadata:
   name: starling
   namespace: starling
   annotations:
-    kube-1password: xro6ibrpyrdphi22fv7go2guyi
+    kube-1password: ufxpki65ffgprn2upksirweeie
     kube-1password/vault: Kubernetes
-    kube-1password/password-key: secret
+    kube-1password/secret-text-parse: "true"
 type: Opaque
 ---
 apiVersion: v1
@@ -64,7 +64,17 @@ spec:
           valueFrom:  
             secretKeyRef:
               name: starling
-              key: secret
+              key: SHARED_SECRET
+        - name: ACCESS_TOKEN
+          valueFrom:  
+            secretKeyRef:
+              name: starling
+              key: ACCESS_TOKEN
+        - name: SAVINGS_GOAL
+          valueFrom:  
+            secretKeyRef:
+              name: starling
+              key: SAVINGS_GOAL
         ports:
         - containerPort: 3000
           name: web
