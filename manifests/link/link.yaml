@@ -9,6 +9,7 @@ data:
   urls.yaml: |
     mn: https://marcusnoble.co.uk
     whites: https://twitter.com/whites11/status/1484053621448785920
+    devopsnotts22: https://noti.st/averagemarcus/E8Ldoh/managing-kubernetes-without-losing-your-cool
 ---
 apiVersion: v1
 kind: Service
