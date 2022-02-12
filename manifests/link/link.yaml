@@ -10,6 +10,7 @@ data:
     mn: https://marcusnoble.co.uk
     whites: https://twitter.com/whites11/status/1484053621448785920
     devopsnotts22: https://noti.st/averagemarcus/E8Ldoh/managing-kubernetes-without-losing-your-cool
+    klustered: https://gist.githubusercontent.com/AverageMarcus/e58301ecf3455caa1638c3ffe70ed138/raw/b35bd595838e2280493a3881abb76353fff2d103/klustered.sh
 ---
 apiVersion: v1
 kind: Service
