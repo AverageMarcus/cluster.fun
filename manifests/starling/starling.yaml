@@ -70,11 +70,6 @@ spec:
             secretKeyRef:
               name: starling
               key: ACCESS_TOKEN
-        - name: SAVINGS_GOAL
-          valueFrom:  
-            secretKeyRef:
-              name: starling
-              key: SAVINGS_GOAL
         ports:
         - containerPort: 3000
           name: web
