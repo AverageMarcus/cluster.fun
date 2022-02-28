@@ -56,3 +56,28 @@ spec:
           requests:
             memory: 10Mi
 ---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tank
+  namespace: tank
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - tank-sms.marcusnoble.co.uk
+    secretName: tank-ingress
+  rules:
+  - host: tank-sms.marcusnoble.co.uk
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: tank
+            port:
+              number: 80
