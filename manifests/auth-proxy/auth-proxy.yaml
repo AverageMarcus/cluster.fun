@@ -46,7 +46,7 @@ spec:
           - 100.100.100.100
       containers:
       - name: oauth-proxy
-        image: quay.io/oauth2-proxy/oauth2-proxy:v7.2.0
+        image: quay.io/oauth2-proxy/oauth2-proxy:v7.2.1
         args:
         - --cookie-secure=false
         - --provider=oidc
