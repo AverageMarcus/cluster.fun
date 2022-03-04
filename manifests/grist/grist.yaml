@@ -1,0 +1,99 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: grist
+  namespace: grist
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grist
+  namespace: grist
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: web
+    name: web
+  selector:
+    app: grist
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grist
+  namespace: grist
+  labels:
+    app: grist
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grist
+  template:
+    metadata:
+      labels:
+        app: grist
+    spec:
+      containers:
+      - name: web
+        image: gristlabs/grist:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8484
+          name: web
+        env:
+        - name: APP_HOME_URL
+          value: "https://grist.cluster.fun/"
+        - name: APP_DOC_URL
+          value: "https://grist.cluster.fun/"
+        - name: GRIST_MAX_UPLOAD_ATTACHMENT_MB
+          value: "0"
+        - name: GRIST_MAX_UPLOAD_IMPORT_MB
+          value: "0"
+        - name: PORT
+          value: "8484"
+        - name: DEBUG
+          value: "1"
+        - name: GRIST_SINGLE_ORG
+          value: "docs"
+        - name: GRIST_DEFAULT_EMAIL
+          value: "grist@marcusnoble.co.uk"
+        volumeMounts:
+          - name: storage
+            mountPath: /persist
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: grist
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grist
+  namespace: grist
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  tls:
+  - hosts:
+    - grist.cluster.fun
+    secretName: grist-ingress
+  rules:
+  - host: grist.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: grist
+            port:
+              number: 80
