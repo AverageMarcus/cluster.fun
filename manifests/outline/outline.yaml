@@ -65,7 +65,7 @@ spec:
         - containerPort: 6379
           name: redis
       - name: outline
-        image: outlinewiki/outline:0.61.1
+        image: outlinewiki/outline:0.62.0
         imagePullPolicy: IfNotPresent
         # command:
         #   - sh
