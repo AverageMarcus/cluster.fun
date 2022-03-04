@@ -11,6 +11,16 @@ spec:
       storage: 5Gi
 ---
 apiVersion: v1
+kind: Secret
+metadata:
+  name: grist-auth
+  namespace: grist
+  annotations:
+    kube-1password: mr6spkkx7n3memkbute6ojaarm
+    kube-1password/vault: Kubernetes
+type: Opaque
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: grist
@@ -33,6 +43,8 @@ metadata:
     app: grist
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: grist
@@ -42,6 +54,46 @@ spec:
         app: grist
     spec:
       containers:
+      - args:
+        - --cookie-secure=false
+        - --provider=oidc
+        - --provider-display-name=Auth0
+        - --upstream=http://localhost:8484
+        - --http-address=$(HOST_IP):8000
+        - --redirect-url=https://grist.cluster.fun/oauth2/callback
+        - --email-domain=marcusnoble.co.uk
+        - --pass-basic-auth=false
+        - --pass-access-token=false
+        - --oidc-issuer-url=https://marcusnoble.eu.auth0.com/
+        - --cookie-secret=KDGD6rrK6cBmryyZ4wcJ9xAUNW9AQNFT
+        - --cookie-expire=336h0m0s
+        env:
+        - name: HOST_IP
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.podIP
+        - name: OAUTH2_PROXY_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: grist-auth
+        - name: OAUTH2_PROXY_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: grist-auth
+        image: quay.io/oauth2-proxy/oauth2-proxy:v7.2.1
+        name: oauth-proxy
+        ports:
+        - containerPort: 8000
+          protocol: TCP
+          name: proxy
+        resources:
+          limits:
+            memory: 50Mi
+          requests:
+            memory: 50Mi
       - name: web
         image: gristlabs/grist:latest
         imagePullPolicy: Always
@@ -63,9 +115,25 @@ spec:
           value: "1"
         - name: GRIST_SINGLE_ORG
           value: "docs"
+        - name: GRIST_DEFAULT_EMAIL
+          value: "grist@marcusnoble.co.uk"
+        - name: REDIS_URL
+          value: "redis://localhost:6379"
+        command:
+        - sh
+        - -c
+        - |
+          yarn add connect-redis@3.4.0
+          yarn run start:prod
         volumeMounts:
           - name: storage
             mountPath: /persist
+      - name: redis
+        image: redis:6
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 6379
+          name: redis
       volumes:
       - name: storage
         persistentVolumeClaim:
