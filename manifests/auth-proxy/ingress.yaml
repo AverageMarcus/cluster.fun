@@ -17,6 +17,7 @@ spec:
     - printer.cluster.fun
     - ender3pro.printer.cluster.fun
     - flsunq5.printer.cluster.fun
+    - elegoomars2.printer.cluster.fun
     - radarr.cluster.fun
     - readarr.cluster.fun
     - sonarr.cluster.fun
@@ -85,6 +86,16 @@ spec:
             port:
               name: http
   - host: flsunq5.printer.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: auth-proxy
+            port:
+              name: http
+  - host: elegoomars2.printer.cluster.fun
     http:
       paths:
       - path: /
