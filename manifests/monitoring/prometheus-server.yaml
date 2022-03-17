@@ -477,6 +477,9 @@ spec:
             timeoutSeconds: 30
             failureThreshold: 3
             successThreshold: 1
+          resources:
+            requests:
+              memory: 1250Mi
           volumeMounts:
             - name: config-volume
               mountPath: /etc/config
