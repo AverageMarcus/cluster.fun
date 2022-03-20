@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: docker-config
-  namespace: starling
+  namespace: calendso
   annotations:
     kube-1password: i6ngbk5zf4k52xgwdwnfup5bby
     kube-1password/vault: Kubernetes
