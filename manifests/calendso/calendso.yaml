@@ -63,6 +63,8 @@ spec:
           value: "https://meet.marcusnoble.co.uk"
         - name: NEXT_PUBLIC_APP_URL
           value: "https://meet.marcusnoble.co.uk"
+        - name: SINGLE_USER
+          value: "AverageMarcus"
         - name: NODE_ENV
           value: production
         - name: POSTGRES_DB
