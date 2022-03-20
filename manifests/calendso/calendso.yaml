@@ -37,12 +37,13 @@ spec:
     app: calendso
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: calendso
   namespace: calendso
 spec:
   replicas: 1
+  serviceName: calendso
   selector:
     matchLabels:
       app: calendso
@@ -58,6 +59,10 @@ spec:
         image: docker.cluster.fun/private/calendso:latest
         imagePullPolicy: Always
         env:
+        - name: BASE_URL
+          value: "https://meet.marcusnoble.co.uk"
+        - name: NEXT_PUBLIC_APP_URL
+          value: "https://meet.marcusnoble.co.uk"
         - name: NODE_ENV
           value: production
         - name: POSTGRES_DB
@@ -91,6 +96,18 @@ spec:
           value: calendso
         - name: PGDATA
           value: /var/lib/postgresql/data/calendso
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
 
 ---
 
