@@ -58,7 +58,7 @@ spec:
         - name: host-mappings
           mountPath: /config/
       - name: tailscale
-        image: ghcr.io/tailscale/tailscale:latest
+        image: ghcr.io/tailscale/tailscale:v1.22
         imagePullPolicy: Always
         env:
         - name: AUTH_KEY
@@ -206,7 +206,7 @@ spec:
           requests:
             memory: 50Mi
       - name: tailscale
-        image: ghcr.io/tailscale/tailscale:latest
+        image: ghcr.io/tailscale/tailscale:v1.22
         imagePullPolicy: Always
         env:
         - name: AUTH_KEY
