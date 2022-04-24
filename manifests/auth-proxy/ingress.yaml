@@ -22,6 +22,7 @@ spec:
     - readarr.cluster.fun
     - sonarr.cluster.fun
     - lidarr.cluster.fun
+    - prowlarr.cluster.fun
     - transmission.cluster.fun
     - tekton.cluster.fun
     secretName: auth-proxy-ingress
@@ -137,6 +138,16 @@ spec:
             port:
               name: http
   - host: lidarr.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: auth-proxy
+            port:
+              name: http
+  - host: prowlarr.cluster.fun
     http:
       paths:
       - path: /
