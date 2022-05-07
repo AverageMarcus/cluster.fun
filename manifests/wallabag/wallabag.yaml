@@ -56,7 +56,7 @@ spec:
               name: wallabag
           env:
             - name: "SYMFONY__ENV__DATABASE_CHARSET"
-              value: "utf8mb4"
+              value: "utf8"
             - name: "SYMFONY__ENV__DATABASE_DRIVER"
               value: "pdo_pgsql"
             - name: "SYMFONY__ENV__DATABASE_NAME"
