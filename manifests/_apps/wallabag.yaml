@@ -1,32 +1,7 @@
-# apiVersion: argoproj.io/v1alpha1
-# kind: Application
-# metadata:
-#   name: wallabag
-#   namespace: argocd
-#   finalizers:
-#   - resources-finalizer.argocd.argoproj.io
-# spec:
-#   project: cluster.fun
-#   destination:
-#     namespace: wallabag
-#     name: cluster-fun (scaleway)
-#   source:
-#     path: manifests/wallabag
-#     repoURL: "https://git.cluster.fun/AverageMarcus/cluster.fun.git"
-#     targetRevision: HEAD
-#   syncPolicy:
-#     syncOptions:
-#       - CreateNamespace=true
-#     automated: {}
-#   ignoreDifferences:
-#   - kind: Secret
-#     jsonPointers:
-#     - /data
-# ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: wallabag-chart
+  name: wallabag
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
@@ -36,56 +11,81 @@ spec:
     namespace: wallabag
     name: cluster-fun (scaleway)
   source:
-    repoURL: 'https://k8s-at-home.com/charts/'
-    targetRevision: 4.1.1
-    chart: wallabag
-    helm:
-      version: v3
-      values: |-
-        env:
-          TZ: UTC
-          MYSQL_ROOT_PASSWORD: wallabag-rootpass
-          SYMFONY__ENV__DOMAIN_NAME: https://wallabag.cluster.fun
-          SYMFONY__ENV__FOSUSER_REGISTRATION: false
-          SYMFONY__ENV__DATABASE_DRIVER: pdo_mysql
-          SYMFONY__ENV__DATABASE_DRIVER_CLASS: ~
-          SYMFONY__ENV__DATABASE_HOST: wallabag-chart-mariadb.wallabag.svc
-          SYMFONY__ENV__DATABASE_PORT: 3306
-          SYMFONY__ENV__DATABASE_NAME: wallabag
-          SYMFONY__ENV__DATABASE_USER: wallabag
-          SYMFONY__ENV__DATABASE_PASSWORD: wallabag-pass
-          SYMFONY__ENV__DATABASE_PATH: ~
-          SYMFONY__ENV__DATABASE_TABLE_PREFIX: wallabag_
-          SYMFONY__ENV__DATABASE_SOCKET: ~
-          SYMFONY__ENV__DATABASE_CHARSET: utf8mb4
-          SYMFONY__ENV__LOCALE: en
-        ingress:
-          main:
-            enabled: true
-            annotations:
-              cert-manager.io/cluster-issuer: letsencrypt
-              nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-            tls:
-            - hosts:
-              - wallabag.cluster.fun
-              secretName: wallabag-ingress
-            hosts:
-            - host: wallabag.cluster.fun
-              paths:
-              - path: /
-                pathType: ImplementationSpecific
-        mariadb:
-          enabled: true
-          architecture: standalone
-          auth:
-            database: wallabag
-            username: wallabag
-            password: wallabag-pass
-            rootPassword: wallabag-rootpass
-          primary:
-            persistence:
-              enabled: true
-        redis:
-          enabled: false
+    path: manifests/wallabag
+    repoURL: "https://git.cluster.fun/AverageMarcus/cluster.fun.git"
+    targetRevision: HEAD
   syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
     automated: {}
+  ignoreDifferences:
+  - kind: Secret
+    jsonPointers:
+    - /data
+# ---
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: wallabag-chart
+#   namespace: argocd
+#   finalizers:
+#   - resources-finalizer.argocd.argoproj.io
+# spec:
+#   project: cluster.fun
+#   destination:
+#     namespace: wallabag
+#     name: cluster-fun (scaleway)
+#   source:
+#     repoURL: 'https://k8s-at-home.com/charts/'
+#     targetRevision: 4.1.1
+#     chart: wallabag
+#     helm:
+#       version: v3
+#       values: |-
+#         env:
+#           TZ: UTC
+#           MYSQL_ROOT_PASSWORD: wallabag-rootpass
+#           SYMFONY__ENV__DOMAIN_NAME: https://wallabag.cluster.fun
+#           SYMFONY__ENV__FOSUSER_REGISTRATION: false
+#           SYMFONY__ENV__DATABASE_DRIVER: pdo_mysql
+#           SYMFONY__ENV__DATABASE_DRIVER_CLASS: ~
+#           SYMFONY__ENV__DATABASE_HOST: wallabag-chart-mariadb.wallabag.svc
+#           SYMFONY__ENV__DATABASE_PORT: 3306
+#           SYMFONY__ENV__DATABASE_NAME: wallabag
+#           SYMFONY__ENV__DATABASE_USER: wallabag
+#           SYMFONY__ENV__DATABASE_PASSWORD: wallabag-pass
+#           SYMFONY__ENV__DATABASE_PATH: ~
+#           SYMFONY__ENV__DATABASE_TABLE_PREFIX: wallabag_
+#           SYMFONY__ENV__DATABASE_SOCKET: ~
+#           SYMFONY__ENV__DATABASE_CHARSET: utf8mb4
+#           SYMFONY__ENV__LOCALE: en
+#         ingress:
+#           main:
+#             enabled: true
+#             annotations:
+#               cert-manager.io/cluster-issuer: letsencrypt
+#               nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+#             tls:
+#             - hosts:
+#               - wallabag.cluster.fun
+#               secretName: wallabag-ingress
+#             hosts:
+#             - host: wallabag.cluster.fun
+#               paths:
+#               - path: /
+#                 pathType: ImplementationSpecific
+#         mariadb:
+#           enabled: true
+#           architecture: standalone
+#           auth:
+#             database: wallabag
+#             username: wallabag
+#             password: wallabag-pass
+#             rootPassword: wallabag-rootpass
+#           primary:
+#             persistence:
+#               enabled: true
+#         redis:
+#           enabled: false
+#   syncPolicy:
+#     automated: {}

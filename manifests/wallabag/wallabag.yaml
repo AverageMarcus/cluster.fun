@@ -1,68 +1,125 @@
 apiVersion: v1
+kind: Secret
+metadata:
+  name: wallabag
+  namespace: wallabag
+  annotations:
+    kube-1password: 4yogl6yx6t4trrkq7o35tiyj6i
+    kube-1password/vault: Kubernetes
+    kube-1password/secret-text-parse: "true"
+type: Opaque
+---
+apiVersion: v1
 kind: Service
 metadata:
-  name: wallabag-deps
+  name: wallabag
   namespace: wallabag
+  labels:
+    app.kubernetes.io/name: wallabag
+  annotations:
 spec:
   type: ClusterIP
   ports:
-  - port: 5432
-    targetPort: db
-    name: db
-  - port: 6379
-    targetPort: redis
-    name: redis
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
   selector:
-    app: wallabag-deps
+    app.kubernetes.io/name: wallabag
 ---
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
-  name: wallabag-deps
+  name: wallabag
   namespace: wallabag
+  labels:
+    app.kubernetes.io/name: wallabag
 spec:
+  revisionHistoryLimit: 3
+  replicas: 0
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
-      app: wallabag-deps
-  serviceName: wallabag-deps
-  replicas: 1
+      app.kubernetes.io/name: wallabag
   template:
     metadata:
       labels:
-        app: wallabag-deps
+        app.kubernetes.io/name: wallabag
     spec:
       containers:
-      - name: postgres
-        image: postgres:9-alpine
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 5432
-          name: db
-        env:
-        - name: POSTGRES_USER
-          value: user
-        - name: POSTGRES_PASSWORD
-          value: pass
-        - name: POSTGRES_DB
-          value: wallabag
-        - name: PGDATA
-          value: /var/lib/postgresql/data/wallabag
-        volumeMounts:
-        - name: data
-          mountPath: /var/lib/postgresql/data
-      - name: redis
-        image: redis:6
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 6379
-          name: redis
-  volumeClaimTemplates:
-  - metadata:
-      name: data
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 5Gi
+        - name: wallabag
+          image: "wallabag/wallabag:2.4.2"
+          imagePullPolicy: IfNotPresent
+          envFrom:
+          - secretRef:
+              name: wallabag
+          env:
+            - name: "SYMFONY__ENV__DATABASE_CHARSET"
+              value: "utf8mb4"
+            - name: "SYMFONY__ENV__DATABASE_DRIVER"
+              value: "pdo_pgsql"
+            - name: "SYMFONY__ENV__DATABASE_NAME"
+              value: "wallabag"
+            - name: "SYMFONY__ENV__DATABASE_TABLE_PREFIX"
+              value: "wallabag_"
+            - name: "SYMFONY__ENV__DOMAIN_NAME"
+              value: "https://wallabag.cluster.fun"
+            - name: "SYMFONY__ENV__FOSUSER_REGISTRATION"
+              value: "false"
+            - name: "SYMFONY__ENV__LOCALE"
+              value: "en"
+            - name: "TZ"
+              value: "UTC"
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 0
+            failureThreshold: 3
+            timeoutSeconds: 1
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 0
+            failureThreshold: 3
+            timeoutSeconds: 1
+            periodSeconds: 10
+          startupProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 0
+            failureThreshold: 30
+            timeoutSeconds: 1
+            periodSeconds: 5
 ---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wallabag
+  namespace: wallabag
+  labels:
+    app.kubernetes.io/name: wallabag
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  tls:
+    - hosts:
+        - "wallabag.cluster.fun"
+      secretName: "wallabag-ingress"
+  rules:
+    - host: "wallabag.cluster.fun"
+      http:
+        paths:
+          - path: "/"
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: wallabag
+                port:
+                  number: 80
