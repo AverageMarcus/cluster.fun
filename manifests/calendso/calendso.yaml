@@ -77,30 +77,30 @@ spec:
         ports:
         - containerPort: 3000
           name: web
-      - name: postgres
-        image: postgres:9-alpine
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 5432
-          name: db
-        env:
-        - name: POSTGRES_USER
-          valueFrom:
-            secretKeyRef:
-              name: calendso
-              key: POSTGRES_USER
-        - name: POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: calendso
-              key: POSTGRES_PASSWORD
-        - name: POSTGRES_DB
-          value: calendso
-        - name: PGDATA
-          value: /var/lib/postgresql/data/calendso
-        volumeMounts:
-        - name: data
-          mountPath: /var/lib/postgresql/data
+      # - name: postgres
+      #   image: postgres:9-alpine
+      #   imagePullPolicy: IfNotPresent
+      #   ports:
+      #   - containerPort: 5432
+      #     name: db
+      #   env:
+      #   - name: POSTGRES_USER
+      #     valueFrom:
+      #       secretKeyRef:
+      #         name: calendso
+      #         key: POSTGRES_USER
+      #   - name: POSTGRES_PASSWORD
+      #     valueFrom:
+      #       secretKeyRef:
+      #         name: calendso
+      #         key: POSTGRES_PASSWORD
+      #   - name: POSTGRES_DB
+      #     value: calendso
+      #   - name: PGDATA
+      #     value: /var/lib/postgresql/data/calendso
+      #   volumeMounts:
+      #   - name: data
+      #     mountPath: /var/lib/postgresql/data
   volumeClaimTemplates:
   - metadata:
       name: data
