@@ -21,7 +21,7 @@ spec:
     targetPort: web
     name: web
   selector:
-    app: outline
+    app.kubernetes.io/name: outline
 ---
 apiVersion: apps/v1
 kind: Deployment
