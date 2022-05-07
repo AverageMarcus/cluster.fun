@@ -24,40 +24,24 @@ spec:
     app: outline
 ---
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: outline
   namespace: outline
+  labels:
+    app.kubernetes.io/name: outline
 spec:
+  revisionHistoryLimit: 3
+  replicas: 1
   selector:
     matchLabels:
-      app: outline
-  serviceName: outline
-  replicas: 1
+      app.kubernetes.io/name: outline
   template:
     metadata:
       labels:
-        app: outline
+        app.kubernetes.io/name: outline
     spec:
       containers:
-      # - name: postgres
-      #   image: postgres:9-alpine
-      #   imagePullPolicy: IfNotPresent
-      #   ports:
-      #   - containerPort: 5432
-      #     name: db
-      #   env:
-      #   - name: POSTGRES_USER
-      #     value: user
-      #   - name: POSTGRES_PASSWORD
-      #     value: pass
-      #   - name: POSTGRES_DB
-      #     value: outline
-      #   - name: PGDATA
-      #     value: /var/lib/postgresql/data/outline
-      #   volumeMounts:
-      #   - name: data
-      #     mountPath: /var/lib/postgresql/data
       - name: redis
         image: redis:6
         imagePullPolicy: IfNotPresent
@@ -75,8 +59,6 @@ spec:
             yarn db:migrate --env=production-ssl-disabled
             yarn start
         env:
-        # - name: PGSSLMODE
-        #   value: disable
         - name: ALLOWED_DOMAINS
           value: marcusnoble.co.uk
         - name: OIDC_SCOPES
@@ -84,24 +66,27 @@ spec:
         ports:
         - containerPort: 3000
           name: web
+        livenessProbe:
+          httpGet:
+            path: /_health
+            port: web
+          initialDelaySeconds: 10
+        startupProbe:
+          httpGet:
+            path: /_health
+            port: web
+          failureThreshold: 30
+          timeoutSeconds: 1
+          periodSeconds: 5
         volumeMounts:
           - mountPath: /opt/outline/.env
             subPath: .env
             name: outline-env
             readOnly: true
-      volumes:
-        - name: outline-env
-          secret:
-            secretName: outline
-  volumeClaimTemplates:
-  - metadata:
-      name: data
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 5Gi
+        volumes:
+          - name: outline-env
+            secret:
+              secretName: outline
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
