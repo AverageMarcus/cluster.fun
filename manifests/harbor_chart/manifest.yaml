@@ -16,23 +16,6 @@ metadata:
 type: Opaque
 
 ---
-# Source: harbor/templates/database/database-secret.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: "harbor-harbor-harbor-database"
-  labels:
-    heritage: Helm
-    release: harbor-harbor
-    chart: harbor
-    app: "harbor"
-  annotations:
-    kube-1password: fyedoxemaq6ro7mxh5espv4ynu
-    kube-1password/vault: Kubernetes
-    kube-1password/secret-text-parse: "true"
-type: Opaque
-
----
 # Source: harbor/templates/exporter/exporter-secret.yaml
 apiVersion: v1
 kind: Secret
@@ -120,11 +103,11 @@ data:
     httpport = 8080
   PORT: "8080"
   DATABASE_TYPE: "postgresql"
-  POSTGRESQL_HOST: "harbor-harbor-harbor-database"
-  POSTGRESQL_PORT: "5432"
-  POSTGRESQL_USERNAME: "postgres"
-  POSTGRESQL_DATABASE: "registry"
-  POSTGRESQL_SSLMODE: "disable"
+  POSTGRESQL_HOST: "51.159.9.131"
+  POSTGRESQL_PORT: "59917"
+  POSTGRESQL_USERNAME: "harbor"
+  POSTGRESQL_DATABASE: "harbor-registry"
+  POSTGRESQL_SSLMODE: "require"
   POSTGRESQL_MAX_IDLE_CONNS: "100"
   POSTGRESQL_MAX_OPEN_CONNS: "900"
   EXT_ENDPOINT: "https://docker.cluster.fun"
@@ -150,7 +133,7 @@ data:
   REGISTRY_CREDENTIAL_USERNAME: "harbor_registry_user"
   HTTP_PROXY: ""
   HTTPS_PROXY: ""
-  NO_PROXY: "harbor-harbor-harbor-core,harbor-harbor-harbor-jobservice,harbor-harbor-harbor-database,harbor-harbor-harbor-chartmuseum,harbor-harbor-harbor-notary-server,harbor-harbor-harbor-notary-signer,harbor-harbor-harbor-registry,harbor-harbor-harbor-portal,harbor-harbor-harbor-trivy,harbor-harbor-harbor-exporter,127.0.0.1,localhost,.local,.internal"
+  NO_PROXY: "harbor-harbor-harbor-core,harbor-harbor-harbor-jobservice,harbor-harbor-harbor-chartmuseum,harbor-harbor-harbor-notary-server,harbor-harbor-harbor-notary-signer,harbor-harbor-harbor-registry,harbor-harbor-harbor-portal,harbor-harbor-harbor-trivy,harbor-harbor-harbor-exporter,127.0.0.1,localhost,.local,.internal"
   PERMITTED_REGISTRY_TYPES_FOR_PROXY_CACHE: "docker-hub,harbor,azure-acr,aws-ecr,google-gcr,quay,docker-registry"
   METRIC_ENABLE: "true"
   METRIC_PATH: "/metrics"
@@ -171,7 +154,7 @@ metadata:
 data:
   HTTP_PROXY: ""
   HTTPS_PROXY: ""
-  NO_PROXY: "harbor-harbor-harbor-core,harbor-harbor-harbor-jobservice,harbor-harbor-harbor-database,harbor-harbor-harbor-chartmuseum,harbor-harbor-harbor-notary-server,harbor-harbor-harbor-notary-signer,harbor-harbor-harbor-registry,harbor-harbor-harbor-portal,harbor-harbor-harbor-trivy,harbor-harbor-harbor-exporter,127.0.0.1,localhost,.local,.internal"
+  NO_PROXY: "harbor-harbor-harbor-core,harbor-harbor-harbor-jobservice,harbor-harbor-harbor-chartmuseum,harbor-harbor-harbor-notary-server,harbor-harbor-harbor-notary-signer,harbor-harbor-harbor-registry,harbor-harbor-harbor-portal,harbor-harbor-harbor-trivy,harbor-harbor-harbor-exporter,127.0.0.1,localhost,.local,.internal"
   LOG_LEVEL: "info"
   HARBOR_EXPORTER_PORT: "8001"
   HARBOR_EXPORTER_METRICS_PATH: "/metrics"
@@ -186,11 +169,11 @@ data:
   HARBOR_SERVICE_SCHEME: "http"
   HARBOR_SERVICE_HOST: "harbor-harbor-harbor-core"
   HARBOR_SERVICE_PORT: "80"
-  HARBOR_DATABASE_HOST: "harbor-harbor-harbor-database"
-  HARBOR_DATABASE_PORT: "5432"
-  HARBOR_DATABASE_USERNAME: "postgres"
-  HARBOR_DATABASE_DBNAME: "registry"
-  HARBOR_DATABASE_SSLMODE: "disable"
+  HARBOR_DATABASE_HOST: "51.159.9.131"
+  HARBOR_DATABASE_PORT: "59917"
+  HARBOR_DATABASE_USERNAME: "harbor"
+  HARBOR_DATABASE_DBNAME: "harbor-registry"
+  HARBOR_DATABASE_SSLMODE: "require"
   HARBOR_DATABASE_MAX_IDLE_CONNS: "100"
   HARBOR_DATABASE_MAX_OPEN_CONNS: "900"
 ---
@@ -212,7 +195,7 @@ data:
   REGISTRY_CREDENTIAL_USERNAME: "harbor_registry_user"
   HTTP_PROXY: ""
   HTTPS_PROXY: ""
-  NO_PROXY: "harbor-harbor-harbor-core,harbor-harbor-harbor-jobservice,harbor-harbor-harbor-database,harbor-harbor-harbor-chartmuseum,harbor-harbor-harbor-notary-server,harbor-harbor-harbor-notary-signer,harbor-harbor-harbor-registry,harbor-harbor-harbor-portal,harbor-harbor-harbor-trivy,harbor-harbor-harbor-exporter,127.0.0.1,localhost,.local,.internal"
+  NO_PROXY: "harbor-harbor-harbor-core,harbor-harbor-harbor-jobservice,harbor-harbor-harbor-chartmuseum,harbor-harbor-harbor-notary-server,harbor-harbor-harbor-notary-signer,harbor-harbor-harbor-registry,harbor-harbor-harbor-portal,harbor-harbor-harbor-trivy,harbor-harbor-harbor-exporter,127.0.0.1,localhost,.local,.internal"
   METRIC_NAMESPACE: harbor
   METRIC_SUBSYSTEM: jobservice
 ---
@@ -382,24 +365,6 @@ spec:
     release: harbor-harbor
     app: "harbor"
     component: core
----
-# Source: harbor/templates/database/database-svc.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: "harbor-harbor-harbor-database"
-  labels:
-    heritage: Helm
-    release: harbor-harbor
-    chart: harbor
-    app: "harbor"
-spec:
-  ports:
-    - port: 5432
-  selector:
-    release: harbor-harbor
-    app: "harbor"
-    component: database
 ---
 # Source: harbor/templates/exporter/exporter-svc.yaml
 apiVersion: v1
@@ -1013,117 +978,6 @@ spec:
                 - harbor
             topologyKey: kubernetes.io/hostname
       priorityClassName: system-cluster-critical
----
-# Source: harbor/templates/database/database-ss.yaml
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: "harbor-harbor-harbor-database"
-  labels:
-    heritage: Helm
-    release: harbor-harbor
-    chart: harbor
-    app: "harbor"
-    component: database
-spec:
-  replicas: 1
-  serviceName: "harbor-harbor-harbor-database"
-  selector:
-    matchLabels:
-      release: harbor-harbor
-      app: "harbor"
-      component: database
-  template:
-    metadata:
-      labels:
-        heritage: Helm
-        release: harbor-harbor
-        chart: harbor
-        app: "harbor"
-        component: database
-      annotations:
-        checksum/secret: 7a382608359a04f6943a40781d4010c95b076ef1dc524f02dfdbbe1f1d4b0615
-    spec:
-      securityContext:
-        runAsUser: 999
-        fsGroup: 999
-      automountServiceAccountToken: false
-      terminationGracePeriodSeconds: 120
-      initContainers:
-      # as we change the data directory to a sub folder to support psp, the init container here
-      # is used to migrate the existing data. See https://github.com/goharbor/harbor-helm/issues/756
-      # for more detail.
-      # we may remove it after several releases
-      - name: "data-migrator"
-        image: goharbor/harbor-db:v2.4.1
-        imagePullPolicy: IfNotPresent
-        command: ["/bin/sh"]
-        args: ["-c", "[ -e /var/lib/postgresql/data/postgresql.conf ] && [ ! -d /var/lib/postgresql/data/pgdata ] && mkdir -m 0700 /var/lib/postgresql/data/pgdata && mv /var/lib/postgresql/data/* /var/lib/postgresql/data/pgdata/ || true"]
-        volumeMounts:
-          - name: database-data
-            mountPath: /var/lib/postgresql/data
-            subPath:
-      # with "fsGroup" set, each time a volume is mounted, Kubernetes must recursively chown() and chmod() all the files and directories inside the volume
-      # this causes the postgresql reports the "data directory /var/lib/postgresql/data/pgdata has group or world access" issue when using some CSIs e.g. Ceph
-      # use this init container to correct the permission
-      # as "fsGroup" applied before the init container running, the container has enough permission to execute the command
-      - name: "data-permissions-ensurer"
-        image: goharbor/harbor-db:v2.4.1
-        imagePullPolicy: IfNotPresent
-        command: ["/bin/sh"]
-        args: ["-c", "chmod -R 700 /var/lib/postgresql/data/pgdata || true"]
-        volumeMounts:
-          - name: database-data
-            mountPath: /var/lib/postgresql/data
-            subPath:
-      containers:
-      - name: database
-        image: goharbor/harbor-db:v2.4.1
-        imagePullPolicy: IfNotPresent
-        livenessProbe:
-          exec:
-            command:
-            - /docker-healthcheck.sh
-          initialDelaySeconds: 300
-          periodSeconds: 10
-        readinessProbe:
-          exec:
-            command:
-            - /docker-healthcheck.sh
-          initialDelaySeconds: 1
-          periodSeconds: 10
-        envFrom:
-          - secretRef:
-              name: "harbor-harbor-harbor-database"
-        env:
-          # put the data into a sub directory to avoid the permission issue in k8s with restricted psp enabled
-          # more detail refer to https://github.com/goharbor/harbor-helm/issues/756
-          - name: PGDATA
-            value: "/var/lib/postgresql/data/pgdata"
-        volumeMounts:
-        - name: database-data
-          mountPath: /var/lib/postgresql/data
-          subPath:
-        - name: shm-volume
-          mountPath: /dev/shm
-      volumes:
-      - name: shm-volume
-        emptyDir:
-          medium: Memory
-          sizeLimit: 512Mi
-  volumeClaimTemplates:
-  - metadata:
-      name: "database-data"
-      labels:
-        heritage: Helm
-        release: harbor-harbor
-        chart: harbor
-        app: "harbor"
-    spec:
-      accessModes: ["ReadWriteOnce"]
-      resources:
-        requests:
-          storage: "1Gi"
 ---
 # Source: harbor/templates/redis/statefulset.yaml
 apiVersion: apps/v1
