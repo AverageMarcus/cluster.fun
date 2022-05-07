@@ -83,10 +83,10 @@ spec:
             subPath: .env
             name: outline-env
             readOnly: true
-        volumes:
-          - name: outline-env
-            secret:
-              secretName: outline
+      volumes:
+        - name: outline-env
+          secret:
+            secretName: outline
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
