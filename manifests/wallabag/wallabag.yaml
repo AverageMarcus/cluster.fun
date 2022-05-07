@@ -27,6 +27,52 @@ spec:
   selector:
     app.kubernetes.io/name: wallabag
 ---
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: wallabag
+  namespace: wallabag
+  labels:
+    app.kubernetes.io/name: wallabag-init
+spec:
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: wallabag-init
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: db-init
+        image: "docker.cluster.fun/dockerhub/wallabag/wallabag:2.4.3"
+        imagePullPolicy: IfNotPresent
+        envFrom:
+        - secretRef:
+            name: wallabag
+        env:
+          - name: "SYMFONY__ENV__DATABASE_CHARSET"
+            value: "utf8"
+          - name: "SYMFONY__ENV__DATABASE_DRIVER"
+            value: "pdo_pgsql"
+          - name: "SYMFONY__ENV__DATABASE_NAME"
+            value: "wallabag"
+          - name: "SYMFONY__ENV__DATABASE_TABLE_PREFIX"
+            value: "wallabag_"
+          - name: "SYMFONY__ENV__DOMAIN_NAME"
+            value: "https://wallabag.cluster.fun"
+          - name: "SYMFONY__ENV__FOSUSER_REGISTRATION"
+            value: "false"
+          - name: "SYMFONY__ENV__LOCALE"
+            value: "en"
+          - name: "TZ"
+            value: "UTC"
+        command: 
+        - /var/www/wallabag/bin/console 
+        - wallabag:install 
+        - --env=prod 
+        - --no-interaction
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
