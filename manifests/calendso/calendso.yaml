@@ -34,23 +34,25 @@ spec:
     targetPort: web
     name: web
   selector:
-    app: calendso
+    app.kubernetes.io/name: calendso
 ---
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: calendso
   namespace: calendso
+  labels:
+    app.kubernetes.io/name: calendso
 spec:
+  revisionHistoryLimit: 3
   replicas: 1
-  serviceName: calendso
   selector:
     matchLabels:
-      app: calendso
+      app.kubernetes.io/name: calendso
   template:
     metadata:
       labels:
-        app: calendso
+        app.kubernetes.io/name: calendso
     spec:
       imagePullSecrets:
         - name: docker-config
@@ -69,50 +71,13 @@ spec:
           value: production
         - name: POSTGRES_DB
           value: calendso
-        - name: DATABASE_HOST
-          value: localhost:5432
         envFrom:
         - secretRef:
             name: calendso
         ports:
         - containerPort: 3000
           name: web
-      # - name: postgres
-      #   image: postgres:9-alpine
-      #   imagePullPolicy: IfNotPresent
-      #   ports:
-      #   - containerPort: 5432
-      #     name: db
-      #   env:
-      #   - name: POSTGRES_USER
-      #     valueFrom:
-      #       secretKeyRef:
-      #         name: calendso
-      #         key: POSTGRES_USER
-      #   - name: POSTGRES_PASSWORD
-      #     valueFrom:
-      #       secretKeyRef:
-      #         name: calendso
-      #         key: POSTGRES_PASSWORD
-      #   - name: POSTGRES_DB
-      #     value: calendso
-      #   - name: PGDATA
-      #     value: /var/lib/postgresql/data/calendso
-      #   volumeMounts:
-      #   - name: data
-      #     mountPath: /var/lib/postgresql/data
-  volumeClaimTemplates:
-  - metadata:
-      name: data
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 1Gi
-
 ---
-
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
