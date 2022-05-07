@@ -40,24 +40,24 @@ spec:
         app: outline
     spec:
       containers:
-      - name: postgres
-        image: postgres:9-alpine
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 5432
-          name: db
-        env:
-        - name: POSTGRES_USER
-          value: user
-        - name: POSTGRES_PASSWORD
-          value: pass
-        - name: POSTGRES_DB
-          value: outline
-        - name: PGDATA
-          value: /var/lib/postgresql/data/outline
-        volumeMounts:
-        - name: data
-          mountPath: /var/lib/postgresql/data
+      # - name: postgres
+      #   image: postgres:9-alpine
+      #   imagePullPolicy: IfNotPresent
+      #   ports:
+      #   - containerPort: 5432
+      #     name: db
+      #   env:
+      #   - name: POSTGRES_USER
+      #     value: user
+      #   - name: POSTGRES_PASSWORD
+      #     value: pass
+      #   - name: POSTGRES_DB
+      #     value: outline
+      #   - name: PGDATA
+      #     value: /var/lib/postgresql/data/outline
+      #   volumeMounts:
+      #   - name: data
+      #     mountPath: /var/lib/postgresql/data
       - name: redis
         image: redis:6
         imagePullPolicy: IfNotPresent
@@ -75,8 +75,8 @@ spec:
             yarn db:migrate --env=production-ssl-disabled
             yarn start
         env:
-        - name: PGSSLMODE
-          value: disable
+        # - name: PGSSLMODE
+        #   value: disable
         - name: ALLOWED_DOMAINS
           value: marcusnoble.co.uk
         - name: OIDC_SCOPES
