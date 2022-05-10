@@ -269,7 +269,6 @@ spec:
     - home.cluster.fun
     - tasks.cluster.fun
     - api.tasks.cluster.fun
-    - mealie.cluster.fun
     secretName: non-auth-proxy-ingress
   rules:
   - host: home.cluster.fun
@@ -293,16 +292,6 @@ spec:
             port:
               name: http
   - host: api.tasks.cluster.fun
-    http:
-      paths:
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: non-auth-proxy
-            port:
-              name: http
-  - host: mealie.cluster.fun
     http:
       paths:
       - path: /
