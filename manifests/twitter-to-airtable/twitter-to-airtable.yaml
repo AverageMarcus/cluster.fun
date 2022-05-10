@@ -109,6 +109,9 @@ spec:
         env:
         - name: PORT
           value: "8080"
+        envFrom:
+        - secretRef:
+            name: "twitter-to-airtable"
         ports:
         - containerPort: 8080
           name: web
