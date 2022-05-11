@@ -172,3 +172,13 @@ spec:
             name: mealie
             port:
               name: web
+  - host: mealie.cluster.fun
+    http:
+      paths:
+      - path: /api
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: mealie-api
+            port:
+              name: api
