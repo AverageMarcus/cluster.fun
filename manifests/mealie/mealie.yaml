@@ -53,10 +53,8 @@ spec:
           value: "1000"
         - name: PGID
           value: "1000"
-        - name: TZ
-          value: Europe/London
         - name: TOKEN_TIME
-          value: "12"
+          value: "168"
         - name: DB_ENGINE
           value: postgres
         - name: POSTGRES_DB
@@ -90,8 +88,6 @@ spec:
           value: "1000"
         - name: PGID
           value: "1000"
-        - name: TZ
-          value: Europe/London
         - name: DB_ENGINE
           value: postgres
         - name: POSTGRES_DB
