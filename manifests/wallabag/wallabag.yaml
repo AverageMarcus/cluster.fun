@@ -116,6 +116,8 @@ spec:
               value: "en"
             - name: "TZ"
               value: "UTC"
+            - name: "POPULATE_DATABASE"
+              value: "false"
           ports:
             - name: http
               containerPort: 80
