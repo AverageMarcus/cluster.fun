@@ -1,0 +1,73 @@
+
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: mastodon-web
+  namespace: mastodon
+  labels:
+    app.kubernetes.io/name: mastodon
+    app.kubernetes.io/instance: "k8s.social"
+    app.kubernetes.io/component: web
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: mastodon-web
+  minReplicas: 2
+  maxReplicas: 4
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          averageUtilization: 80
+          type: Utilization
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: mastodon-sidekiq
+  namespace: mastodon
+  labels:
+    app.kubernetes.io/name: mastodon
+    app.kubernetes.io/instance: "k8s.social"
+    app.kubernetes.io/component: sidekiq
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: mastodon-sidekiq
+  minReplicas: 2
+  maxReplicas: 6
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          averageUtilization: 80
+          type: Utilization
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: mastodon-streaming
+  namespace: mastodon
+  labels:
+    app.kubernetes.io/name: mastodon
+    app.kubernetes.io/instance: "k8s.social"
+    app.kubernetes.io/component: streaming
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: mastodon-streaming
+  minReplicas: 2
+  maxReplicas: 6
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          averageUtilization: 80
+          type: Utilization
+---
