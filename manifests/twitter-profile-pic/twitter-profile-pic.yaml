@@ -40,7 +40,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: docker.cluster.fun/averagemarcus/twitter-profile-pic:latest
+        image: rg.fr-par.scw.cloud/averagemarcus/twitter-profile-pic:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 9090

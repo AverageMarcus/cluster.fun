@@ -98,7 +98,7 @@ spec:
           requests:
             memory: 50Mi
       - name: web
-        image: docker.cluster.fun/averagemarcus/gopherss:latest
+        image: rg.fr-par.scw.cloud/averagemarcus/gopherss:latest
         env:
         - name: PORT
           value: "8080"

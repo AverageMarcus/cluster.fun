@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: docker.cluster.fun/averagemarcus/text-to-dxf:latest
+        image: rg.fr-par.scw.cloud/averagemarcus/text-to-dxf:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

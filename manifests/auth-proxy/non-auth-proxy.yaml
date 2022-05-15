@@ -44,7 +44,7 @@ spec:
           - 100.100.100.100
       containers:
       - name: proxy
-        image: docker.cluster.fun/averagemarcus/proxy:latest
+        image: rg.fr-par.scw.cloud/averagemarcus/proxy:latest
         imagePullPolicy: Always
         env:
         - name: PROXY_DESTINATION

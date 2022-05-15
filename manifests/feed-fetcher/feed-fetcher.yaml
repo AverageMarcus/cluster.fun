@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: docker.cluster.fun/averagemarcus/feed-fetcher:latest
+        image: rg.fr-par.scw.cloud/averagemarcus/feed-fetcher:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

@@ -47,7 +47,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: docker.cluster.fun/averagemarcus/link:latest
+        image: rg.fr-par.scw.cloud/averagemarcus/link:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 5050

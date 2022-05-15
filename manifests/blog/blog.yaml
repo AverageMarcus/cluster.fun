@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: docker.cluster.fun/averagemarcus/blog:latest
+        image: rg.fr-par.scw.cloud/averagemarcus/blog:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8000

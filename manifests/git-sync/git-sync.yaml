@@ -66,7 +66,7 @@ spec:
         spec:
           containers:
           - name: sync
-            image: docker.cluster.fun/averagemarcus/git-sync:latest
+            image: rg.fr-par.scw.cloud/averagemarcus/git-sync:latest
             imagePullPolicy: Always
             env:
             - name: GITHUB_TOKEN
