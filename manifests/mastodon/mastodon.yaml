@@ -104,6 +104,26 @@ spec:
             requests:
               memory: 350Mi
               cpu: 25m
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: "app.kubernetes.io/name"
+                  operator: In
+                  values:
+                  - mastodon
+                - key: "app.kubernetes.io/instance"
+                  operator: In
+                  values:
+                  - "k8s.social"
+                - key: "app.kubernetes.io/component"
+                  operator: In
+                  values:
+                  - sidekiq
+              topologyKey: kubernetes.io/hostname
 ---
 
 apiVersion: apps/v1
@@ -167,6 +187,26 @@ spec:
             requests:
               memory: 500Mi
               cpu: 8m
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: "app.kubernetes.io/name"
+                  operator: In
+                  values:
+                  - mastodon
+                - key: "app.kubernetes.io/instance"
+                  operator: In
+                  values:
+                  - "k8s.social"
+                - key: "app.kubernetes.io/component"
+                  operator: In
+                  values:
+                  - streaming
+              topologyKey: kubernetes.io/hostname
 ---
 
 apiVersion: apps/v1
@@ -231,4 +271,24 @@ spec:
             requests:
               memory: 600Mi
               cpu: 8m
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: "app.kubernetes.io/name"
+                  operator: In
+                  values:
+                  - mastodon
+                - key: "app.kubernetes.io/instance"
+                  operator: In
+                  values:
+                  - "k8s.social"
+                - key: "app.kubernetes.io/component"
+                  operator: In
+                  values:
+                  - web
+              topologyKey: kubernetes.io/hostname
 ---
