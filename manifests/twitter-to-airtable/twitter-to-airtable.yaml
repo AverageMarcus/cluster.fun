@@ -104,7 +104,7 @@ spec:
           requests:
             memory: 50Mi
       - name: web
-        image: docker.cluster.fun/private/twitter-to-airtable:latest
+        image: rg.fr-par.scw.cloud/averagemarcus-private/twitter-to-airtable:latest
         imagePullPolicy: Always
         env:
         - name: PORT

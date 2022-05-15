@@ -55,7 +55,7 @@ spec:
         - name: docker-config
       containers:
       - name: web
-        image: docker.cluster.fun/private/starling:latest
+        image: rg.fr-par.scw.cloud/averagemarcus-private/starling:latest
         imagePullPolicy: Always
         env:
         - name: PORT

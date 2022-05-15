@@ -44,7 +44,7 @@ spec:
         - name: docker-config
       containers:
       - name: web
-        image: docker.cluster.fun/private/11-year-anniversary:latest
+        image: rg.fr-par.scw.cloud/averagemarcus-private/11-year-anniversary:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 80

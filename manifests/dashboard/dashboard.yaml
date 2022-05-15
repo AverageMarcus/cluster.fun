@@ -93,7 +93,7 @@ spec:
           requests:
             memory: 50Mi
       - name: web
-        image: docker.cluster.fun/private/dashboard:latest
+        image: rg.fr-par.scw.cloud/averagemarcus-private/dashboard:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 80

@@ -58,7 +58,7 @@ spec:
         - name: docker-config
       containers:
       - name: web
-        image: docker.cluster.fun/private/calendso:latest
+        image: rg.fr-par.scw.cloud/averagemarcus-private/calendso:latest
         imagePullPolicy: Always
         env:
         - name: BASE_URL
