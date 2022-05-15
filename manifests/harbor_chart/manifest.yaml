@@ -480,7 +480,7 @@ metadata:
     app: "harbor"
     component: core
 spec:
-  replicas: 2
+  replicas: 0
   selector:
     matchLabels:
       release: harbor-harbor
@@ -611,7 +611,7 @@ metadata:
     app: "harbor"
     component: exporter
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       release: harbor-harbor
@@ -673,7 +673,7 @@ metadata:
     app: "harbor"
     component: jobservice
 spec:
-  replicas: 1
+  replicas: 0
   strategy:
     type: Recreate
     rollingUpdate: null
@@ -761,7 +761,7 @@ metadata:
     app: "harbor"
     component: portal
 spec:
-  replicas: 2
+  replicas: 0
   selector:
     matchLabels:
       release: harbor-harbor
@@ -838,7 +838,7 @@ metadata:
     app: "harbor"
     component: registry
 spec:
-  replicas: 2
+  replicas: 0
   strategy:
     type: Recreate
     rollingUpdate: null
@@ -991,7 +991,7 @@ metadata:
     app: "harbor"
     component: redis
 spec:
-  replicas: 1
+  replicas: 0
   serviceName: harbor-harbor-harbor-redis
   selector:
     matchLabels:
