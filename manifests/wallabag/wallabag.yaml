@@ -35,6 +35,7 @@ metadata:
   labels:
     app.kubernetes.io/name: wallabag-init
 spec:
+  suspend: true
   template:
     metadata:
       labels:
