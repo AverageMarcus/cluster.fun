@@ -44,7 +44,7 @@ spec:
       restartPolicy: OnFailure
       containers:
       - name: db-init
-        image: "wallabag/wallabag:2.4.3"
+        image: "wallabag/wallabag:2.5.0"
         imagePullPolicy: IfNotPresent
         envFrom:
         - secretRef:
@@ -95,7 +95,7 @@ spec:
     spec:
       containers:
         - name: wallabag
-          image: "wallabag/wallabag:2.4.3"
+          image: "wallabag/wallabag:2.5.0"
           imagePullPolicy: IfNotPresent
           envFrom:
           - secretRef:
