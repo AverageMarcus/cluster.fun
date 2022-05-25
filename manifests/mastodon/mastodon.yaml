@@ -102,7 +102,7 @@ spec:
                 name: mastodon
           resources:
             requests:
-              memory: 350Mi
+              memory: 450Mi
               cpu: 25m
       affinity:
         podAntiAffinity:
@@ -269,7 +269,7 @@ spec:
             periodSeconds: 10
           resources:
             requests:
-              memory: 600Mi
+              memory: 800Mi
               cpu: 8m
       affinity:
         podAntiAffinity:
