@@ -103,7 +103,6 @@ spec:
           resources:
             requests:
               memory: 450Mi
-              cpu: 25m
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -186,7 +185,6 @@ spec:
           resources:
             requests:
               memory: 500Mi
-              cpu: 8m
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -270,7 +268,6 @@ spec:
           resources:
             requests:
               memory: 800Mi
-              cpu: 8m
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
