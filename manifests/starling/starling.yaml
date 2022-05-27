@@ -42,7 +42,7 @@ metadata:
   name: starling
   namespace: starling
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: starling
@@ -73,6 +73,11 @@ spec:
         ports:
         - containerPort: 3000
           name: web
+        resources:
+          limits:
+            memory: 50Mi
+          requests:
+            memory: 50Mi
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress

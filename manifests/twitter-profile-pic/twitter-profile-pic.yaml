@@ -47,9 +47,9 @@ spec:
           name: web
         resources:
           limits:
-            memory: 250Mi
+            memory: 100Mi
           requests:
-            memory: 250Mi
+            memory: 100Mi
         volumeMounts:
           - name: dotenv
             mountPath: /app/.env

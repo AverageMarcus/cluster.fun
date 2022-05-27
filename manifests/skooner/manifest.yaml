@@ -53,6 +53,12 @@ spec:
             port: 4654
           initialDelaySeconds: 30
           timeoutSeconds: 30
+        resources:
+          limits:
+            memory: 80Mi
+          requests:
+            memory: 80Mi
+
 
 ---
 

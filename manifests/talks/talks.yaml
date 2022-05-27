@@ -36,9 +36,9 @@ spec:
           name: web
         resources:
           limits:
-            memory: 50Mi
+            memory: 20Mi
           requests:
-            memory: 50Mi
+            memory: 20Mi
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress

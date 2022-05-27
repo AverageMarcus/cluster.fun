@@ -48,6 +48,7 @@ spec:
   tls:
   - hosts:
     - cors-proxy.cluster.fun
+    - cors-proxy.marcusnoble.co.uk
     secretName: cors-proxy-ingress
   rules:
   - host: cors-proxy.cluster.fun
@@ -60,23 +61,6 @@ spec:
             name: cors-proxy
             port:
               number: 80
-
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: cors-proxy-mn
-  namespace: cors-proxy
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-spec:
-  ingressClassName: nginx
-  tls:
-  - hosts:
-    - cors-proxy.marcusnoble.co.uk
-    secretName: cors-proxy-mn-ingress
-  rules:
   - host: cors-proxy.marcusnoble.co.uk
     http:
       paths:
