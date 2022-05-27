@@ -92,9 +92,9 @@ spec:
           mountPath: /usr/share/nginx/html/.well-known/matrix
         resources:
           limits:
-            memory: 5Mi
+            memory: 15Mi
           requests:
-            memory: 5Mi
+            memory: 15Mi
       volumes:
       - name: well-known
         configMap:
