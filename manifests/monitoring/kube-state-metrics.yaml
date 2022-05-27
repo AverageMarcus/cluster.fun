@@ -209,33 +209,33 @@ spec:
       containers:
       - name: kube-state-metrics
         args:
-        - --resources=certificatesigningrequests
+        #- --resources=certificatesigningrequests
         - --resources=configmaps
         - --resources=cronjobs
         - --resources=daemonsets
         - --resources=deployments
-        - --resources=endpoints
-        - --resources=horizontalpodautoscalers
+        #- --resources=endpoints
+        #- --resources=horizontalpodautoscalers
         - --resources=ingresses
         - --resources=jobs
-        - --resources=limitranges
+        #- --resources=limitranges
         - --resources=mutatingwebhookconfigurations
         - --resources=namespaces
-        - --resources=networkpolicies
+        #- --resources=networkpolicies
         - --resources=nodes
         - --resources=persistentvolumeclaims
         - --resources=persistentvolumes
         - --resources=poddisruptionbudgets
         - --resources=pods
         - --resources=replicasets
-        - --resources=replicationcontrollers
-        - --resources=resourcequotas
+        #- --resources=replicationcontrollers
+        #- --resources=resourcequotas
         - --resources=secrets
         - --resources=services
         - --resources=statefulsets
         - --resources=storageclasses
         - --resources=validatingwebhookconfigurations
-        - --resources=volumeattachments
+        #- --resources=volumeattachments
         imagePullPolicy: IfNotPresent
         image: "k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.4.2"
         ports:

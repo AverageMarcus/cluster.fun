@@ -62,6 +62,16 @@ spec:
             - --no-collector.wifi
             - --no-collector.hwmon
             - --no-collector.netclass
+            - --no-collector.arp
+            - --no-collector.bcache
+            - --no-collector.bonding
+            - --no-collector.btrfs
+            - --no-collector.dmi
+            - --no-collector.edac
+            - --no-collector.entropy
+            - --no-collector.fibrechannel
+            - --no-collector.infiniband
+            - --no-collector.tapestats
             - --collector.filesystem.ignored-mount-points=^/(dev|proc|sys|var/lib/docker/.+|var/lib/kubelet/pods/.+)($|/)
             - --web.listen-address=:9100
           ports:
