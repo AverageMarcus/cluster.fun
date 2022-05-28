@@ -90,7 +90,22 @@ data:
             selector: '{app="internal-proxy"}'
             action: drop
         - match:
+            selector: '{app="non-auth-proxy"}'
+            action: drop
+        - match:
+            selector: '{app="vpa"}'
+            action: drop
+        - match:
             selector: '{app="promtail"}'
+            action: drop
+        - match:
+            selector: '{app="csi-node"}'
+            action: drop
+        - match:
+            selector: '{app="victoria-metrics"}'
+            action: drop
+        - match:
+            selector: '{app="git-sync"}'
             action: drop
         - match:
             selector: '{app="ingress-nginx"}'
@@ -104,6 +119,9 @@ data:
             - drop:
                 source: "request_path"
                 value:  "/healthz"
+            - drop:
+                source: "request_path"
+                value:  "/health"
             - labels:
                 request_host:
                 request_method:
