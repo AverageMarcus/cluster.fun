@@ -64,6 +64,8 @@ spec:
           value: "20"
         - name: DEFAULT_THEME
           value: arc-green
+        - name: ALLOWED_HOST_LIST
+          value: "*"
         - name: SECRET_KEY
           valueFrom:
             secretKeyRef:
