@@ -69,7 +69,8 @@ metadata:
   namespace: tweetsvg
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.tls: "true"
 spec:
   tls:
   - hosts:
