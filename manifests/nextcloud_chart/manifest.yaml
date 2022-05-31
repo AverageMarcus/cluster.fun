@@ -891,7 +891,7 @@ spec:
                 - "https://nextcloud.cluster.fun/cron.php"
               resources:
                 requests:
-                  memory: 500Mi
+                  memory: 200Mi
 ---
 # Source: nextcloud/templates/ingress.yaml
 apiVersion: networking.k8s.io/v1
