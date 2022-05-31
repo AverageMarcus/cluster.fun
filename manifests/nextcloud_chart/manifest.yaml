@@ -520,7 +520,7 @@ spec:
           failureThreshold: 3
         resources:
           requests:
-            memory: 500Mi
+            memory: 450Mi
         volumeMounts:
         - name: nextcloud-data
           mountPath: /var/www/

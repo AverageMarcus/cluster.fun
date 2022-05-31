@@ -103,7 +103,7 @@ spec:
                 name: mastodon
           resources:
             requests:
-              memory: 450Mi
+              memory: 400Mi
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -186,7 +186,7 @@ spec:
               port: streaming
           resources:
             requests:
-              memory: 500Mi
+              memory: 200Mi
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -270,7 +270,7 @@ spec:
             periodSeconds: 10
           resources:
             requests:
-              memory: 800Mi
+              memory: 700Mi
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
