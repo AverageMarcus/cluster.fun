@@ -9,7 +9,7 @@ spec:
   project: cluster.fun
   destination:
     namespace: talks
-    name: cluster-fun (scaleway)
+    name: civo
   source:
     path: manifests/talks
     repoURL: "https://git.cluster.fun/AverageMarcus/cluster.fun.git"

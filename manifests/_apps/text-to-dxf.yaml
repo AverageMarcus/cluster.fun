@@ -9,7 +9,7 @@ spec:
   project: cluster.fun
   destination:
     namespace: text-to-dxf
-    name: cluster-fun (scaleway)
+    name: civo
   source:
     path: manifests/text-to-dxf
     repoURL: "https://git.cluster.fun/AverageMarcus/cluster.fun.git"
