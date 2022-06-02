@@ -15,6 +15,7 @@ data:
       "api.tasks.cluster.fun": "api.tasks.cluster.local",
       "mealie.cluster.fun": "mealie.cluster.local",
       "prometheus.auth-proxy.svc": "prometheus.cluster.local",
+      "vmcluster.auth-proxy.svc": "vmcluster.cluster.local",
       "loki.auth-proxy.svc": "loki.cluster.local",
       "loki.auth-proxy.svc:80": "loki.cluster.local"
     }
@@ -129,6 +130,23 @@ apiVersion: v1
 kind: Service
 metadata:
   name: prometheus
+  namespace: auth-proxy
+  labels:
+    app: internal-proxy
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: internal-proxy
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vmcluster
   namespace: auth-proxy
   labels:
     app: internal-proxy

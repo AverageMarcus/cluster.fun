@@ -115,11 +115,13 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: vmagent
+  namespace: monitoring
   labels:
     app.kubernetes.io/name: victoria-metrics
     app.kubernetes.io/component: agent
-  name: vmagent
-  namespace: monitoring
+  annotations:
+    configmap.reloader.stakater.com/reload: "vmagent"
 spec:
   strategy:
     type: Recreate
@@ -141,6 +143,7 @@ spec:
           imagePullPolicy: "IfNotPresent"
           args:
             - -remoteWrite.url=http://prometheus.auth-proxy.svc/api/v1/write
+            - -remoteWrite.url=http://vmcluster.auth-proxy.svc/insert/0/prometheus/
             - -remoteWrite.showURL
             - -promscrape.config=/config/prometheus.yml
           volumeMounts:
