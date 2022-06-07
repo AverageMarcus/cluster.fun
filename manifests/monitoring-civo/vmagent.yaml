@@ -142,7 +142,6 @@ spec:
           image: "victoriametrics/vmagent:v1.77.2"
           imagePullPolicy: "IfNotPresent"
           args:
-            - -remoteWrite.url=http://prometheus.proxy-civo.svc/api/v1/write
             - -remoteWrite.url=http://vmcluster.proxy-civo.svc/insert/0/prometheus/
             - -remoteWrite.showURL
             - -promscrape.config=/config/prometheus.yml

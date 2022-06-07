@@ -26,34 +26,6 @@ spec:
             port:
               number: 80
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: prometheus
-  namespace: auth-proxy
-  labels:
-    app: prometheus
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-spec:
-  ingressClassName: nginx
-  tls:
-  - hosts:
-    - prometheus.cluster.fun
-    secretName: prometheus-ingress
-  rules:
-  - host: prometheus.cluster.fun
-    http:
-      paths:
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: auth-proxy
-            port:
-              number: 80
----
 apiVersion: v1
 kind: Secret
 metadata:

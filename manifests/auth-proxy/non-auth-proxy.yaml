@@ -14,7 +14,6 @@ data:
       "tasks.cluster.fun": "tasks.cluster.local",
       "api.tasks.cluster.fun": "api.tasks.cluster.local",
       "mealie.cluster.fun": "mealie.cluster.local",
-      "prometheus.auth-proxy.svc": "prometheus.cluster.local",
       "vmcluster.auth-proxy.svc": "vmcluster.cluster.local",
       "loki.auth-proxy.svc": "loki.cluster.local",
       "loki.auth-proxy.svc:80": "loki.cluster.local"

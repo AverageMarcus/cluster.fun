@@ -18,7 +18,6 @@ metadata:
 data:
   mapping.json: |
     {
-      "prometheus.proxy-civo.svc": "prometheus.cluster.local",
       "vmcluster.proxy-civo.svc": "vmcluster.cluster.local",
       "loki.proxy-civo.svc": "loki.cluster.local",
       "loki.proxy-civo.svc:80": "loki.cluster.local"
