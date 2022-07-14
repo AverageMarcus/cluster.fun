@@ -35,10 +35,14 @@ data:
       tls_config:
         ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
         insecure_skip_verify: true
+
     - job_name: kubernetes-service-endpoints
       kubernetes_sd_configs:
       - role: endpoints
       relabel_configs:
+      - action: drop
+        source_labels: [__meta_kubernetes_pod_container_init]
+        regex: true
       - action: keep
         regex: true
         source_labels:
@@ -74,10 +78,14 @@ data:
         source_labels:
         - __meta_kubernetes_pod_node_name
         target_label: kubernetes_node
+
     - job_name: kubernetes-pods
       kubernetes_sd_configs:
       - role: pod
       relabel_configs:
+      - action: drop
+        source_labels: [__meta_kubernetes_pod_container_init]
+        regex: true
       - action: keep
         regex: true
         source_labels:
@@ -109,7 +117,13 @@ data:
         source_labels:
         - __meta_kubernetes_pod_phase
 
-
+    - job_name: 'node-exporter'
+      kubernetes_sd_configs:
+        - role: endpoints
+      relabel_configs:
+      - source_labels: [__meta_kubernetes_endpoints_name]
+        regex: 'prometheus-node-exporter'
+        action: keep
 ---
 
 apiVersion: apps/v1
@@ -145,6 +159,7 @@ spec:
             - -remoteWrite.url=http://vmcluster.auth-proxy.svc/insert/0/prometheus/
             - -remoteWrite.showURL
             - -promscrape.config=/config/prometheus.yml
+            - -promscrape.suppressDuplicateScrapeTargetErrors
           volumeMounts:
             - name: config-volume
               mountPath: /config
