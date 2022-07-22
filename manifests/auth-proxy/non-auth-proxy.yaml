@@ -15,8 +15,8 @@ data:
       "api.tasks.cluster.fun": "api.tasks.cluster.local",
       "mealie.cluster.fun": "mealie.cluster.local",
       "vmcluster.auth-proxy.svc": "vmcluster.cluster.local",
-      "loki.auth-proxy.svc": "loki.cluster.local",
-      "loki.auth-proxy.svc:80": "loki.cluster.local"
+      "loki.auth-proxy.svc": "loki-write.cluster.local",
+      "loki.auth-proxy.svc:80": "loki-write.cluster.local"
     }
 ---
 apiVersion: apps/v1

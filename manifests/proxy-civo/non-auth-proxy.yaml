@@ -19,8 +19,8 @@ data:
   mapping.json: |
     {
       "vmcluster.proxy-civo.svc": "vmcluster.cluster.local",
-      "loki.proxy-civo.svc": "loki.cluster.local",
-      "loki.proxy-civo.svc:80": "loki.cluster.local"
+      "loki.proxy-civo.svc": "loki-write.cluster.local",
+      "loki.proxy-civo.svc:80": "loki-write.cluster.local"
     }
 ---
 apiVersion: apps/v1
