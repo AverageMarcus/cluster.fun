@@ -64,6 +64,9 @@ data:
     - url: http://loki.proxy-civo.svc:80/loki/api/v1/push
       external_labels:
         kubernetes_cluster: civo
+    - url: http://loki-distributed.proxy-civo.svc:80/loki/api/v1/push
+      external_labels:
+        kubernetes_cluster: civo
     target_config:
       sync_period: 10s
     scrape_configs:

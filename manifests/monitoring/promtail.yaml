@@ -64,6 +64,9 @@ data:
     - url: http://loki.auth-proxy.svc:80/loki/api/v1/push
       external_labels:
         kubernetes_cluster: scaleway
+    - url: http://loki-distributed.auth-proxy.svc:80/loki/api/v1/push
+      external_labels:
+        kubernetes_cluster: scaleway
     target_config:
       sync_period: 10s
     scrape_configs:

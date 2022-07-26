@@ -11,12 +11,11 @@ data:
       "tekton-el.auth-proxy.svc": "tekton-el.cluster.local",
       "home.auth-proxy.svc": "home.cluster.local",
       "home.cluster.fun": "home.cluster.local",
-      "tasks.cluster.fun": "tasks.cluster.local",
-      "api.tasks.cluster.fun": "api.tasks.cluster.local",
-      "mealie.cluster.fun": "mealie.cluster.local",
       "vmcluster.auth-proxy.svc": "vmcluster.cluster.local",
       "loki.auth-proxy.svc": "loki-write.cluster.local",
-      "loki.auth-proxy.svc:80": "loki-write.cluster.local"
+      "loki.auth-proxy.svc:80": "loki-write.cluster.local",
+      "loki-distributed.auth-proxy.svc": "loki-loki.cluster.local",
+      "loki-distributed.auth-proxy.svc:80": "loki-loki.cluster.local"
     }
 ---
 apiVersion: apps/v1
@@ -112,6 +111,23 @@ apiVersion: v1
 kind: Service
 metadata:
   name: loki
+  namespace: auth-proxy
+  labels:
+    app: internal-proxy
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: internal-proxy
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: loki-distributed
   namespace: auth-proxy
   labels:
     app: internal-proxy
