@@ -61,9 +61,6 @@ data:
     server:
       http_listen_port: 3101
     clients:
-    - url: http://loki.proxy-civo.svc:80/loki/api/v1/push
-      external_labels:
-        kubernetes_cluster: civo
     - url: http://loki-distributed.proxy-civo.svc:80/loki/api/v1/push
       external_labels:
         kubernetes_cluster: civo
