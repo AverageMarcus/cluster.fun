@@ -42,7 +42,7 @@ spec:
     spec:
       containers:
       - name: git
-        image: gitea/gitea:1.16.8
+        image: gitea/gitea:1.17.0
         env:
         - name: APP_NAME
           value: "Git"
