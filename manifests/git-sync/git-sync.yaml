@@ -46,6 +46,18 @@ metadata:
 type: Opaque
 data:
 ---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: git-sync-codeberg
+  namespace: git-sync
+  annotations:
+    kube-1password: 5ynzgk6qcgshztkjbddwalixfq
+    kube-1password/vault: Kubernetes
+    kube-1password/password-key: token
+type: Opaque
+data:
+---
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
@@ -88,5 +100,10 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: git-sync-bitbucket
+                  key: token
+            - name: CODEBERG_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: git-sync-codeberg
                   key: token
           restartPolicy: Never
