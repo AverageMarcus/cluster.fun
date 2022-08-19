@@ -150,7 +150,7 @@ data:
       "branding": {},
       "integrations_ui_url": "https://scalar.vector.im/",
       "integrations_rest_url": "https://scalar.vector.im/api",
-      "integrations_widgets_urls": ["https://scalar.vector.im/_matrix/integrations/v1","https://scalar.vector.im/api","https://scalar-staging.vector.im/_matrix/integrations/v1","https://scalar-staging.vector.im/api","https://scalar-staging.riot.im/scalar/api"], 
+      "integrations_widgets_urls": ["https://scalar.vector.im/_matrix/integrations/v1","https://scalar.vector.im/api","https://scalar-staging.vector.im/_matrix/integrations/v1","https://scalar-staging.vector.im/api","https://scalar-staging.riot.im/scalar/api"],
       "showLabsSettings": true,
       "features": {
         "feature_pinning": "labs",
@@ -470,7 +470,7 @@ spec:
               mountPath: /data/matrix.cluster.fun.log.config
               subPath: matrix.cluster.fun.log.config
             - name: signing-key
-              mountPath: /data/keys 
+              mountPath: /data/keys
       containers:
         - name: "synapse"
           image: "matrixdotorg/synapse:v1.43.0"
@@ -491,6 +491,9 @@ spec:
             - name: synapse-config-homeserver
               mountPath: /data/homeserver.yaml
               subPath: homeserver.yaml
+            - name: mautrix-whatsapp-registration
+              mountPath: /data/mautrix-whatsapp-registration.yaml
+              subPath: registration.yaml
             - name: synapse-config-logging
               mountPath: /data/matrix.cluster.fun.log.config
               subPath: matrix.cluster.fun.log.config
@@ -534,6 +537,9 @@ spec:
         - name: synapse-config-homeserver
           secret:
             secretName: matrix-synapse-config
+        - name: mautrix-whatsapp-registration
+          secret:
+            secretName: mautrix-whatsapp-registration
         - name: signing-key
           persistentVolumeClaim:
             claimName: chat-matrix-signing-key
