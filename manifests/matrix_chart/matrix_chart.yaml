@@ -473,7 +473,7 @@ spec:
               mountPath: /data/keys
       containers:
         - name: "synapse"
-          image: "matrixdotorg/synapse:v1.43.0"
+          image: "matrixdotorg/synapse:v1.65.0"
           imagePullPolicy: IfNotPresent
           env:
             - name: UID
