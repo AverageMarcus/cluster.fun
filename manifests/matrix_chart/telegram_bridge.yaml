@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: mautrix-signal-registration
+  name: mautrix-telegram-registration
   namespace: chat
   annotations:
-    kube-1password: z6tylu2br724gttcpfyi5egaui
+    kube-1password: dancy7ogc4gjlxhfntqejgudwi
     kube-1password/vault: Kubernetes
     kube-1password/secret-text-key: registration.yaml
   labels:
-    app.kubernetes.io/name: "mautrix-signal"
+    app.kubernetes.io/name: "mautrix-telegram"
     component: registration
 type: Opaque
 
@@ -17,14 +17,14 @@ type: Opaque
 apiVersion: v1
 kind: Secret
 metadata:
-  name: mautrix-signal-config
+  name: mautrix-telegram-config
   namespace: chat
   annotations:
-    kube-1password: 5vfaorcudozlq4clkzgmzzszqe
+    kube-1password: nilzdpfum35hhwijnwvasbzmcq
     kube-1password/vault: Kubernetes
     kube-1password/secret-text-key: config.yaml
   labels:
-    app.kubernetes.io/name: "mautrix-signal"
+    app.kubernetes.io/name: "mautrix-telegram"
     component: config
 type: Opaque
 
@@ -33,10 +33,10 @@ type: Opaque
 apiVersion: v1
 kind: Service
 metadata:
-  name: mautrix-signal
+  name: mautrix-telegram
   namespace: chat
   labels:
-    app.kubernetes.io/name: mautrix-signal
+    app.kubernetes.io/name: mautrix-telegram
   annotations:
     prometheus.io/scrape: "true"
     prometheus.io/path: "/metrics"
@@ -44,21 +44,21 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: 29328
+  - port: 29318
     targetPort: http
     protocol: TCP
     name: http
   selector:
-    app.kubernetes.io/name: mautrix-signal
+    app.kubernetes.io/name: mautrix-telegram
 
 ---
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mautrix-signal
+  name: mautrix-telegram
   labels:
-    app.kubernetes.io/name: mautrix-signal
+    app.kubernetes.io/name: mautrix-telegram
 spec:
   revisionHistoryLimit: 3
   replicas: 1
@@ -66,11 +66,11 @@ spec:
     type: Recreate
   selector:
     matchLabels:
-      app.kubernetes.io/name: mautrix-signal
+      app.kubernetes.io/name: mautrix-telegram
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: mautrix-signal
+        app.kubernetes.io/name: mautrix-telegram
     spec:
       serviceAccountName: default
       automountServiceAccountToken: true
@@ -85,37 +85,29 @@ spec:
           - |
             cp /secrets/* /data/
         volumeMounts:
-          - name: mautrix-signal-config
+          - name: mautrix-telegram-config
             mountPath: /secrets/config.yaml
             subPath: config.yaml
-          - name: mautrix-signal-registration
+          - name: mautrix-telegram-registration
             mountPath: /secrets/registration.yaml
             subPath: registration.yaml
           - name: data
             mountPath: /data
       containers:
-        - name: signald
-          image: docker.io/signald/signald:stable
-          imagePullPolicy: Always
-          volumeMounts:
-          - name: signald
-            mountPath: /signald
-        - name: mautrix-signal
-          image: "dock.mau.dev/mautrix/signal:v0.3.0"
+        - name: mautrix-telegram
+          image: "dock.mau.dev/mautrix/telegram:v0.11.3"
           imagePullPolicy: IfNotPresent
           env:
             - name: "TZ"
               value: "UTC"
           ports:
             - name: http
-              containerPort: 29328
+              containerPort: 29318
               protocol: TCP
             - name: metrics
               containerPort: 9000
               protocol: TCP
           volumeMounts:
-          - name: signald
-            mountPath: /signald
           - name: data
             mountPath: /data
           livenessProbe:
@@ -142,12 +134,10 @@ spec:
       volumes:
         - name: data
           emptyDir: {}
-        - name: signald
-          emptyDir: {}
-        - name: mautrix-signal-config
+        - name: mautrix-telegram-config
           secret:
-            secretName: mautrix-signal-config
-        - name: mautrix-signal-registration
+            secretName: mautrix-telegram-config
+        - name: mautrix-telegram-registration
           secret:
-            secretName: mautrix-signal-registration
+            secretName: mautrix-telegram-registration
 ---
