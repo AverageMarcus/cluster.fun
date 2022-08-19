@@ -94,6 +94,12 @@ spec:
           - name: data
             mountPath: /data
       containers:
+        - name: signald
+          image: docker.io/signald/signald:stable
+          imagePullPolicy: Always
+          volumeMounts:
+          - name: signald
+            mountPath: /signald
         - name: mautrix-signal
           image: "dock.mau.dev/mautrix/signal:v0.3.0"
           imagePullPolicy: IfNotPresent
@@ -108,6 +114,8 @@ spec:
               containerPort: 9000
               protocol: TCP
           volumeMounts:
+          - name: signald
+            mountPath: /signald
           - name: data
             mountPath: /data
           livenessProbe:
@@ -133,6 +141,8 @@ spec:
             periodSeconds: 5
       volumes:
         - name: data
+          emptyDir: {}
+        - name: signald
           emptyDir: {}
         - name: mautrix-signal-config
           secret:
