@@ -446,7 +446,7 @@ spec:
         fsGroup: 1000
       initContainers:
         - name: generate-signing-key
-          image: "matrixdotorg/synapse:v1.43.0"
+          image: "matrixdotorg/synapse:v1.46.0"
           imagePullPolicy: IfNotPresent
           env:
             - name: SYNAPSE_SERVER_NAME
@@ -473,7 +473,7 @@ spec:
               mountPath: /data/keys
       containers:
         - name: "synapse"
-          image: "matrixdotorg/synapse:v1.65.0"
+          image: "matrixdotorg/synapse:v1.46.0"
           imagePullPolicy: IfNotPresent
           env:
             - name: UID
