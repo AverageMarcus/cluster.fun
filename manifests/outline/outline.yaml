@@ -30,6 +30,8 @@ metadata:
   namespace: outline
   labels:
     app.kubernetes.io/name: outline
+  annotations:
+    secret.reloader.stakater.com/reload: "outline"
 spec:
   revisionHistoryLimit: 3
   replicas: 1
@@ -42,12 +44,6 @@ spec:
         app.kubernetes.io/name: outline
     spec:
       containers:
-      - name: redis
-        image: redis:6
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 6379
-          name: redis
       - name: outline
         image: outlinewiki/outline:0.65.1
         imagePullPolicy: IfNotPresent
