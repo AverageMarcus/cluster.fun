@@ -368,7 +368,7 @@ spec:
         fsGroup: 33
 ---
 # Source: nextcloud/templates/cronjob.yaml
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: nextcloud-nextcloud-cron

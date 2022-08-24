@@ -1,4 +1,4 @@
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: mastodon-media-remove
@@ -42,7 +42,7 @@ spec:
 ---
 
 
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: mastodon-assets-precompile
@@ -85,7 +85,7 @@ spec:
                   value: "3000"
 ---
 
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: mastodon-db-migrate
