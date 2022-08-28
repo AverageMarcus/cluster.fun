@@ -150,24 +150,41 @@ data:
       "branding": {},
       "integrations_ui_url": "https://scalar.vector.im/",
       "integrations_rest_url": "https://scalar.vector.im/api",
-      "integrations_widgets_urls": ["https://scalar.vector.im/_matrix/integrations/v1","https://scalar.vector.im/api","https://scalar-staging.vector.im/_matrix/integrations/v1","https://scalar-staging.vector.im/api","https://scalar-staging.riot.im/scalar/api"],
+      "integrations_widgets_urls": [
+        "https://scalar.vector.im/_matrix/integrations/v1",
+        "https://scalar.vector.im/api",
+        "https://scalar-staging.vector.im/_matrix/integrations/v1",
+        "https://scalar-staging.vector.im/api",
+        "https://scalar-staging.riot.im/scalar/api"
+      ],
       "showLabsSettings": true,
       "features": {
-        "feature_pinning": "labs",
+        "feature_pinning": true,
         "feature_custom_status": "labs",
         "feature_state_counters": "labs",
         "feature_many_integration_managers": "labs",
         "feature_mjolnir": "labs",
         "feature_dm_verification": "labs",
         "feature_bridge_state": "labs",
-        "feature_presence_in_room_list": "labs",
+        "feature_presence_in_room_list": true,
         "feature_custom_themes": "labs",
-        "feature_new_spinner": "labs"
+        "feature_new_spinner": "labs",
+        "feature_jump_to_date": "labs",
+        "feature_location_share_pin_drop": "labs",
+        "feature_location_share_live": "labs",
+        "feature_thread": true,
+        "feature_video_rooms": true,
+        "feature_favourite_messages": "labs"
       },
       "roomDirectory": {
-        "servers": []
+        "servers": ["matrix.cluster.fun"]
       },
-      "permalinkPrefix": "https://chat.cluster.fun"
+      "permalinkPrefix": "https://chat.cluster.fun",
+      "enable_presence_by_hs_url": {
+        "https://matrix.org": false,
+        "https://matrix-client.matrix.org": false
+      },
+      "map_style_url": "https://api.maptiler.com/maps/streets/style.json?key=2IerXP2a5g1e7hxxBbzs"
     }
   nginx.conf: |
     worker_processes  auto;
