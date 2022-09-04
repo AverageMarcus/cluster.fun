@@ -56,7 +56,7 @@ spec:
             yarn start
         env:
         - name: ALLOWED_DOMAINS
-          value: marcusnoble.co.uk
+          value: marcusnoble.co.uk,namelessplanet.com,paradoxfox.shop
         - name: OIDC_SCOPES
           value: "openid profile email"
         ports:
