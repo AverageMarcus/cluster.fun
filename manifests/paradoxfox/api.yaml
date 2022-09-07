@@ -1,0 +1,112 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: paradoxfox-api
+  namespace: paradoxfox
+  labels:
+    app.kubernetes.io/name: paradoxfox
+    app.kubernetes.io/component: api
+  annotations:
+    kube-1password: hypviaps3z54ujuj37d6vyaile
+    kube-1password/vault: Kubernetes
+    kube-1password/secret-text-parse: "true"
+type: Opaque
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: paradoxfox-api
+  namespace: paradoxfox
+  labels:
+    app.kubernetes.io/name: paradoxfox
+    app.kubernetes.io/component: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: paradoxfox
+      app.kubernetes.io/component: api
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: paradoxfox
+        app.kubernetes.io/component: api
+    spec:
+      imagePullSecrets:
+        - name: docker-config
+      containers:
+      - name: paradoxfox-api
+        image: rg.fr-par.scw.cloud/averagemarcus-private/paradoxfox-api:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9000
+          name: web
+        env:
+        - name: PORT
+          value: "9000"
+        - name: NODE_ENV
+          value: "production"
+        - name: ADMIN_CORS
+          # value: "https://admin.paradoxfox.shop,http://localhost:7000,http://localhost:7001"
+          value: "https://admin.paradoxfox.shop"
+        - name: STORE_CORS
+          # value: "https://paradoxfox.shop,http://localhost:8000"
+          value: "https://paradoxfox.shop"
+        envFrom:
+        - secretRef:
+            name: paradoxfox-api
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: paradoxfox-api
+  namespace: paradoxfox
+  labels:
+    app.kubernetes.io/name: paradoxfox
+    app.kubernetes.io/component: api
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: web
+    name: web
+  selector:
+    app.kubernetes.io/name: paradoxfox
+    app.kubernetes.io/component: api
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: paradoxfox-api
+  namespace: paradoxfox
+  labels:
+    app.kubernetes.io/name: paradoxfox
+    app.kubernetes.io/component: api
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - api.paradoxfox.shop
+    secretName: paradoxfox-api-ingress
+  rules:
+  - host: api.paradoxfox.shop
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: paradoxfox-api
+            port:
+              number: 80
+
+---

@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: paradoxfox-admin
+  namespace: paradoxfox
+  labels:
+    app.kubernetes.io/name: paradoxfox
+    app.kubernetes.io/component: admin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: paradoxfox
+      app.kubernetes.io/component: admin
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: paradoxfox
+        app.kubernetes.io/component: admin
+    spec:
+      imagePullSecrets:
+        - name: docker-config
+      containers:
+      - name: paradoxfox-admin
+        image: rg.fr-par.scw.cloud/averagemarcus-private/paradoxfox-admin:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9000
+          name: web
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: PORT
+          value: "9000"
+        - name: GATSBY_MEDUSA_BACKEND_URL
+          value: "https://api.paradoxfox.shop"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: paradoxfox-admin
+  namespace: paradoxfox
+  labels:
+    app.kubernetes.io/name: paradoxfox
+    app.kubernetes.io/component: admin
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: web
+    name: web
+  selector:
+    app.kubernetes.io/name: paradoxfox
+    app.kubernetes.io/component: admin
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: paradoxfox-admin
+  namespace: paradoxfox
+  labels:
+    app.kubernetes.io/name: paradoxfox
+    app.kubernetes.io/component: admin
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - admin.paradoxfox.shop
+    secretName: paradoxfox-admin-ingress
+  rules:
+  - host: admin.paradoxfox.shop
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: paradoxfox-admin
+            port:
+              number: 80
+
+---

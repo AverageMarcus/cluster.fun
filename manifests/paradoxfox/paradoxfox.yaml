@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: docker-config
+  namespace: paradoxfox
+  annotations:
+    kube-1password: i6ngbk5zf4k52xgwdwnfup5bby
+    kube-1password/vault: Kubernetes
+    kube-1password/secret-text-key: .dockerconfigjson
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: e30=
+
+---
