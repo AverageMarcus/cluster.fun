@@ -10,7 +10,9 @@ data:
     mn: https://marcusnoble.co.uk
     whites: https://twitter.com/whites11/status/1484053621448785920
     devopsnotts22: https://noti.st/averagemarcus/E8Ldoh/managing-kubernetes-without-losing-your-cool
+    kubernetes-cool: https://noti.st/averagemarcus/E8Ldoh/managing-kubernetes-without-losing-your-cool
     klustered: https://gist.githubusercontent.com/AverageMarcus/e58301ecf3455caa1638c3ffe70ed138/raw/klustered.sh
+    wonders-and-woes: https://noti.st/averagemarcus/sWywEJ/the-wonders-and-woes-of-webhooks
 ---
 apiVersion: v1
 kind: Service
