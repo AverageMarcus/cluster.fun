@@ -7,7 +7,7 @@ metadata:
     app.kubernetes.io/name: paradoxfox
     app.kubernetes.io/component: admin
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app.kubernetes.io/name: paradoxfox
