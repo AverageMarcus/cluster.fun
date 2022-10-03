@@ -13,6 +13,7 @@ data:
     kubernetes-cool: https://noti.st/averagemarcus/E8Ldoh/managing-kubernetes-without-losing-your-cool
     klustered: https://gist.githubusercontent.com/AverageMarcus/e58301ecf3455caa1638c3ffe70ed138/raw/klustered.sh
     wonders-and-woes: https://noti.st/averagemarcus/sWywEJ/the-wonders-and-woes-of-webhooks
+    kubehuddle: https://noti.st/averagemarcus/TqCEd4/the-wonders-and-woes-of-webhooks
 ---
 apiVersion: v1
 kind: Service
