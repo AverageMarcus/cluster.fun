@@ -129,9 +129,9 @@ metadata:
   namespace: twitter-to-airtable
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.tls: "true"
 spec:
-  ingressClassName: nginx
   tls:
   - hosts:
     - twitter-to-airtable.cluster.fun

@@ -9,7 +9,7 @@ spec:
   project: cluster.fun
   destination:
     namespace: twitter-to-airtable
-    name: cluster-fun (scaleway)
+    name: civo
   source:
     path: manifests/twitter-to-airtable
     repoURL: "https://git.cluster.fun/AverageMarcus/cluster.fun.git"
