@@ -72,6 +72,10 @@ data:
         target_label: kubernetes_name
       - action: replace
         source_labels:
+        - __meta_kubernetes_endpoint_port_name
+        target_label: kubernetes_endpoint_port_name
+      - action: replace
+        source_labels:
         - __meta_kubernetes_pod_node_name
         target_label: kubernetes_node
     - job_name: kubernetes-pods
@@ -104,6 +108,10 @@ data:
         source_labels:
         - __meta_kubernetes_pod_name
         target_label: kubernetes_pod_name
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_pod_container_port_name
+        target_label: kubernetes_port_name
       - action: drop
         regex: Pending|Succeeded|Failed
         source_labels:
