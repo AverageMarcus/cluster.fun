@@ -14,6 +14,7 @@ data:
     klustered: https://gist.githubusercontent.com/AverageMarcus/e58301ecf3455caa1638c3ffe70ed138/raw/klustered.sh
     wonders-and-woes: https://noti.st/averagemarcus/sWywEJ/the-wonders-and-woes-of-webhooks
     kubehuddle: https://noti.st/averagemarcus/TqCEd4/the-wonders-and-woes-of-webhooks
+    kcduk: https://noti.st/averagemarcus/fxN4gl/managing-kubernetes-without-losing-your-cool
 ---
 apiVersion: v1
 kind: Service
