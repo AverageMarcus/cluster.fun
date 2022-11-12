@@ -95,7 +95,7 @@ spec:
             mountPath: /data
       containers:
         - name: mautrix-telegram
-          image: "dock.mau.dev/mautrix/telegram:v0.11.3"
+          image: "dock.mau.dev/mautrix/telegram:v0.12.1"
           imagePullPolicy: IfNotPresent
           env:
             - name: "TZ"
