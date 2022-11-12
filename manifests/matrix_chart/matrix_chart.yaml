@@ -386,7 +386,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: "riot"
-          image: "vectorim/element-web:v1.11.3"
+          image: "vectorim/element-web:v1.11.14"
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -463,7 +463,7 @@ spec:
         fsGroup: 1000
       initContainers:
         - name: generate-signing-key
-          image: "matrixdotorg/synapse:v1.65.0"
+          image: "matrixdotorg/synapse:v1.71.0"
           imagePullPolicy: IfNotPresent
           env:
             - name: SYNAPSE_SERVER_NAME
@@ -490,7 +490,7 @@ spec:
               mountPath: /data/keys
       containers:
         - name: "synapse"
-          image: "matrixdotorg/synapse:v1.65.0"
+          image: "matrixdotorg/synapse:v1.71.0"
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
