@@ -68,7 +68,7 @@ spec:
             mountPath: /data
       containers:
       - name: web
-        image: nodered/node-red:2.2.2-16
+        image: nodered/node-red:2.3.2-12
         imagePullPolicy: Always
         ports:
         - containerPort: 1880
