@@ -63,9 +63,20 @@ spec:
   tls:
   - hosts:
     - marcusnoble.com
+    - www.marcusnoble.com
     secretName: marcusnoble-ingress
   rules:
   - host: marcusnoble.com
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: marcusnoble
+            port:
+              number: 80
+  - host: www.marcusnoble.com
     http:
       paths:
       - path: /
