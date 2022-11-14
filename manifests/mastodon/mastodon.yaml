@@ -68,7 +68,7 @@ metadata:
     configmap.reloader.stakater.com/reload: "mastodon-env"
     secret.reloader.stakater.com/reload: "mastodon"
 spec:
-  replicas: 2
+  replicas: 0
   selector:
     matchLabels:
       app.kubernetes.io/name: mastodon
@@ -139,7 +139,7 @@ metadata:
     configmap.reloader.stakater.com/reload: "mastodon-env"
     secret.reloader.stakater.com/reload: "mastodon"
 spec:
-  replicas: 2
+  replicas: 0
   selector:
     matchLabels:
       app.kubernetes.io/name: mastodon
@@ -222,7 +222,7 @@ metadata:
     configmap.reloader.stakater.com/reload: "mastodon-env"
     secret.reloader.stakater.com/reload: "mastodon"
 spec:
-  replicas: 2
+  replicas: 0
   selector:
     matchLabels:
       app.kubernetes.io/name: mastodon
