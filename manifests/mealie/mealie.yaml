@@ -42,7 +42,7 @@ spec:
       containers:
       - name: frontend
         image: hkotel/mealie:frontend-nightly
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         envFrom:
         - secretRef:
             name: mealie
@@ -79,7 +79,7 @@ spec:
             name: data
       - name: api
         image: hkotel/mealie:api-nightly
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         envFrom:
         - secretRef:
             name: mealie
