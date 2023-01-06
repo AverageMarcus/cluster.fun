@@ -1,0 +1,229 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: docker-config
+  namespace: mastodon-digest
+  annotations:
+    kube-1password: i6ngbk5zf4k52xgwdwnfup5bby
+    kube-1password/vault: Kubernetes
+    kube-1password/secret-text-key: .dockerconfigjson
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: e30=
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mastodon-digest-auth
+  namespace: mastodon-digest
+  annotations:
+    kube-1password: mr6spkkx7n3memkbute6ojaarm
+    kube-1password/vault: Kubernetes
+type: Opaque
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mastodon-digest
+  namespace: mastodon-digest
+  annotations:
+    kube-1password: bfklz3yi3dn4e7xtsbttcvhata
+    kube-1password/vault: Kubernetes
+    kube-1password/secret-text-parse: "true"
+type: Opaque
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config
+  namespace: mastodon-digest
+  labels:
+    app: mastodon-digest
+data:
+  config.json: |
+    [
+      {
+        "timeline": "home",
+        "hours": 12,
+        "scorer": "ExtendedSimpleWeighted",
+        "threshold": "lax",
+        "output": "/usr/share/nginx/html/home/"
+      },
+      {
+        "timeline": "federated",
+        "hours": 12,
+        "scorer": "ExtendedSimpleWeighted",
+        "threshold": "lax",
+        "output": "/usr/share/nginx/html/federated/"
+      }
+    ]
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: index
+  namespace: mastodon-digest
+  labels:
+    app: mastodon-digest
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta chartset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Mastodon Digest</title>
+        <style>
+        body { background-color: #292c36; font-family: "Arial", sans-serif; }
+        div#container { margin: auto; max-width: 640px; padding: 10px; text-align: center; margin: 0 auto; }
+        .links { align: center; }
+        h1 { color: white; }
+        a.button { background: #595aff; color: #fff; line-height: 1.2; min-height: 38px; min-width: 88px; padding: 0 30px; border: 0; border-radius: 6px;; display: inline-flex; justify-content: center; align-items: center; }
+    </style>
+    </head>
+    <body>
+        <div id="container">
+            <h1>Mastodon Digest</h1>
+            <section class="links">
+                <a href="home/" class="button">Home</a>
+                <a href="federated/" class="button">Federated</a>
+            </section>
+        </div>
+    </body>
+    </html>
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mastodon-digest
+  namespace: mastodon-digest
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: auth
+    name: web
+  selector:
+    app: mastodon-digest
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mastodon-digest
+  namespace: mastodon-digest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mastodon-digest
+  template:
+    metadata:
+      labels:
+        app: mastodon-digest
+    spec:
+      imagePullSecrets:
+        - name: docker-config
+      containers:
+      - args:
+        - --cookie-secure=false
+        - --provider=oidc
+        - --provider-display-name=Auth0
+        - --upstream=http://localhost:80
+        - --http-address=$(HOST_IP):8000
+        - --redirect-url=https://mastodon-digest.cluster.fun/oauth2/callback
+        - --email-domain=marcusnoble.co.uk
+        - --pass-basic-auth=false
+        - --pass-access-token=false
+        - --oidc-issuer-url=https://marcusnoble.eu.auth0.com/
+        - --cookie-secret=KDGD6rrK6cBmryyZ4wcJ9xAUNW9AQNFT
+        env:
+        - name: HOST_IP
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.podIP
+        - name: OAUTH2_PROXY_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: mastodon-digest-auth
+        - name: OAUTH2_PROXY_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: mastodon-digest-auth
+        image: quay.io/oauth2-proxy/oauth2-proxy:v7.2.1
+        name: oauth-proxy
+        ports:
+        - containerPort: 8000
+          protocol: TCP
+          name: auth
+        resources:
+          limits:
+            memory: 50Mi
+          requests:
+            memory: 50Mi
+
+      - name: web
+        image: nginx:stable
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+          name: web
+        volumeMounts:
+        - name: html
+          mountPath: /usr/share/nginx/html
+        - name: index
+          mountPath: /usr/share/nginx/html/index.html
+          subPath: index.html
+
+      - name: digest
+        image: rg.fr-par.scw.cloud/averagemarcus-private/mastodon-digest:latest
+        imagePullPolicy: Always
+        env:
+        - name: CONFIG_FILE
+          value: /config.json
+        envFrom:
+        - secretRef:
+            name: mastodon-digest
+        volumeMounts:
+        - name: config
+          mountPath: /config.json
+          subPath: config.json
+        - name: html
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: html
+        emptyDir: {}
+      - name: config
+        configMap:
+          name: config
+      - name: index
+        configMap:
+          name: index
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mastodon-digest
+  namespace: mastodon-digest
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - mastodon-digest.cluster.fun
+    secretName: mastodon-digest-ingress
+  rules:
+  - host: mastodon-digest.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: mastodon-digest
+            port:
+              number: 80
