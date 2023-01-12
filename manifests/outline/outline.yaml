@@ -45,7 +45,7 @@ spec:
     spec:
       containers:
       - name: outline
-        image: outlinewiki/outline:0.66.3
+        image: outlinewiki/outline:0.67.1
         imagePullPolicy: IfNotPresent
         command:
           - sh
