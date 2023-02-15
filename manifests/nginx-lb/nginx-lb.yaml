@@ -113,6 +113,7 @@ spec:
       containers:
       - args:
         - /nginx-ingress-controller
+        - --publish-service=$(POD_NAMESPACE)/ingress-nginx-controller
         - --election-id=ingress-controller-leader-nginx
         - --controller-class=k8s.io/ingress-nginx
         - --configmap=$(POD_NAMESPACE)/ingress-nginx-configuration
@@ -132,7 +133,7 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.namespace
-        image: k8s.gcr.io/ingress-nginx/controller:v1.0.0-beta.1
+        image: registry.k8s.io/ingress-nginx/controller:v1.5.1
         imagePullPolicy: IfNotPresent
         name: nginx-ingress-controller
         ports:
