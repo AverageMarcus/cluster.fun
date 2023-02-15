@@ -113,7 +113,7 @@ spec:
       containers:
       - args:
         - /nginx-ingress-controller
-        - --publish-service=$(POD_NAMESPACE)/ingress-nginx-controller
+        - --publish-service=$(POD_NAMESPACE)/nginx-ingress-service
         - --election-id=ingress-controller-leader-nginx
         - --controller-class=k8s.io/ingress-nginx
         - --configmap=$(POD_NAMESPACE)/ingress-nginx-configuration
