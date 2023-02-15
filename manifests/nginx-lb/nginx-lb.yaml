@@ -355,9 +355,6 @@ metadata:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  annotations:
-    meta.helm.sh/release-name: kapsule-ingress
-    meta.helm.sh/release-namespace: kube-system
   labels:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: ingress-nginx
@@ -366,7 +363,7 @@ metadata:
     k8s.scw.cloud/object: ConfigMap
     k8s.scw.cloud/system: ingress
   name: ingress-nginx-plugin-redirect-location
-  namespace: kube-system
+  namespace: ingress-nginx
 data:
   main.lua: |
     local ngx = ngx
