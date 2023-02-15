@@ -472,8 +472,6 @@ spec:
         - --annotations-prefix=nginx.ingress.kubernetes.io
         - --watch-ingress-without-class
         - --enable-metrics
-        - --tcp-services-configmap=$(POD_NAMESPACE)/ingress-nginx-tcp-services
-        - --udp-services-configmap=$(POD_NAMESPACE)/ingress-nginx-udp-services
         env:
         - name: POD_NAME
           valueFrom:
