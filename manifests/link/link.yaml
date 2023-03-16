@@ -17,6 +17,7 @@ data:
     kcduk: https://noti.st/averagemarcus/fxN4gl/managing-kubernetes-without-losing-your-cool
     wonders-and-woes-webinar: https://noti.st/averagemarcus/Hw2IXG/the-wonders-and-woes-of-webhooks
     kcdukraine: https://noti.st/averagemarcus/quuysq/managing-kubernetes-without-losing-your-cool
+    devopsox23: https://noti.st/averagemarcus/quuysq/managing-kubernetes-without-losing-your-cool
 ---
 apiVersion: v1
 kind: Service
