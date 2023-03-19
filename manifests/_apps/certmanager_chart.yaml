@@ -59,7 +59,7 @@ spec:
     name: cluster-fun (scaleway)
   source:
     repoURL: 'https://charts.jetstack.io'
-    targetRevision: 1.6.1
+    targetRevision: 1.11.0
     chart: cert-manager
     helm:
       version: v3
