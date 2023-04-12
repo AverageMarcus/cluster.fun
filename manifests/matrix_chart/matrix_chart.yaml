@@ -283,38 +283,6 @@ data:
       level: WARNING
       handlers: [console]
 ---
-# Source: matrix/templates/synapse/media-pvc.yaml
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: chat-matrix-media-store
-  namespace: chat
-  labels:
-    app.kubernetes.io/name: "matrix"
-    component: synapse
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 8Gi
----
-# Source: matrix/templates/synapse/signing-key-pvc.yaml
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: chat-matrix-signing-key
-  namespace: chat
-  labels:
-    app.kubernetes.io/name: "matrix"
-    component: synapse
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
----
 # Source: matrix/templates/riot/service.yaml
 apiVersion: v1
 kind: Service
