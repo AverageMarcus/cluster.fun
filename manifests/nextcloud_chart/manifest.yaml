@@ -161,25 +161,6 @@ data:
       );
     }
 ---
-# Source: nextcloud/templates/nextcloud-pvc.yaml
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: nextcloud-nextcloud-nextcloud
-  labels:
-    app.kubernetes.io/name: nextcloud
-    helm.sh/chart: nextcloud-2.6.3
-    app.kubernetes.io/instance: nextcloud-nextcloud
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/component: app
-spec:
-  accessModes:
-    - "ReadWriteOnce"
-  resources:
-    requests:
-      storage: "5Gi"
-  storageClassName: "scw-bssd-retain"
----
 
 
 # Source: nextcloud/templates/service.yaml

@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    pv.kubernetes.io/provisioned-by: csi.scaleway.com
+  finalizers:
+  - kubernetes.io/pv-protection
+  - external-attacher/csi-scaleway-com
+  name: pvc-47f91479-7386-439b-b95a-c457663d76db
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  csi:
+    driver: csi.scaleway.com
+    fsType: ext4
+    volumeAttributes:
+      encrypted: "false"
+      storage.kubernetes.io/csiProvisionerIdentity: 1602958408485-1847-csi.scaleway.com
+    volumeHandle: fr-par-1/145b4a54-1ba1-409e-9399-30ebce7058af
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: scw-bssd
+  volumeMode: Filesystem
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: rss-db
+  namespace: rss
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  volumeName: pvc-47f91479-7386-439b-b95a-c457663d76db
+---

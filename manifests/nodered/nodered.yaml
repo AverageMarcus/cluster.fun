@@ -9,18 +9,6 @@ metadata:
     kube-1password/secret-text-key: settings.js
 type: Opaque
 ---
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: node-red
-  namespace: node-red
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 5Gi
----
 apiVersion: v1
 kind: Service
 metadata:
