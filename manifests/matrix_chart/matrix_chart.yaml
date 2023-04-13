@@ -457,21 +457,6 @@ spec:
             - name: signing-key
               mountPath: /data/keys
       containers:
-        - name: copy-media
-          image: "bash"
-          imagePullPolicy: IfNotPresent
-          command:
-          - bash
-          - -c
-          - |
-            cp -R /data/old /data/new
-            echo "Done"
-            sleep 9999
-          volumeMounts:
-            - name: media-store
-              mountPath: /data/old
-            - name: user-media
-              mountPath: /data/new
         - name: "synapse"
           image: "matrixdotorg/synapse:v1.71.0"
           imagePullPolicy: IfNotPresent
@@ -500,7 +485,7 @@ spec:
               subPath: matrix.cluster.fun.log.config
             - name: signing-key
               mountPath: /data/keys
-            - name: media-store
+            - name: user-media
               mountPath: /data/media_store
             - name: uploads
               mountPath: /data/uploads
@@ -550,9 +535,6 @@ spec:
         - name: signing-key
           persistentVolumeClaim:
             claimName: chat-matrix-signing-key
-        - name: media-store
-          persistentVolumeClaim:
-            claimName: chat-matrix-media-store
         - name: user-media
           persistentVolumeClaim:
             claimName: chat-matrix-user-media
