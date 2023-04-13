@@ -498,7 +498,7 @@ spec:
               subPath: matrix.cluster.fun.log.config
             - name: signing-key
               mountPath: /data/keys
-            - name: media-store
+            - name: user-media
               mountPath: /data/media_store
             - name: uploads
               mountPath: /data/uploads
