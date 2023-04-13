@@ -6,46 +6,6 @@ metadata:
   finalizers:
   - kubernetes.io/pv-protection
   - external-attacher/csi-scaleway-com
-  name: pvc-fb3ef708-13ad-4f9b-b6b7-5e6cbb9c1bdf
-spec:
-  accessModes:
-  - ReadWriteOnce
-  capacity:
-    storage: 8Gi
-  csi:
-    driver: csi.scaleway.com
-    fsType: ext4
-    volumeAttributes:
-      storage.kubernetes.io/csiProvisionerIdentity: 1588413765965-1847-csi.scaleway.com
-    volumeHandle: fr-par-1/eb8e5669-56ea-49e3-a631-efbeaca4c4ef
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: scw-bssd
-  volumeMode: Filesystem
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: chat-matrix-media-store
-  namespace: chat
-  labels:
-    app.kubernetes.io/name: "matrix"
-    component: synapse
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 8Gi
-  volumeName: pvc-fb3ef708-13ad-4f9b-b6b7-5e6cbb9c1bdf
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  annotations:
-    pv.kubernetes.io/provisioned-by: csi.scaleway.com
-  finalizers:
-  - kubernetes.io/pv-protection
-  - external-attacher/csi-scaleway-com
   name: pvc-470f5860-49e0-414c-bb36-329970afc44b
 spec:
   accessModes:
