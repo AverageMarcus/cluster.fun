@@ -7,9 +7,7 @@ metadata:
   namespace: nextcloud
   labels:
     app: redis
-    chart: redis-11.0.5
     release: "nextcloud-nextcloud"
-    heritage: "Helm"
   annotations:
     kube-1password: u54jxidod7tlnpwva37f5hcu5y
     kube-1password/vault: Kubernetes
@@ -24,9 +22,7 @@ metadata:
   name: nextcloud-nextcloud
   labels:
     app.kubernetes.io/name: nextcloud
-    helm.sh/chart: nextcloud-2.6.3
     app.kubernetes.io/instance: nextcloud-nextcloud
-    app.kubernetes.io/managed-by: Helm
   annotations:
     kube-1password: iaz4xmtr2czpsjl6xirhryzfia
     kube-1password/vault: Kubernetes
@@ -40,9 +36,7 @@ metadata:
   name: nextcloud-s3
   labels:
     app.kubernetes.io/name: nextcloud
-    helm.sh/chart: nextcloud-2.6.3
     app.kubernetes.io/instance: nextcloud-nextcloud
-    app.kubernetes.io/managed-by: Helm
   annotations:
     kube-1password: 7zanxzbyzfctc5d2yqfq6e5zcy
     kube-1password/vault: Kubernetes
@@ -57,9 +51,7 @@ metadata:
   name: nextcloud-nextcloud-config
   labels:
     app.kubernetes.io/name: nextcloud
-    helm.sh/chart: nextcloud-2.6.3
     app.kubernetes.io/instance: nextcloud-nextcloud
-    app.kubernetes.io/managed-by: Helm
 data:
   general.config.php: |-
     <?php
@@ -170,9 +162,7 @@ metadata:
   name: nextcloud-nextcloud
   labels:
     app.kubernetes.io/name: nextcloud
-    helm.sh/chart: nextcloud-2.6.3
     app.kubernetes.io/instance: nextcloud-nextcloud
-    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: app
 spec:
   type: ClusterIP
@@ -192,9 +182,7 @@ metadata:
   name: nextcloud-nextcloud
   labels:
     app.kubernetes.io/name: nextcloud
-    helm.sh/chart: nextcloud-2.6.3
     app.kubernetes.io/instance: nextcloud-nextcloud
-    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: app
 spec:
   replicas: 1
@@ -365,9 +353,7 @@ metadata:
   name: nextcloud-nextcloud-cron
   labels:
     app.kubernetes.io/name: nextcloud
-    helm.sh/chart: nextcloud-2.6.3
     app.kubernetes.io/instance: nextcloud-nextcloud
-    app.kubernetes.io/managed-by: Helm
   annotations:
     {}
 spec:
@@ -379,13 +365,11 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: nextcloud
-        app.kubernetes.io/managed-by: Helm
     spec:
       template:
         metadata:
           labels:
             app.kubernetes.io/name: nextcloud
-            app.kubernetes.io/managed-by: Helm
         spec:
           restartPolicy: Never
           containers:
@@ -408,9 +392,7 @@ metadata:
   name: nextcloud-nextcloud
   labels:
     app.kubernetes.io/name: nextcloud
-    helm.sh/chart: nextcloud-2.6.3
     app.kubernetes.io/instance: nextcloud-nextcloud
-    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/component: app
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
