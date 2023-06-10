@@ -282,6 +282,16 @@ spec:
           timeoutSeconds: 5
           successThreshold: 1
           failureThreshold: 3
+        # Cover case where upgrade is being performed
+        startupProbe:
+          httpGet:
+            path: /status.php
+            port: http
+            httpHeaders:
+            - name: Host
+              value: "nextcloud.cluster.fun"
+          failureThreshold: 30
+          periodSeconds: 10
         resources:
           requests:
             memory: 450Mi
