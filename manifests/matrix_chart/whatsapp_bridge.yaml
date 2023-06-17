@@ -95,7 +95,7 @@ spec:
             mountPath: /data
       containers:
         - name: mautrix-whatsapp
-          image: "dock.mau.dev/mautrix/whatsapp:v0.8.5"
+          image: "dock.mau.dev/mautrix/whatsapp:v0.8.6"
           imagePullPolicy: IfNotPresent
           env:
             - name: "TZ"
