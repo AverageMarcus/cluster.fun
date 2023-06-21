@@ -44,7 +44,7 @@ spec:
       restartPolicy: OnFailure
       containers:
       - name: db-init
-        image: "wallabag/wallabag:2.6.1"
+        image: "wallabag/wallabag:latest"
         imagePullPolicy: IfNotPresent
         envFrom:
         - secretRef:
@@ -93,6 +93,37 @@ spec:
       labels:
         app.kubernetes.io/name: wallabag
     spec:
+      initContainers:
+        - name: db-migrate
+          image: "wallabag/wallabag:2.6.1"
+          imagePullPolicy: IfNotPresent
+          command:
+          - /var/www/wallabag/bin/console
+          - doctrine:migrations:migrate
+          - --env=prod
+          - --no-interaction
+          envFrom:
+          - secretRef:
+              name: wallabag
+          env:
+            - name: "SYMFONY__ENV__DATABASE_CHARSET"
+              value: "utf8"
+            - name: "SYMFONY__ENV__DATABASE_DRIVER"
+              value: "pdo_pgsql"
+            - name: "SYMFONY__ENV__DATABASE_NAME"
+              value: "wallabag"
+            - name: "SYMFONY__ENV__DATABASE_TABLE_PREFIX"
+              value: "wallabag_"
+            - name: "SYMFONY__ENV__DOMAIN_NAME"
+              value: "https://wallabag.cluster.fun"
+            - name: "SYMFONY__ENV__FOSUSER_REGISTRATION"
+              value: "false"
+            - name: "SYMFONY__ENV__LOCALE"
+              value: "en"
+            - name: "TZ"
+              value: "UTC"
+            - name: "POPULATE_DATABASE"
+              value: "false"
       containers:
         - name: wallabag
           image: "wallabag/wallabag:2.6.1"
