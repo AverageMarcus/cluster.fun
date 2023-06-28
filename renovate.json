@@ -6,6 +6,9 @@
   "prConcurrentLimit": 0,
   "prHourlyLimit": 0,
   "rebaseWhen": "behind-base-branch",
+  "extends": [
+    "replacements:k8s-registry-move"
+  ],
   "ignorePaths": [
     "terraform"
   ],
