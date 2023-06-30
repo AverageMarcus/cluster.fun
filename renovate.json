@@ -7,7 +7,8 @@
   "prHourlyLimit": 0,
   "rebaseWhen": "behind-base-branch",
   "extends": [
-    "replacements:k8s-registry-move"
+    "replacements:k8s-registry-move",
+    "local>averagemarcus/renovate-config//source-urls"
   ],
   "ignorePaths": [
     "terraform"
