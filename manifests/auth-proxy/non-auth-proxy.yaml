@@ -49,6 +49,8 @@ metadata:
   namespace: auth-proxy
   labels:
     app: non-auth-proxy
+  annotations:
+    secret.reloader.stakater.com/reload: "tailscale-non-auth-proxy"
 spec:
   replicas: 1
   strategy:

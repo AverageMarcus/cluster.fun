@@ -70,6 +70,7 @@ metadata:
     app: internal-proxy
   annotations:
     configmap.reloader.stakater.com/reload: "host-mappings"
+    secret.reloader.stakater.com/reload: "tailscale-internal-proxy"
 spec:
   replicas: 1
   strategy:
