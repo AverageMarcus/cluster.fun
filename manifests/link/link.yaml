@@ -19,6 +19,8 @@ data:
     kcdukraine: https://noti.st/averagemarcus/quuysq/managing-kubernetes-without-losing-your-cool
     devopsox23: https://noti.st/averagemarcus/quuysq/managing-kubernetes-without-losing-your-cool
     dddem23: https://noti.st/averagemarcus/Rt4hFh/managing-kubernetes-without-losing-your-cool
+    kube-london: https://noti.st/averagemarcus/SFD1bY/the-wonders-and-woes-of-webhooks
+    kcduk23: https://noti.st/averagemarcus/4YvpTx/webhooks-whats-the-worst-that-could-happen
 ---
 apiVersion: v1
 kind: Service
