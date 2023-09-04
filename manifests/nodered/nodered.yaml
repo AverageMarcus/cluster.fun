@@ -30,6 +30,8 @@ metadata:
   namespace: node-red
 spec:
   replicas: 1
+  strategy:
+    type:
   selector:
     matchLabels:
       app: node-red
