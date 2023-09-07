@@ -215,7 +215,7 @@ spec:
       serviceAccountName: promtail
       containers:
         - name: promtail
-          image: "grafana/promtail:2.8.4"
+          image: "grafana/promtail:2.9.0"
           imagePullPolicy: IfNotPresent
           args:
             - "-config.file=/etc/promtail/promtail.yaml"
