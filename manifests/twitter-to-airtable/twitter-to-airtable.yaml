@@ -92,7 +92,7 @@ spec:
             secretKeyRef:
               key: password
               name: twitter-to-airtable-auth
-        image: quay.io/oauth2-proxy/oauth2-proxy:v7.5.0
+        image: quay.io/oauth2-proxy/oauth2-proxy:v7.5.1
         name: oauth-proxy
         ports:
         - containerPort: 8000
