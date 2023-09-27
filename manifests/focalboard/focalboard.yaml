@@ -57,7 +57,7 @@ spec:
     spec:
       containers:
       - name: focalboard
-        image: mattermost/focalboard:7.11.3
+        image: mattermost/focalboard:7.11.4
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8000
