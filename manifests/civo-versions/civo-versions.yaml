@@ -55,9 +55,9 @@ spec:
               key: API_KEY
         resources:
           limits:
-            memory: 10Mi
+            memory: 30Mi
           requests:
-            memory: 10Mi
+            memory: 30Mi
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
