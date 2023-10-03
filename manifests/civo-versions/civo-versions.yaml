@@ -1,0 +1,88 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: civo-versions
+  namespace: civo-versions
+  annotations:
+    kube-1password: ybo7axn7wpks4z3u3gjhibnu5i
+    kube-1password/vault: Kubernetes
+    kube-1password/secret-text-parse: "true"
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: civo-versions
+  namespace: civo-versions
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: web
+    name: web
+  selector:
+    app: civo-versions
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: civo-versions
+  namespace: civo-versions
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: civo-versions
+  template:
+    metadata:
+      labels:
+        app: civo-versions
+    spec:
+      containers:
+      - name: web
+        image: rg.fr-par.scw.cloud/averagemarcus/civo-versions:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+          name: web
+        env:
+        - name: PORT
+          value: "8000"
+        - name: API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: civo-versions
+              key: API_KEY
+        resources:
+          limits:
+            memory: 10Mi
+          requests:
+            memory: 10Mi
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: civo-versions
+  namespace: civo-versions
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    ingress.kubernetes.io/ssl-redirect: "true"
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+spec:
+  tls:
+  - hosts:
+    - civo-versions.cluster.fun
+    secretName: civo-versions-ingress
+  rules:
+  - host: civo-versions.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: civo-versions
+            port:
+              number: 80

@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: civo-versions
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster.fun
+  destination:
+    namespace: civo-versions
+    name: civo
+  source:
+    path: manifests/civo-versions
+    repoURL: "https://git.cluster.fun/AverageMarcus/cluster.fun.git"
+    targetRevision: HEAD
+  syncPolicy:
+    automated: {}
+    syncOptions:
+      - CreateNamespace=true
+  ignoreDifferences:
+  - kind: Secret
+    jsonPointers:
+    - /data
+  - group: apps
+    kind: Deployment
+    jqPathExpressions:
+    - .spec.template.spec.containers[]?.image
