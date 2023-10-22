@@ -49,6 +49,9 @@ metadata:
   namespace: rss
   labels:
     app: miniflux
+  annotations:
+    secret.reloader.stakater.com/reload: "miniflux"
+    configmap.reloader.stakater.com/reload: "miniflux"
 spec:
   replicas: 1
   strategy:
