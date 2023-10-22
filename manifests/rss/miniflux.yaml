@@ -21,7 +21,7 @@ metadata:
 data:
   RUN_MIGRATIONS: "1"
   CREATE_ADMIN: "1"
-  LOG_LEVEL: warning
+  LOG_LEVEL: info
   POLLING_FREQUENCY: "30"
   BASE_URL: "https://miniflux.cluster.fun/"
   METRICS_COLLECTOR: "1"
