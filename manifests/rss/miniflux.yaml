@@ -37,7 +37,7 @@ spec:
   type: ClusterIP
   ports:
   - port: 80
-    targetPort: 8000
+    targetPort: web
     name: web
   selector:
     app: miniflux
