@@ -22,7 +22,7 @@ data:
   RUN_MIGRATIONS: "1"
   CREATE_ADMIN: "1"
   LOG_LEVEL: info
-  POLLING_FREQUENCY: "30"
+  POLLING_FREQUENCY: "15"
   BASE_URL: "https://miniflux.cluster.fun/"
   METRICS_COLLECTOR: "1"
 ---
