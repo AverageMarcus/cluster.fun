@@ -21,6 +21,7 @@ data:
     dddem23: https://noti.st/averagemarcus/Rt4hFh/managing-kubernetes-without-losing-your-cool
     kube-london: https://noti.st/averagemarcus/SFD1bY/the-wonders-and-woes-of-webhooks
     kcduk23: https://noti.st/averagemarcus/4YvpTx/webhooks-whats-the-worst-that-could-happen
+    rejekts23: https://noti.st/averagemarcus/Bi7qLP/webhooks-whats-the-worst-that-could-happen
 ---
 apiVersion: v1
 kind: Service
