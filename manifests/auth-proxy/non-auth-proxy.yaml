@@ -109,7 +109,7 @@ spec:
           requests:
             memory: 50Mi
       - name: tailscale
-        image: ghcr.io/tailscale/tailscale:v1.50
+        image: ghcr.io/tailscale/tailscale:v1.52
         imagePullPolicy: Always
         tty: true
         env:
