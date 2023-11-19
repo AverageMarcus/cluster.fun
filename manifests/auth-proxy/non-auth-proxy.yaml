@@ -176,21 +176,21 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - home.cluster.fun
+    # - home.cluster.fun
     - tasks.cluster.fun
     - api.tasks.cluster.fun
     secretName: non-auth-proxy-ingress
   rules:
-  - host: home.cluster.fun
-    http:
-      paths:
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: non-auth-proxy
-            port:
-              name: http
+  # - host: home.cluster.fun
+  #   http:
+  #     paths:
+  #     - path: /
+  #       pathType: ImplementationSpecific
+  #       backend:
+  #         service:
+  #           name: non-auth-proxy
+  #           port:
+  #             name: http
   - host: tasks.cluster.fun
     http:
       paths:

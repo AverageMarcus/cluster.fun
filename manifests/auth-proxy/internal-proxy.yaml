@@ -9,8 +9,6 @@ data:
   mapping.json: |
     {
       "tekton-el.auth-proxy.svc": "tekton-el.cluster.local",
-      "home.auth-proxy.svc": "home.cluster.local",
-      "home.cluster.fun": "home.cluster.local",
       "vmcluster.auth-proxy.svc": "vmcluster.cluster.local",
       "loki.auth-proxy.svc": "loki-write.cluster.local",
       "loki.auth-proxy.svc:80": "loki-write.cluster.local",
