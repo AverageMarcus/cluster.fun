@@ -102,7 +102,7 @@ spec:
         - name: host-mappings
           mountPath: /config/
       - name: tailscale
-        image: ghcr.io/tailscale/tailscale:v1.52
+        image: ghcr.io/tailscale/tailscale:v1.54
         imagePullPolicy: Always
         tty: true
         env:
