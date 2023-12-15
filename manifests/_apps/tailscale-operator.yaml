@@ -31,7 +31,7 @@ metadata:
 spec:
   project: cluster.fun
   destination:
-    namespace: tailscale-operator
+    namespace: tailscale
     name: scaleway
   source:
     repoURL: 'https://github.com/tailscale/tailscale/main/cmd/k8s-operator/deploy/chart'
