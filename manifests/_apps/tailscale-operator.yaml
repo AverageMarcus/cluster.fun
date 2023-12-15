@@ -16,6 +16,8 @@ spec:
     targetRevision: HEAD
   syncPolicy:
     automated: {}
+    syncOptions:
+      - CreateNamespace=true
   ignoreDifferences:
   - kind: Secret
     jsonPointers:
@@ -44,5 +46,7 @@ spec:
           hostname: "scaleway"
   syncPolicy:
     automated: {}
+    syncOptions:
+      - CreateNamespace=true
 
 ---
