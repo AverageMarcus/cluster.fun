@@ -14,6 +14,9 @@ spec:
     path: manifests/tailscale-operator
     repoURL: "https://git.cluster.fun/AverageMarcus/cluster.fun.git"
     targetRevision: HEAD
+    kustomize:
+      commonLabels:
+        app.kubernetes.io/instance: scaleway
   syncPolicy:
     automated: {}
     syncOptions:

@@ -35,6 +35,9 @@ spec:
                 - env:
                     - name: OPERATOR_HOSTNAME
                       value: tailscale-operator
+                      valueFrom:
+                        fieldRef:
+                          fieldPath: metadata.labels['app.kubernetes.io/instance']
                     - name: OPERATOR_SECRET
                       value: operator
                     - name: OPERATOR_LOGGING
