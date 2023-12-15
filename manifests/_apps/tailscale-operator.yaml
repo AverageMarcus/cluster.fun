@@ -14,9 +14,36 @@ spec:
     path: manifests/tailscale-operator
     repoURL: "https://git.cluster.fun/AverageMarcus/cluster.fun.git"
     targetRevision: HEAD
-    kustomize:
-      commonLabels:
-        app.kubernetes.io/instance: scaleway-cluster
+  syncPolicy:
+    automated: {}
+    syncOptions:
+      - CreateNamespace=true
+  ignoreDifferences:
+  - kind: Secret
+    jsonPointers:
+    - /data
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tailscale-operator-chart-scaleway
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster.fun
+  destination:
+    namespace: tailscale
+    name: scaleway
+  source:
+    repoURL: 'https://pkgs.tailscale.com/helmcharts'
+    targetRevision: 1.56.0
+    chart: tailscale-operator
+    helm:
+      version: v3
+      values: |-
+        operatorConfig:
+          hostname: scaleway-cluster
   syncPolicy:
     automated: {}
     syncOptions:
@@ -57,6 +84,36 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
+  name: tailscale-operator-chart-civo
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster.fun
+  destination:
+    namespace: tailscale
+    name: civo
+  source:
+    repoURL: 'https://pkgs.tailscale.com/helmcharts'
+    targetRevision: 1.56.0
+    chart: tailscale-operator
+    helm:
+      version: v3
+      values: |-
+        operatorConfig:
+          hostname: civo-cluster
+  syncPolicy:
+    automated: {}
+    syncOptions:
+      - CreateNamespace=true
+  ignoreDifferences:
+  - kind: Secret
+    jsonPointers:
+    - /data
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
   name: tailscale-operator-scaleway-old
   namespace: argocd
   finalizers:
@@ -73,6 +130,36 @@ spec:
     kustomize:
       commonLabels:
         app.kubernetes.io/instance: scaleway-old-cluster
+  syncPolicy:
+    automated: {}
+    syncOptions:
+      - CreateNamespace=true
+  ignoreDifferences:
+  - kind: Secret
+    jsonPointers:
+    - /data
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tailscale-operator-chart-scaleway-old
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster.fun
+  destination:
+    namespace: tailscale
+    name: cluster-fun (scaleway)
+  source:
+    repoURL: 'https://pkgs.tailscale.com/helmcharts'
+    targetRevision: 1.56.0
+    chart: tailscale-operator
+    helm:
+      version: v3
+      values: |-
+        operatorConfig:
+          hostname: scaleway-old-cluster
   syncPolicy:
     automated: {}
     syncOptions:
