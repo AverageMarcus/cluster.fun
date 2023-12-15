@@ -4,7 +4,7 @@ metadata:
   name: operator-oauth
   namespace: tailscale
   annotations:
-    kube-1password: 43tugabtoh22ykoe5emcjjpeqa
+    kube-1password: xwj5xtmakuzeujeqzqd3mp67xy
     kube-1password/vault: Kubernetes
     kube-1password/secret-text-parse: "true"
 type: Opaque
