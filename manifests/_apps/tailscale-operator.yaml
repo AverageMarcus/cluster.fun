@@ -1,0 +1,48 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tailscale-operator
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster.fun
+  destination:
+    namespace: tailscale
+    name: scaleway
+  source:
+    path: manifests/tailscale-operator
+    repoURL: "https://git.cluster.fun/AverageMarcus/cluster.fun.git"
+    targetRevision: HEAD
+  syncPolicy:
+    automated: {}
+  ignoreDifferences:
+  - kind: Secret
+    jsonPointers:
+    - /data
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tailscale-operator-chart
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster.fun
+  destination:
+    namespace: tailscale-operator
+    name: scaleway
+  source:
+    repoURL: 'https://github.com/tailscale/tailscale/main/cmd/k8s-operator/deploy/chart'
+    targetRevision: 0.1.0
+    chart: tailscale-operator
+    helm:
+      version: v3
+      values: |-
+        operatorConfig:
+          hostname: "scaleway"
+  syncPolicy:
+    automated: {}
+
+---
