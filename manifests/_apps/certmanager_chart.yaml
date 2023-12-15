@@ -72,3 +72,59 @@ spec:
             memory: 64Mi
   syncPolicy:
     automated: {}
+
+---
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager-chart-scaleway
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster.fun
+  destination:
+    namespace: cert-manager
+    name: scaleway
+  source:
+    repoURL: 'https://charts.jetstack.io'
+    targetRevision: 1.11.0
+    chart: cert-manager
+    helm:
+      version: v3
+      values: |-
+        installCRDs: "true"
+        resources:
+          requests:
+            memory: 32Mi
+          limits:
+            memory: 64Mi
+  syncPolicy:
+    automated: {}
+
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager-issuer-scaleway
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster.fun
+  destination:
+    namespace: cert-manager
+    name: scaleway
+  source:
+    path: manifests/certmanager_chart
+    repoURL: "https://git.cluster.fun/AverageMarcus/cluster.fun.git"
+    targetRevision: HEAD
+  syncPolicy:
+    automated: {}
+  ignoreDifferences:
+  - kind: Secret
+    jsonPointers:
+    - /data
+---
