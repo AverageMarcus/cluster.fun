@@ -20,3 +20,27 @@ spec:
   - kind: Secret
     jsonPointers:
     - /data
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: reloader-scaleway
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster.fun
+  destination:
+    namespace: kube-system
+    name: scaleway
+  source:
+    repoURL: 'https://stakater.github.io/stakater-charts'
+    targetRevision: v0.0.89
+    chart: reloader
+  syncPolicy:
+    automated: {}
+  ignoreDifferences:
+  - kind: Secret
+    jsonPointers:
+    - /data
+---
