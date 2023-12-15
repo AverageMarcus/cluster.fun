@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: tailscale-operator
+  name: tailscale-operator-scaleway
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
@@ -16,7 +16,63 @@ spec:
     targetRevision: HEAD
     kustomize:
       commonLabels:
-        app.kubernetes.io/instance: scaleway
+        app.kubernetes.io/instance: scaleway-cluster
+  syncPolicy:
+    automated: {}
+    syncOptions:
+      - CreateNamespace=true
+  ignoreDifferences:
+  - kind: Secret
+    jsonPointers:
+    - /data
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tailscale-operator-civo
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster.fun
+  destination:
+    namespace: tailscale
+    name: civo
+  source:
+    path: manifests/tailscale-operator
+    repoURL: "https://git.cluster.fun/AverageMarcus/cluster.fun.git"
+    targetRevision: HEAD
+    kustomize:
+      commonLabels:
+        app.kubernetes.io/instance: civo-cluster
+  syncPolicy:
+    automated: {}
+    syncOptions:
+      - CreateNamespace=true
+  ignoreDifferences:
+  - kind: Secret
+    jsonPointers:
+    - /data
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tailscale-operator-scaleway-old
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster.fun
+  destination:
+    namespace: tailscale
+    name: cluster-fun (scaleway)
+  source:
+    path: manifests/tailscale-operator
+    repoURL: "https://git.cluster.fun/AverageMarcus/cluster.fun.git"
+    targetRevision: HEAD
+    kustomize:
+      commonLabels:
+        app.kubernetes.io/instance: scaleway-old-cluster
   syncPolicy:
     automated: {}
     syncOptions:
