@@ -56,10 +56,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - devstats-viewer.cluster.fun
+    - devstats.cluster.fun
     secretName: devstats-viewer-ingress
   rules:
-  - host: devstats-viewer.cluster.fun
+  - host: devstats.cluster.fun
     http:
       paths:
       - path: /
