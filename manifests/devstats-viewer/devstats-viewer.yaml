@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: devstats-viewer
+  namespace: devstats-viewer
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: web
+    name: web
+  selector:
+    app: devstats-viewer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devstats-viewer
+  namespace: devstats-viewer
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: devstats-viewer
+  template:
+    metadata:
+      labels:
+        app: devstats-viewer
+    spec:
+      imagePullSecrets:
+        - name: docker-config
+      containers:
+      - name: web
+        image: rg.fr-par.scw.cloud/averagemarcus/devstats-viewer:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          name: web
+        resources:
+          limits:
+            memory: 10Mi
+          requests:
+            memory: 10Mi
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: devstats-viewer
+  namespace: devstats-viewer
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    ingress.kubernetes.io/ssl-redirect: "true"
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+spec:
+  tls:
+  - hosts:
+    - devstats-viewer.cluster.fun
+    secretName: devstats-viewer-ingress
+  rules:
+  - host: devstats-viewer.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: devstats-viewer
+            port:
+              number: 80
