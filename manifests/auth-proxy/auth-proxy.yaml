@@ -148,7 +148,7 @@ spec:
           requests:
             memory: 50Mi
       - name: tailscale
-        image: ghcr.io/tailscale/tailscale:v1.56
+        image: ghcr.io/tailscale/tailscale:v1.58
         imagePullPolicy: Always
         env:
         - name: TS_AUTH_KEY
