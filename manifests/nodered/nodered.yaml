@@ -56,9 +56,21 @@ spec:
             subPath: settings.js
           - name: data
             mountPath: /data
+      - name: update-native-modules
+        image: nodered/node-red:3.1.5-18
+        imagePullPolicy: IfNotPresent
+        command:
+          - bash
+          - -c
+          - |
+            cd /data
+            npm rebuild
+        volumeMounts:
+          - name: data
+            mountPath: /data
       containers:
       - name: web
-        image: nodered/node-red:3.1.5-14
+        image: nodered/node-red:3.1.5-18
         imagePullPolicy: Always
         ports:
         - containerPort: 1880
