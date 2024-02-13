@@ -329,7 +329,7 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
         - name: redis
-          image: docker.io/bitnami/redis:7.0.12-debian-11-r11
+          image: docker.io/bitnami/redis:7.2.4-debian-11-r11
           imagePullPolicy: "IfNotPresent"
           securityContext:
             runAsUser: 1001
@@ -471,7 +471,7 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
         - name: redis
-          image: docker.io/bitnami/redis:7.0.12-debian-11-r11
+          image: docker.io/bitnami/redis:7.2.4-debian-11-r11
           imagePullPolicy: "IfNotPresent"
           securityContext:
             runAsUser: 1001
