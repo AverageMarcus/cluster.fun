@@ -354,7 +354,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: "riot"
-          image: "vectorim/element-web:v1.11.57"
+          image: "vectorim/element-web:v1.11.58"
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
