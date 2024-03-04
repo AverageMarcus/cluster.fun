@@ -28,14 +28,14 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: hkotel/mealie:frontend-nightly
+        image: ghcr.io/mealie-recipes/mealie:v1.2.0
         imagePullPolicy: Always
         envFrom:
         - secretRef:
             name: mealie
         env:
-        - name: API_URL
-          value: "http://localhost:9000"
+        # - name: API_URL
+        #   value: "http://localhost:9000"
         - name: PUID
           value: "1000"
         - name: PGID
@@ -64,33 +64,33 @@ spec:
         volumeMounts:
           - mountPath: /app/data
             name: data
-      - name: api
-        image: hkotel/mealie:api-nightly
-        imagePullPolicy: Always
-        envFrom:
-        - secretRef:
-            name: mealie
-        env:
-        - name: PUID
-          value: "1000"
-        - name: PGID
-          value: "1000"
-        - name: DB_ENGINE
-          value: postgres
-        - name: POSTGRES_DB
-          value: mealie
-        - name: DEFAULT_EMAIL
-          value: "mealie@marcusnoble.co.uk"
-        - name: TOKEN_TIME
-          value: "168"
-        - name: BASE_URL
-          value: "https://mealie.cluster.fun"
-        ports:
-        - containerPort: 9000
-          name: api
-        volumeMounts:
-          - mountPath: /app/data
-            name: data
+      # - name: api
+      #   image: ghcr.io/mealie-recipes/mealie:api-nightly
+      #   imagePullPolicy: Always
+      #   envFrom:
+      #   - secretRef:
+      #       name: mealie
+      #   env:
+      #   - name: PUID
+      #     value: "1000"
+      #   - name: PGID
+      #     value: "1000"
+      #   - name: DB_ENGINE
+      #     value: postgres
+      #   - name: POSTGRES_DB
+      #     value: mealie
+      #   - name: DEFAULT_EMAIL
+      #     value: "mealie@marcusnoble.co.uk"
+      #   - name: TOKEN_TIME
+      #     value: "168"
+      #   - name: BASE_URL
+      #     value: "https://mealie.cluster.fun"
+      #   ports:
+      #   - containerPort: 9000
+      #     name: api
+      #   volumeMounts:
+      #     - mountPath: /app/data
+      #       name: data
       volumes:
       - name: data
         persistentVolumeClaim:
