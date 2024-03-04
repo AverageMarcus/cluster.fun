@@ -18,6 +18,8 @@ metadata:
   namespace: mealie
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: mealie
@@ -34,8 +36,6 @@ spec:
         - secretRef:
             name: mealie
         env:
-        # - name: API_URL
-        #   value: "http://localhost:9000"
         - name: PUID
           value: "1000"
         - name: PGID
@@ -59,38 +59,11 @@ spec:
         - name: RECIPE_DISABLE_AMOUNT
           value: "false"
         ports:
-        - containerPort: 3000
+        - containerPort: 9000
           name: web
         volumeMounts:
           - mountPath: /app/data
             name: data
-      # - name: api
-      #   image: ghcr.io/mealie-recipes/mealie:api-nightly
-      #   imagePullPolicy: Always
-      #   envFrom:
-      #   - secretRef:
-      #       name: mealie
-      #   env:
-      #   - name: PUID
-      #     value: "1000"
-      #   - name: PGID
-      #     value: "1000"
-      #   - name: DB_ENGINE
-      #     value: postgres
-      #   - name: POSTGRES_DB
-      #     value: mealie
-      #   - name: DEFAULT_EMAIL
-      #     value: "mealie@marcusnoble.co.uk"
-      #   - name: TOKEN_TIME
-      #     value: "168"
-      #   - name: BASE_URL
-      #     value: "https://mealie.cluster.fun"
-      #   ports:
-      #   - containerPort: 9000
-      #     name: api
-      #   volumeMounts:
-      #     - mountPath: /app/data
-      #       name: data
       volumes:
       - name: data
         persistentVolumeClaim:
@@ -114,21 +87,6 @@ spec:
     app: mealie
 ---
 
-apiVersion: v1
-kind: Service
-metadata:
-  name: mealie-api
-  namespace: mealie
-spec:
-  type: ClusterIP
-  ports:
-  - port: 80
-    targetPort: api
-    name: api
-  selector:
-    app: mealie
-
----
 
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -155,13 +113,3 @@ spec:
             name: mealie
             port:
               name: web
-  - host: mealie.cluster.fun
-    http:
-      paths:
-      - path: /api
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: mealie-api
-            port:
-              name: api
