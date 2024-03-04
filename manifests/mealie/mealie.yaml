@@ -58,6 +58,10 @@ spec:
           value: "false"
         - name: RECIPE_DISABLE_AMOUNT
           value: "false"
+        - name: ALLOW_SIGNUP
+          value: "false"
+        - name: BASE_URL
+          value: "https://mealie.cluster.fun"
         ports:
         - containerPort: 9000
           name: web
