@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: ghcr.io/mealie-recipes/mealie:v1.2.0
+        image: ghcr.io/mealie-recipes/mealie:v1.3.0
         imagePullPolicy: Always
         envFrom:
         - secretRef:
