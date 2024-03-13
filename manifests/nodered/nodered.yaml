@@ -57,7 +57,7 @@ spec:
           - name: data
             mountPath: /data
       - name: update-native-modules
-        image: nodered/node-red:3.1.6-18
+        image: nodered/node-red:3.1.7-18
         imagePullPolicy: IfNotPresent
         command:
           - bash
@@ -70,7 +70,7 @@ spec:
             mountPath: /data
       containers:
       - name: web
-        image: nodered/node-red:3.1.6-18
+        image: nodered/node-red:3.1.7-18
         imagePullPolicy: Always
         ports:
         - containerPort: 1880
