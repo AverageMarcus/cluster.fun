@@ -25,6 +25,7 @@ spec:
     - prowlarr.cluster.fun
     - transmission.cluster.fun
     - tekton.cluster.fun
+    - changedetection.cluster.fun
     secretName: auth-proxy-ingress
   rules:
   - host: downloads.cluster.fun
@@ -168,6 +169,16 @@ spec:
             port:
               name: http
   - host: tekton.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: auth-proxy
+            port:
+              name: http
+  - host: changedetection.cluster.fun
     http:
       paths:
       - path: /
