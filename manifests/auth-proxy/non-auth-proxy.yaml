@@ -108,43 +108,6 @@ spec:
             memory: 50Mi
           requests:
             memory: 50Mi
-      - name: tailscale
-        image: ghcr.io/tailscale/tailscale:v1.62
-        imagePullPolicy: Always
-        tty: true
-        env:
-        - name: TS_AUTH_KEY
-          valueFrom:
-            secretKeyRef:
-              name: tailscale-auth
-              key: password
-        - name: TS_KUBE_SECRET
-          value: tailscale-non-auth-proxy
-        - name: TS_ACCEPT_DNS
-          value: "true"
-        - name: TS_EXTRA_ARGS
-          value: "--hostname=non-auth-proxy"
-        securityContext:
-          capabilities:
-            add:
-            - NET_ADMIN
-        command:
-        - sh
-        - -c
-        - |
-          export PATH=$PATH:/tailscale/bin
-          if [[ ! -d /dev/net ]]; then mkdir -p /dev/net; fi
-          if [[ ! -c /dev/net/tun ]]; then mknod /dev/net/tun c 10 200; fi
-          echo "Starting tailscaled"
-          tailscaled --state=kube:${TS_KUBE_SECRET} --socket=/tmp/tailscaled.sock &
-          PID=$!
-          echo "Running tailscale up"
-          tailscale --socket=/tmp/tailscaled.sock up \
-            --accept-dns=${TS_ACCEPT_DNS} \
-            --authkey=${TS_AUTH_KEY} \
-            ${TS_EXTRA_ARGS}
-          echo "Re-enabling incoming traffic from the cluster"
-          wait ${PID}
 ---
 apiVersion: v1
 kind: Service
@@ -176,38 +139,16 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    # - home.cluster.fun
-    - tasks.cluster.fun
-    - api.tasks.cluster.fun
+    - hello-world.cluster.fun
     secretName: non-auth-proxy-ingress
   rules:
-  # - host: home.cluster.fun
-  #   http:
-  #     paths:
-  #     - path: /
-  #       pathType: ImplementationSpecific
-  #       backend:
-  #         service:
-  #           name: non-auth-proxy
-  #           port:
-  #             name: http
-  - host: tasks.cluster.fun
+  - host: hello-world.cluster.fun
     http:
       paths:
       - path: /
         pathType: ImplementationSpecific
         backend:
           service:
-            name: non-auth-proxy
-            port:
-              name: http
-  - host: api.tasks.cluster.fun
-    http:
-      paths:
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: non-auth-proxy
+            name: tailscale-proxy
             port:
               name: http
