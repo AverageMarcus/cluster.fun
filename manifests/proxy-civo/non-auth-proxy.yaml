@@ -25,49 +25,6 @@ data:
       "loki-distributed.proxy-civo.svc:80": "loki-loki.cluster.local"
     }
 ---
-apiVersion: v1
-kind: Secret
-metadata:
-  name: tailscale-internal-proxy
-  namespace: proxy-civo
-type: Opaque
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: tailscale-internal-proxy
-  labels:
-    app.kubernetes.io/name: tailscale
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: tailscale-internal-proxy
-  labels:
-    app.kubernetes.io/name: tailscale
-subjects:
-- kind: ServiceAccount
-  name: "tailscale-internal-proxy"
-roleRef:
-  kind: Role
-  name: tailscale-internal-proxy
-  apiGroup: rbac.authorization.k8s.io
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  name: tailscale-internal-proxy
-  labels:
-    app.kubernetes.io/name: tailscale
-rules:
-- apiGroups: [""]
-  resources: ["secrets"]
-  verbs: ["create"]
-- apiGroups: [""]
-  resourceNames: ["tailscale-internal-proxy"]
-  resources: ["secrets"]
-  verbs: ["get", "update"]
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -77,7 +34,7 @@ metadata:
     app: internal-proxy
   annotations:
     configmap.reloader.stakater.com/reload: "host-mappings"
-    secret.reloader.stakater.com/reload: "tailscale-internal-proxy"
+    secret.reloader.stakater.com/reload: "tailscale-auth"
 spec:
   replicas: 1
   strategy:
@@ -90,7 +47,6 @@ spec:
       labels:
         app: internal-proxy
     spec:
-      serviceAccountName: tailscale-internal-proxy
       dnsPolicy: ClusterFirst
       dnsConfig:
         nameservers:
@@ -104,49 +60,19 @@ spec:
           value: talos.averagemarcus.github.beta.tailscale.net
         - name: PORT
           value: "8080"
+        - name: TS_AUTH_KEY
+          valueFrom:
+            secretKeyRef:
+              name: tailscale-auth
+              key: password
+        - name: TS_HOSTNAME
+          value: proxy-civo-internal-proxy
         ports:
         - containerPort: 8080
           protocol: TCP
         volumeMounts:
         - name: host-mappings
           mountPath: /config/
-      - name: tailscale
-        image: ghcr.io/tailscale/tailscale:v1.62
-        imagePullPolicy: Always
-        tty: true
-        env:
-        - name: TS_AUTH_KEY
-          valueFrom:
-            secretKeyRef:
-              name: tailscale-auth
-              key: password
-        - name: TS_KUBE_SECRET
-          value: tailscale-internal-proxy
-        - name: TS_ACCEPT_DNS
-          value: "true"
-        - name: TS_EXTRA_ARGS
-          value: "--hostname=proxy-civo-internal-proxy"
-        securityContext:
-          capabilities:
-            add:
-            - NET_ADMIN
-        command:
-        - sh
-        - -c
-        - |
-          export PATH=$PATH:/tailscale/bin
-          if [[ ! -d /dev/net ]]; then mkdir -p /dev/net; fi
-          if [[ ! -c /dev/net/tun ]]; then mknod /dev/net/tun c 10 200; fi
-          echo "Starting tailscaled"
-          tailscaled --state=kube:${TS_KUBE_SECRET} --socket=/tmp/tailscaled.sock &
-          PID=$!
-          echo "Running tailscale up"
-          tailscale --socket=/tmp/tailscaled.sock up \
-            --accept-dns=${TS_ACCEPT_DNS} \
-            --authkey=${TS_AUTH_KEY} \
-            ${TS_EXTRA_ARGS}
-          echo "Re-enabling incoming traffic from the cluster"
-          wait ${PID}
       volumes:
       - name: host-mappings
         configMap:
