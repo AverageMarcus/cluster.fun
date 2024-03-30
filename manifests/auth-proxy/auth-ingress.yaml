@@ -1,6 +1,33 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
+  name: auth-proxy-v2
+  namespace: auth-proxy
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - hello.cluster.fun
+    secretName: non-auth-proxy-ingress
+  rules:
+  - host: hello.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: auth-proxy-v2
+            port:
+              name: http
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
   name: auth-proxy
   namespace: auth-proxy
   annotations:

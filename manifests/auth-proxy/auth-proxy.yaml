@@ -255,5 +255,5 @@ spec:
     protocol: TCP
     targetPort: 8080
   selector:
-    app: auth-proxy
+    app: auth-proxy-v2
   type: ClusterIP
