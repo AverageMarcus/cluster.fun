@@ -14,7 +14,8 @@ data:
       "loki.auth-proxy.svc:80": "loki-write.cluster.local",
       "loki-distributed.auth-proxy.svc": "loki-loki.cluster.local",
       "loki-distributed.auth-proxy.svc:80": "loki-loki.cluster.local",
-      "hello-world.cluster.fun": "hello-world.cluster.fun"
+      "hello-world.cluster.fun": "hello-world.cluster.fun",
+      "hello.cluster.fun": "hello.cluster.fun"
     }
 ---
 apiVersion: apps/v1
