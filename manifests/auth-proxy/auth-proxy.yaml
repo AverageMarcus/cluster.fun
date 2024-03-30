@@ -177,21 +177,3 @@ spec:
   type: ClusterIP
 
 ---
-
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: auth-proxy-v2
-  namespace: auth-proxy
-  labels:
-    app: auth-proxy-v2
-spec:
-  ports:
-  - name: http
-    port: 80
-    protocol: TCP
-    targetPort: 8181
-  selector:
-    app: internal-proxy
-  type: ClusterIP

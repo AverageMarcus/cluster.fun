@@ -13,9 +13,7 @@ data:
       "loki.auth-proxy.svc": "loki-write.cluster.local",
       "loki.auth-proxy.svc:80": "loki-write.cluster.local",
       "loki-distributed.auth-proxy.svc": "loki-loki.cluster.local",
-      "loki-distributed.auth-proxy.svc:80": "loki-loki.cluster.local",
-      "hello-world.cluster.fun": "hello-world.cluster.fun",
-      "hello.cluster.fun": "hello.cluster.fun"
+      "loki-distributed.auth-proxy.svc:80": "loki-loki.cluster.local"
     }
 ---
 apiVersion: apps/v1
@@ -120,10 +118,14 @@ metadata:
     app: internal-proxy
 spec:
   ports:
-  - name: http
+  - name: non-auth
     port: 80
     protocol: TCP
     targetPort: 8080
+  - name: auth
+    port: 81
+    protocol: TCP
+    targetPort: 8181
   selector:
     app: internal-proxy
   type: ClusterIP

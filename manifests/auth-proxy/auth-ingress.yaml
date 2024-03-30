@@ -20,9 +20,9 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: auth-proxy-v2
+            name: tailscale-proxy
             port:
-              name: http
+              name: auth
 
 ---
 apiVersion: networking.k8s.io/v1

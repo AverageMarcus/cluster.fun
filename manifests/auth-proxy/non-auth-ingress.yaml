@@ -22,4 +22,4 @@ spec:
           service:
             name: tailscale-proxy
             port:
-              name: http
+              name: non-auth
