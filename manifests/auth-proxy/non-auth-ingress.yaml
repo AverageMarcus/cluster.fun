@@ -20,7 +20,6 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            # name: tailscale-proxy
-            name: auth-proxy
+            name: tailscale-proxy
             port:
               name: http
