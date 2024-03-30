@@ -11,7 +11,7 @@ spec:
   tls:
   - hosts:
     - hello.cluster.fun
-    secretName: non-auth-proxy-ingress
+    secretName: non-auth-proxy-ingress-v2
   rules:
   - host: hello.cluster.fun
     http:
