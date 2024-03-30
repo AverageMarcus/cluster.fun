@@ -47,6 +47,7 @@ spec:
       labels:
         app: internal-proxy
     spec:
+      serviceAccountName: default
       dnsPolicy: ClusterFirst
       dnsConfig:
         nameservers:
