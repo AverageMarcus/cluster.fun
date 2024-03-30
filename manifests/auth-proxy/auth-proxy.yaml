@@ -179,68 +179,6 @@ spec:
 ---
 
 
-
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: auth-proxy-v2
-  namespace: auth-proxy
-  labels:
-    app: auth-proxy-v2
-spec:
-  replicas: 1
-  strategy:
-    type: Recreate
-  selector:
-    matchLabels:
-      app: auth-proxy-v2
-  template:
-    metadata:
-      labels:
-        app: auth-proxy-v2
-    spec:
-      serviceAccountName: default
-      containers:
-      - name: oauth-proxy
-        image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
-        args:
-        - --cookie-secure=false
-        - --provider=oidc
-        - --provider-display-name=Auth0
-        - --upstream=http://tailscale-proxy.auth-proxy.svc
-        - --http-address=0.0.0.0:8080
-        - --email-domain=*
-        - --pass-basic-auth=false
-        - --pass-access-token=false
-        - --oidc-issuer-url=https://marcusnoble.eu.auth0.com/
-        - --cookie-secret=KDGD6rrK6cBmryyZ4wcJ9xAUNW9AQNFT
-        - --cookie-expire=336h0m0s
-        env:
-        - name: HOST_IP
-          valueFrom:
-            fieldRef:
-              apiVersion: v1
-              fieldPath: status.podIP
-        - name: OAUTH2_PROXY_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              key: username
-              name: auth-proxy
-        - name: OAUTH2_PROXY_CLIENT_SECRET
-          valueFrom:
-            secretKeyRef:
-              key: password
-              name: auth-proxy
-        ports:
-        - containerPort: 8080
-          protocol: TCP
-        resources:
-          limits:
-            memory: 50Mi
-          requests:
-            memory: 50Mi
----
 apiVersion: v1
 kind: Service
 metadata:
@@ -253,7 +191,7 @@ spec:
   - name: http
     port: 80
     protocol: TCP
-    targetPort: 8080
+    targetPort: 8181
   selector:
-    app: auth-proxy-v2
+    app: internal-proxy
   type: ClusterIP
