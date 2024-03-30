@@ -1,33 +1,6 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: auth-proxy-v2
-  namespace: auth-proxy
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-spec:
-  ingressClassName: nginx
-  tls:
-  - hosts:
-    - hello.cluster.fun
-    secretName: non-auth-proxy-ingress-v2
-  rules:
-  - host: hello.cluster.fun
-    http:
-      paths:
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: tailscale-proxy
-            port:
-              name: auth
-
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
   name: auth-proxy
   namespace: auth-proxy
   annotations:
@@ -62,9 +35,9 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: auth-proxy
+            name: tailscale-proxy
             port:
-              name: http
+              name: auth
   - host: argo.cluster.fun
     http:
       paths:
@@ -72,9 +45,9 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: auth-proxy
+            name: tailscale-proxy
             port:
-              name: http
+              name: auth
   - host: code.cluster.fun
     http:
       paths:
@@ -82,9 +55,9 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: auth-proxy
+            name: tailscale-proxy
             port:
-              name: http
+              name: auth
   - host: jackett.cluster.fun
     http:
       paths:
@@ -92,9 +65,9 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: auth-proxy
+            name: tailscale-proxy
             port:
-              name: http
+              name: auth
   - host: printer.cluster.fun
     http:
       paths:
@@ -102,9 +75,9 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: auth-proxy
+            name: tailscale-proxy
             port:
-              name: http
+              name: auth
   - host: ender3pro.printer.cluster.fun
     http:
       paths:
@@ -112,9 +85,9 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: auth-proxy
+            name: tailscale-proxy
             port:
-              name: http
+              name: auth
   - host: flsunq5.printer.cluster.fun
     http:
       paths:
@@ -122,9 +95,9 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: auth-proxy
+            name: tailscale-proxy
             port:
-              name: http
+              name: auth
   - host: elegoomars2.printer.cluster.fun
     http:
       paths:
@@ -132,9 +105,9 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: auth-proxy
+            name: tailscale-proxy
             port:
-              name: http
+              name: auth
   - host: radarr.cluster.fun
     http:
       paths:
@@ -142,9 +115,9 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: auth-proxy
+            name: tailscale-proxy
             port:
-              name: http
+              name: auth
   - host: readarr.cluster.fun
     http:
       paths:
@@ -152,9 +125,9 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: auth-proxy
+            name: tailscale-proxy
             port:
-              name: http
+              name: auth
   - host: sonarr.cluster.fun
     http:
       paths:
@@ -162,9 +135,9 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: auth-proxy
+            name: tailscale-proxy
             port:
-              name: http
+              name: auth
   - host: lidarr.cluster.fun
     http:
       paths:
@@ -172,9 +145,9 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: auth-proxy
+            name: tailscale-proxy
             port:
-              name: http
+              name: auth
   - host: prowlarr.cluster.fun
     http:
       paths:
@@ -182,9 +155,9 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: auth-proxy
+            name: tailscale-proxy
             port:
-              name: http
+              name: auth
   - host: transmission.cluster.fun
     http:
       paths:
@@ -192,9 +165,9 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: auth-proxy
+            name: tailscale-proxy
             port:
-              name: http
+              name: auth
   - host: tekton.cluster.fun
     http:
       paths:
@@ -202,9 +175,9 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: auth-proxy
+            name: tailscale-proxy
             port:
-              name: http
+              name: auth
   - host: changedetection.cluster.fun
     http:
       paths:
@@ -212,6 +185,6 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: auth-proxy
+            name: tailscale-proxy
             port:
-              name: http
+              name: auth
