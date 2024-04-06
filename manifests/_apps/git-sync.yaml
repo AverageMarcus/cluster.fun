@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: git-sync
+  name: cluster-fun-git-sync
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
@@ -9,7 +9,7 @@ spec:
   project: cluster.fun
   destination:
     namespace: git-sync
-    name: cluster-fun (scaleway)
+    name: cluster-fun (v2)
   source:
     path: manifests/git-sync
     repoURL: "https://git.cluster.fun/AverageMarcus/cluster.fun.git"
@@ -22,3 +22,4 @@ spec:
   - kind: Secret
     jsonPointers:
     - /data
+---
