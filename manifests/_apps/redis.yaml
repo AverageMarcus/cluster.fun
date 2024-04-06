@@ -22,3 +22,29 @@ spec:
   - kind: Secret
     jsonPointers:
     - /data
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-fun-redis
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: cluster.fun
+  destination:
+    namespace: redis
+    name: cluster-fun (v2)
+  source:
+    path: manifests/redis
+    repoURL: "https://git.cluster.fun/AverageMarcus/cluster.fun.git"
+    targetRevision: HEAD
+  syncPolicy:
+    automated: {}
+    syncOptions:
+      - CreateNamespace=true
+  ignoreDifferences:
+  - kind: Secret
+    jsonPointers:
+    - /data
+---
