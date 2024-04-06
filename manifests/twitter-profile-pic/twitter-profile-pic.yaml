@@ -62,59 +62,6 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: twitter-profile-pic
-  namespace: twitter-profile-pic
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-spec:
-  ingressClassName: nginx
-  tls:
-  - hosts:
-    - twitter-profile-pic.marcusnoble.co.uk
-    secretName: twitter-profile-pic-ingress
-  rules:
-  - host: twitter-profile-pic.marcusnoble.co.uk
-    http:
-      paths:
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: twitter-profile-pic
-            port:
-              number: 80
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: twitter-profile-pic-jsox
-  namespace: twitter-profile-pic
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-spec:
-  ingressClassName: nginx
-  tls:
-  - hosts:
-    - twitter-profile-pic.jsoxford.com
-    secretName: twitter-profile-pic-jsox-ingress
-  rules:
-  - host: twitter-profile-pic.jsoxford.com
-    http:
-      paths:
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: twitter-profile-pic
-            port:
-              number: 80
-
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
   name: twitter-profile-pic-cluster-fun
   namespace: twitter-profile-pic
   annotations:
