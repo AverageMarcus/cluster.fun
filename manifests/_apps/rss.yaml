@@ -1,35 +1,6 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: rss
-  namespace: argocd
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster.fun
-  destination:
-    namespace: rss
-    name: cluster-fun (scaleway)
-  source:
-    path: manifests/rss
-    repoURL: "https://git.cluster.fun/AverageMarcus/cluster.fun.git"
-    targetRevision: HEAD
-  syncPolicy:
-    automated: {}
-    syncOptions:
-      - CreateNamespace=true
-  ignoreDifferences:
-  - kind: Secret
-    jsonPointers:
-    - /data
-  - group: apps
-    kind: Deployment
-    jqPathExpressions:
-    - .spec.template.spec.containers[]?.image
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
   name: cluster-fun-rss
   namespace: argocd
   finalizers:
