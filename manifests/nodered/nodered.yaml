@@ -29,7 +29,7 @@ metadata:
   name: node-red
   namespace: node-red
 spec:
-  replicas: 1
+  replicas: 0
   strategy:
     type: Recreate
   selector:
