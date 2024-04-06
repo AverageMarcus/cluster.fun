@@ -33,5 +33,6 @@ spec:
   resources:
     requests:
       storage: 5Gi
+  storageClassName: sbs-bssd
   volumeName: pvc-2fee8e5b-4e91-4d9a-8721-58e62c7a0a53
 ---
