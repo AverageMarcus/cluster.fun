@@ -1,31 +1,6 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: blackhole
-  namespace: argocd
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster.fun
-  destination:
-    namespace: kube-system
-    name: cluster-fun (scaleway)
-  source:
-    path: manifests/blackhole
-    repoURL: "https://git.cluster.fun/AverageMarcus/cluster.fun.git"
-    targetRevision: HEAD
-  syncPolicy:
-    automated: {}
-    syncOptions:
-      - CreateNamespace=true
-  ignoreDifferences:
-  - kind: Secret
-    jsonPointers:
-    - /data
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
   name: cluster-fun-blackhole
   namespace: argocd
   finalizers:
