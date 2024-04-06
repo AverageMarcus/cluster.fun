@@ -1,35 +1,6 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: devstats-viewer
-  namespace: argocd
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster.fun
-  destination:
-    namespace: devstats-viewer
-    name: cluster-fun (scaleway)
-  source:
-    path: manifests/devstats-viewer
-    repoURL: "https://git.cluster.fun/AverageMarcus/cluster.fun.git"
-    targetRevision: HEAD
-  syncPolicy:
-    syncOptions:
-      - CreateNamespace=true
-    automated: {}
-  ignoreDifferences:
-  - kind: Secret
-    jsonPointers:
-    - /data
-  - group: apps
-    kind: Deployment
-    jqPathExpressions:
-    - .spec.template.spec.containers[]?.image
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
   name: cluster-fun-devstats-viewer
   namespace: argocd
   finalizers:
