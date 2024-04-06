@@ -1,27 +1,3 @@
-# apiVersion: v1
-# kind: PersistentVolume
-# metadata:
-#   annotations:
-#     pv.kubernetes.io/provisioned-by: csi.scaleway.com
-#   finalizers:
-#   - kubernetes.io/pv-protection
-#   - external-attacher/csi-scaleway-com
-#   name: pvc-db95ada8-d8e4-400a-acea-7d594ecffa36
-# spec:
-#   accessModes:
-#   - ReadWriteOnce
-#   capacity:
-#     storage: 5Gi
-#   csi:
-#     driver: csi.scaleway.com
-#     fsType: ext4
-#     volumeAttributes:
-#       storage.kubernetes.io/csiProvisionerIdentity: 1588413765965-1847-csi.scaleway.com
-#     volumeHandle: fr-par-1/5c16182d-f742-4ae5-a70c-386aa356f906
-#   persistentVolumeReclaimPolicy: Retain
-#   storageClassName: scw-bssd-retain
-#   volumeMode: Filesystem
-# ---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
