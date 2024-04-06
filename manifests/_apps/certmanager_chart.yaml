@@ -72,5 +72,7 @@ spec:
             memory: 64Mi
   syncPolicy:
     automated: {}
+  ignoreDifferences:
+  - kind: CiliumIdentity
 
 ---
