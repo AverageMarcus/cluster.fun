@@ -54,7 +54,7 @@ spec:
       serviceAccountName: prometheus-node-exporter
       containers:
         - name: prometheus-node-exporter
-          image: "prom/node-exporter:v1.7.0"
+          image: "prom/node-exporter:v1.8.0"
           imagePullPolicy: "IfNotPresent"
           args:
             - --path.procfs=/host/proc
