@@ -23,6 +23,7 @@ data:
     kcduk23: https://noti.st/averagemarcus/4YvpTx/webhooks-whats-the-worst-that-could-happen
     rejekts23: https://noti.st/averagemarcus/Bi7qLP/webhooks-whats-the-worst-that-could-happen
     rejekts24: https://speaking.marcusnoble.co.uk/pg46DB/from-fragile-to-resilient-validatingadmissionpolicies-strengthen-kubernetes
+    lopug24: https://speaking.marcusnoble.co.uk/I6dyx4/webhooks-whats-the-worst-that-could-happen
 ---
 apiVersion: v1
 kind: Service
