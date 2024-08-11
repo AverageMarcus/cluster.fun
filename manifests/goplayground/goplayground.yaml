@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: x1unix/go-playground:2.0.2
+        image: x1unix/go-playground:2.1.0
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8000
