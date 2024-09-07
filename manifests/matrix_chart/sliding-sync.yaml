@@ -59,8 +59,6 @@ spec:
               secretKeyRef:
                 name: matrix-sliding-sync
                 key: SYNCV3_DB
-          - name: SYNCV3_DB
-            value: user=$(whoami) dbname=syncv3 sslmode=disable host=host.docker.internal password='DATABASE_PASSWORD_HERE'"
 ---
 apiVersion: v1
 kind: Service
