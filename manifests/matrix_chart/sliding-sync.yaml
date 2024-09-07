@@ -46,7 +46,7 @@ spec:
           - name: SYNCV3_SERVER
             value: https://matrix.cluster.fun
           - name: SYNCV3_BINDADDR
-            value: "8008"
+            value: ":8008"
           - name: SYNCV3_PROM
             value: ":9090"
           - name: SYNCV3_SECRET
