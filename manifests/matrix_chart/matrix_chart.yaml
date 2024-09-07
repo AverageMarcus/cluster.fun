@@ -124,6 +124,15 @@ data:
     {
       "m.server": "matrix.cluster.fun:443"
     }
+  client: |-
+    {
+      "m.homeserver": {
+        "base_url": "https://matrix.cluster.fun"
+      },
+      "org.matrix.msc3575.proxy": {
+        "url": "https://syncv3.matrix.cluster.fun"
+      }
+    }
 
 
 ---
