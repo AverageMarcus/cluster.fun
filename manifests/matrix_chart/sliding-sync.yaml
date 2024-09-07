@@ -97,7 +97,7 @@ spec:
   tls:
   - hosts:
     - syncv3.matrix.cluster.fun
-    secretName: riot-ingress
+    secretName: sliding-sync-ingress
   rules:
   - host: syncv3.matrix.cluster.fun
     http:
