@@ -42,6 +42,9 @@ spec:
             - name: http
               containerPort: 8008
               protocol: TCP
+            - name: metrics
+              containerPort: 9090
+              protocol: TCP
           env:
           - name: SYNCV3_SERVER
             value: https://matrix.cluster.fun
@@ -77,6 +80,10 @@ spec:
   - port: 80
     targetPort: http
     name: web
+  - port: 9090
+    targetPort: metrics
+    protocol: TCP
+    name: metrics
   selector:
     app.kubernetes.io/name: sliding-sync
 ---
