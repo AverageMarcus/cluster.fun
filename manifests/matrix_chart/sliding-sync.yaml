@@ -73,7 +73,7 @@ metadata:
     component: sliding-sync
   annotations:
     prometheus.io/scrape: "true"
-    prometheus.io/port: "9000"
+    prometheus.io/port: "9090"
 spec:
   type: ClusterIP
   ports:
