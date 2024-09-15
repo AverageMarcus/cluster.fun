@@ -106,7 +106,7 @@ spec:
           persistentVolumeClaim:
             claimName: grist-data
 ---
-apiVersion: autoscaling/v2beta1
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: grist
