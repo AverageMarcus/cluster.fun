@@ -140,6 +140,7 @@ spec:
   tls:
   - hosts:
     - grist.cluster.fun
+    secretName: grist-ingress
   rules:
     - host: "grist.cluster.fun"
       http:
