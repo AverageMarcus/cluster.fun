@@ -58,6 +58,8 @@ metadata:
   namespace: grist
   labels:
     app.kubernetes.io/name: grist
+  annotations:
+    secret.reloader.stakater.com/reload: "grist"
 spec:
   selector:
     matchLabels:
