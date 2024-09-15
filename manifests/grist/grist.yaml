@@ -87,6 +87,10 @@ spec:
               value: https://grist.cluster.fun
             - name:  APP_DOC_URL
               value: https://grist.cluster.fun
+            - name: APP_HOME_INTERNAL_URL
+              value: http://grist.grist.svc
+            - name:  APP_DOC_INTERNAL_URL
+              value: http://grist.grist.svc
             - name: GRIST_SINGLE_ORG
               value: default
             - name: GRIST_TELEMETRY_LEVEL
