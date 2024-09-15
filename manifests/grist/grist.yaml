@@ -6,7 +6,7 @@ metadata:
   labels:
     app.kubernetes.io/name: grist
   annotations:
-    kube-1password: sgx6juca4jtecyynxzveeljq7y
+    kube-1password: bpagsbvdrwomghyeowdgauytqq
     kube-1password/vault: Kubernetes
     kube-1password/secret-text-parse: "true"
 type: Opaque
