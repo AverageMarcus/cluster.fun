@@ -95,6 +95,8 @@ spec:
               value: "tank.tank.svc,matrix.cluster.fun"
             - name: GRIST_ANON_PLAYGROUND
               value: "false"
+            - name: GRIST_FORCE_LOGIN
+              value: "true"
           envFrom:
           - secretRef:
               name: grist
