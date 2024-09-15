@@ -58,7 +58,7 @@ spec:
         imagePullPolicy: Always
         env:
         - name: PROXY_DESTINATION
-          value: talos.averagemarcus.github.beta.tailscale.net
+          value: talos.tail4dfb.ts.net
         - name: PORT
           value: "8080"
         - name: TS_AUTH_KEY
