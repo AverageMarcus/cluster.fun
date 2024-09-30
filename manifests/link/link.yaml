@@ -24,6 +24,9 @@ data:
     rejekts23: https://noti.st/averagemarcus/Bi7qLP/webhooks-whats-the-worst-that-could-happen
     rejekts24: https://speaking.marcusnoble.co.uk/pg46DB/from-fragile-to-resilient-validatingadmissionpolicies-strengthen-kubernetes
     lopug24: https://speaking.marcusnoble.co.uk/I6dyx4/webhooks-whats-the-worst-that-could-happen
+    kcduk24: https://speaking.marcusnoble.co.uk/0qcuN9/from-fragile-to-resilient-validatingadmissionpolicies-strengthen-kubernetes
+    rejektsna24: https://speaking.marcusnoble.co.uk/dALiFY/from-fragile-to-resilient-validatingadmissionpolicies-strengthen-kubernetes
+    kcddk24: https://speaking.marcusnoble.co.uk/FU4W7x/from-fragile-to-resilient-validatingadmissionpolicies-strengthen-kubernetes
 ---
 apiVersion: v1
 kind: Service
