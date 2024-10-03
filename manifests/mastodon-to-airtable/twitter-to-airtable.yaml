@@ -92,7 +92,7 @@ spec:
             secretKeyRef:
               key: password
               name: mastodon-to-airtable-auth
-        image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
+        image: quay.io/oauth2-proxy/oauth2-proxy:v7.7.0
         name: oauth-proxy
         ports:
         - containerPort: 8000
