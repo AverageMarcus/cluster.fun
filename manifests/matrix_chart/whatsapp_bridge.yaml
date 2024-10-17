@@ -37,10 +37,10 @@ metadata:
   namespace: chat
   labels:
     app.kubernetes.io/name: mautrix-whatsapp
-  annotations:
-    prometheus.io/scrape: "true"
-    prometheus.io/path: "/metrics"
-    prometheus.io/port: "9000"
+  # annotations:
+  #   prometheus.io/scrape: "true"
+  #   prometheus.io/path: "/metrics"
+  #   prometheus.io/port: "9000"
 spec:
   type: ClusterIP
   ports:
@@ -104,9 +104,9 @@ spec:
             - name: http
               containerPort: 29318
               protocol: TCP
-            - name: metrics
-              containerPort: 9000
-              protocol: TCP
+            # - name: metrics
+            #   containerPort: 9000
+            #   protocol: TCP
           volumeMounts:
           - name: data
             mountPath: /data
