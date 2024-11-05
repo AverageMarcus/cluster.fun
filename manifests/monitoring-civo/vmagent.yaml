@@ -147,7 +147,7 @@ spec:
       serviceAccountName: prometheus-server
       containers:
         - name: vmagent
-          image: "victoriametrics/vmagent:v1.105.0"
+          image: "victoriametrics/vmagent:v1.106.0"
           imagePullPolicy: "IfNotPresent"
           args:
             - -remoteWrite.url=http://vmcluster.proxy-civo.svc/insert/0/prometheus/
