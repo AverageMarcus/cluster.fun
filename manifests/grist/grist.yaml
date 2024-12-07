@@ -1,0 +1,165 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: grist
+  namespace: grist
+  labels:
+    app.kubernetes.io/name: grist
+  annotations:
+    kube-1password: bpagsbvdrwomghyeowdgauytqq
+    kube-1password/vault: Kubernetes
+    kube-1password/secret-text-parse: "true"
+type: Opaque
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: grist
+  namespace: grist
+  labels:
+    app.kubernetes.io/name: grist
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: grist-data
+  namespace: grist
+  labels:
+    app.kubernetes.io/name: grist
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: "1Gi"
+  storageClassName: "sbs-default-retain"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grist
+  namespace: grist
+  labels:
+    app.kubernetes.io/name: grist
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 8484
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: grist
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grist
+  namespace: grist
+  labels:
+    app.kubernetes.io/name: grist
+  annotations:
+    secret.reloader.stakater.com/reload: "grist"
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: grist
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: grist
+    spec:
+      serviceAccountName: grist
+      containers:
+        - name: grist
+          image: gristlabs/grist-oss:1.1.18
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8484
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            tcpSocket:
+              port: http
+          env:
+            - name: APP_HOME_URL
+              value: https://grist.cluster.fun
+            - name:  APP_DOC_URL
+              value: https://grist.cluster.fun
+            - name: APP_HOME_INTERNAL_URL
+              value: http://grist.grist.svc
+            - name:  APP_DOC_INTERNAL_URL
+              value: http://grist.grist.svc
+            - name: GRIST_SINGLE_ORG
+              value: default
+            - name: GRIST_TELEMETRY_LEVEL
+              value: "off"
+            - name: ALLOWED_WEBHOOK_DOMAINS
+              value: "tank.tank.svc,matrix.cluster.fun"
+            - name: GRIST_ANON_PLAYGROUND
+              value: "false"
+            - name: GRIST_FORCE_LOGIN
+              value: "true"
+          envFrom:
+          - secretRef:
+              name: grist
+          volumeMounts:
+            - name: data
+              mountPath: /persist
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: grist-data
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: grist
+  namespace: grist
+  labels:
+    app.kubernetes.io/name: grist
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: grist
+  minReplicas: 1
+  maxReplicas: 3
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grist
+  namespace: grist
+  labels:
+    app.kubernetes.io/name: grist
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - grist.cluster.fun
+    secretName: grist-ingress
+  rules:
+    - host: "grist.cluster.fun"
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: grist
+                port:
+                  number: 80
