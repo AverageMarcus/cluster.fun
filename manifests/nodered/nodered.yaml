@@ -65,6 +65,7 @@ spec:
           - |
             cd /data
             npm rebuild
+            npm install tldts
         volumeMounts:
           - name: data
             mountPath: /data
