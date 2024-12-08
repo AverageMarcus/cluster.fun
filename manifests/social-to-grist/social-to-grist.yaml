@@ -1,0 +1,151 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: docker-config
+  namespace: social-to-grist
+  annotations:
+    kube-1password: i6ngbk5zf4k52xgwdwnfup5bby
+    kube-1password/vault: Kubernetes
+    kube-1password/secret-text-key: .dockerconfigjson
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: e30=
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: social-to-grist-auth
+  namespace: social-to-grist
+  annotations:
+    kube-1password: mr6spkkx7n3memkbute6ojaarm
+    kube-1password/vault: Kubernetes
+type: Opaque
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: social-to-grist
+  namespace: social-to-grist
+  annotations:
+    kube-1password: oa3ycnui3ji4lc665bifaao63q
+    kube-1password/vault: Kubernetes
+    kube-1password/secret-text-parse: "true"
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: social-to-grist
+  namespace: social-to-grist
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: auth
+    name: web
+  selector:
+    app: social-to-grist
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: social-to-grist
+  namespace: social-to-grist
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: social-to-grist
+  template:
+    metadata:
+      labels:
+        app: social-to-grist
+    spec:
+      imagePullSecrets:
+        - name: docker-config
+      containers:
+      - args:
+        - --cookie-secure=false
+        - --provider=oidc
+        - --provider-display-name=Auth0
+        - --upstream=http://localhost:8080
+        - --http-address=$(HOST_IP):8000
+        - --redirect-url=https://social-to-grist.cluster.fun/oauth2/callback
+        - --email-domain=marcusnoble.co.uk
+        - --pass-basic-auth=false
+        - --pass-access-token=false
+        - --oidc-issuer-url=https://marcusnoble.eu.auth0.com/
+        - --cookie-secret=KDGD6rrK6cBmryyZ4wcJ9xAUNW9AQNFT
+        env:
+        - name: HOST_IP
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.podIP
+        - name: OAUTH2_PROXY_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: social-to-grist-auth
+        - name: OAUTH2_PROXY_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: social-to-grist-auth
+        image: quay.io/oauth2-proxy/oauth2-proxy:v7.7.1
+        name: oauth-proxy
+        ports:
+        - containerPort: 8000
+          protocol: TCP
+          name: auth
+        resources:
+          limits:
+            memory: 50Mi
+          requests:
+            memory: 50Mi
+      - name: web
+        image: rg.fr-par.scw.cloud/averagemarcus-private/social-to-grist:latest
+        imagePullPolicy: Always
+        env:
+        - name: PORT
+          value: "8080"
+        envFrom:
+        - secretRef:
+            name: "social-to-grist"
+        ports:
+        - containerPort: 8080
+          name: web
+        resources:
+          limits:
+            memory: 50Mi
+          requests:
+            memory: 50Mi
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: social-to-grist
+  namespace: social-to-grist
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    ingress.kubernetes.io/ssl-redirect: "true"
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+spec:
+  tls:
+  - hosts:
+    - social-to-grist.cluster.fun
+    secretName: social-to-grist-ingress
+  rules:
+  - host: social-to-grist.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: social-to-grist
+            port:
+              number: 80
