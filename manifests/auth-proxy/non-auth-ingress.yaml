@@ -11,9 +11,20 @@ spec:
   tls:
   - hosts:
     - hello-world.cluster.fun
+    - ntfy.cluster.fun
     secretName: non-auth-proxy-ingress
   rules:
   - host: hello-world.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: tailscale-proxy
+            port:
+              name: non-auth
+  - host: ntfy.cluster.fun
     http:
       paths:
       - path: /
