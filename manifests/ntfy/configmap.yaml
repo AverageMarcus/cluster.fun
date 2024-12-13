@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ntfy
+  labels:
+    app.kubernetes.io/name: ntfy
+data:
+  server.yml: |
+    # Template: https://github.com/binwiederhier/ntfy/blob/main/server/server.yml
+    base-url: https://ntfy.cluster.fun
+    upstream-base-url: "https://ntfy.sh"
+    behind-proxy: true
+    cache-file: "/var/cache/ntfy/db/cache.db"
+    cache-duration: "12h"
+    auth-file: "/var/cache/ntfy/db/user.db"
+    auth-default-access: "deny-all"
+    attachment-cache-dir: "/var/cache/ntfy/attachments"
+    attachment-file-size-limit: "50M"
+    attachment-expiry-duration: "24h"
+    enable-metrics: true
+    metrics-listen-http: "0.0.0.0:9090"
+    log-format: json
+    enable-signup: false
+    enable-login: true
+    enable-reservations: false
