@@ -10,9 +10,9 @@ data:
     base-url: https://ntfy.cluster.fun
     upstream-base-url: "https://ntfy.sh"
     behind-proxy: true
-    cache-file: "/var/cache/ntfy/db/cache.db"
+    cache-file: "/var/cache/ntfy/cache.db"
     cache-duration: "12h"
-    auth-file: "/var/cache/ntfy/db/user.db"
+    auth-file: "/var/cache/ntfy/user.db"
     auth-default-access: "deny-all"
     attachment-cache-dir: "/var/cache/ntfy/attachments"
     attachment-file-size-limit: "50M"
