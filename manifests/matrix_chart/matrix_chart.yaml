@@ -348,7 +348,7 @@ metadata:
     app.kubernetes.io/name: "matrix"
     component: element
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: matrix-riot
