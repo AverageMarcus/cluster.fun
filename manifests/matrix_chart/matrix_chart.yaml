@@ -480,15 +480,6 @@ spec:
             - name: synapse-config-homeserver
               mountPath: /data/homeserver.yaml
               subPath: homeserver.yaml
-            - name: mautrix-whatsapp-registration
-              mountPath: /data/mautrix-whatsapp-registration.yaml
-              subPath: registration.yaml
-            # - name: mautrix-signal-registration
-            #   mountPath: /data/mautrix-signal-registration.yaml
-            #   subPath: registration.yaml
-            # - name: mautrix-telegram-registration
-            #   mountPath: /data/mautrix-telegram-registration.yaml
-            #   subPath: registration.yaml
             - name: synapse-config-logging
               mountPath: /data/matrix.cluster.fun.log.config
               subPath: matrix.cluster.fun.log.config
@@ -532,15 +523,6 @@ spec:
         - name: synapse-config-homeserver
           secret:
             secretName: matrix-synapse-config
-        - name: mautrix-whatsapp-registration
-          secret:
-            secretName: mautrix-whatsapp-registration
-        # - name: mautrix-signal-registration
-        #   secret:
-        #     secretName: mautrix-signal-registration
-        # - name: mautrix-telegram-registration
-        #   secret:
-        #     secretName: mautrix-telegram-registration
         - name: signing-key
           persistentVolumeClaim:
             claimName: chat-matrix-signing-key
