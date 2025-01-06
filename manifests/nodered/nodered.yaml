@@ -67,6 +67,7 @@ spec:
             npm rebuild
             npm install tldts
             npm install @atproto/api
+            npm install node-fetch
         volumeMounts:
           - name: data
             mountPath: /data
