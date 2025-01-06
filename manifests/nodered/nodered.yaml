@@ -66,6 +66,7 @@ spec:
             cd /data
             npm rebuild
             npm install tldts
+            npm install @atproto/api
         volumeMounts:
           - name: data
             mountPath: /data
