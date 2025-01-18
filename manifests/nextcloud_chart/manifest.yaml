@@ -203,7 +203,7 @@ spec:
     spec:
       containers:
       - name: nextcloud
-        image: "nextcloud:30.0.4-apache"
+        image: "nextcloud:30.0.5-apache"
         imagePullPolicy: IfNotPresent
         env:
         - name: SQLITE_DATABASE
@@ -374,7 +374,7 @@ spec:
           restartPolicy: Never
           containers:
             - name: nextcloud
-              image: "nextcloud:30.0.4-apache"
+              image: "nextcloud:30.0.5-apache"
               imagePullPolicy: IfNotPresent
               command: [ "curl" ]
               args:
