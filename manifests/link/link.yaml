@@ -27,6 +27,7 @@ data:
     kcduk24: https://speaking.marcusnoble.co.uk/0qcuN9/from-fragile-to-resilient-validatingadmissionpolicies-strengthen-kubernetes
     rejektsna24: https://speaking.marcusnoble.co.uk/dALiFY/from-fragile-to-resilient-validatingadmissionpolicies-strengthen-kubernetes
     kcddk24: https://speaking.marcusnoble.co.uk/FU4W7x/from-fragile-to-resilient-validatingadmissionpolicies-strengthen-kubernetes
+    cndoslo: https://speaking.marcusnoble.co.uk/j5M53P/from-fragile-to-resilient-validatingadmissionpolicies-strengthen-kubernetes
 ---
 apiVersion: v1
 kind: Service
