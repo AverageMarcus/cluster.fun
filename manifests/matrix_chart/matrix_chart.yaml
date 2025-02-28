@@ -388,6 +388,8 @@ spec:
             - mountPath: /var/run/pid
               name: ephemeral
               subPath: pid
+            - mountPath: /tmp
+              name: tmp
           readinessProbe:
             httpGet:
               path: /
@@ -411,6 +413,8 @@ spec:
           configMap:
             name: matrix-riot-config
         - name: ephemeral
+          emptyDir: {}
+        - name: tmp
           emptyDir: {}
 ---
 # Source: matrix/templates/synapse/deployment.yaml
