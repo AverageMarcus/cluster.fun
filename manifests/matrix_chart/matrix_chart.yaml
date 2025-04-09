@@ -444,7 +444,7 @@ spec:
         fsGroup: 1000
       initContainers:
         - name: generate-signing-key
-          image: "ghcr.io/element-hq/synapse:v1.127.1"
+          image: "ghcr.io/element-hq/synapse:v1.128.0"
           imagePullPolicy: IfNotPresent
           env:
             - name: SYNAPSE_SERVER_NAME
@@ -471,7 +471,7 @@ spec:
               mountPath: /data/keys
       containers:
         - name: "synapse"
-          image: "ghcr.io/element-hq/synapse:v1.127.1"
+          image: "ghcr.io/element-hq/synapse:v1.128.0"
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
