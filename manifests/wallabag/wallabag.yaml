@@ -95,7 +95,7 @@ spec:
     spec:
       initContainers:
         - name: db-migrate
-          image: "wallabag/wallabag:2.6.11"
+          image: "wallabag/wallabag:2.6.12"
           imagePullPolicy: IfNotPresent
           command:
           - /var/www/wallabag/bin/console
@@ -126,7 +126,7 @@ spec:
               value: "false"
       containers:
         - name: wallabag
-          image: "wallabag/wallabag:2.6.11"
+          image: "wallabag/wallabag:2.6.12"
           imagePullPolicy: IfNotPresent
           envFrom:
           - secretRef:
