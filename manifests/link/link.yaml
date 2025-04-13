@@ -30,6 +30,7 @@ data:
     cndoslo: https://speaking.marcusnoble.co.uk/j5M53P/from-fragile-to-resilient-validatingadmissionpolicies-strengthen-kubernetes
     rejekts25: https://speaking.marcusnoble.co.uk/AXARFf/pod-deep-dive-everything-you-didnt-know-you-needed-to-know
     kcdbudapest: https://speaking.marcusnoble.co.uk/43QLpx/the-future-of-kubernetes-admission-logic
+    kcdczechslovak: https://speaking.marcusnoble.co.uk/Np2xUv/pod-deep-dive-the-interesting-bits
 ---
 apiVersion: v1
 kind: Service
