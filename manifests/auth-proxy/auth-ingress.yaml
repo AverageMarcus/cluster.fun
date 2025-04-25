@@ -27,6 +27,7 @@ spec:
     - tekton.cluster.fun
     - changedetection.cluster.fun
     - grafana.cluster.fun
+    - podgrab.cluster.fun
     secretName: auth-proxy-ingress
   rules:
   - host: downloads.cluster.fun
@@ -190,6 +191,16 @@ spec:
             port:
               name: auth
   - host: grafana.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: tailscale-proxy
+            port:
+              name: auth
+  - host: podgrab.cluster.fun
     http:
       paths:
       - path: /
