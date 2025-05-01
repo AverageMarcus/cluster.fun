@@ -23,6 +23,7 @@ spec:
     - sonarr.cluster.fun
     - lidarr.cluster.fun
     - prowlarr.cluster.fun
+    - mylarr.cluster.fun
     - transmission.cluster.fun
     - tekton.cluster.fun
     - changedetection.cluster.fun
@@ -201,6 +202,16 @@ spec:
             port:
               name: auth
   - host: podgrab.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: tailscale-proxy
+            port:
+              name: auth
+  - host: mylarr.cluster.fun
     http:
       paths:
       - path: /
