@@ -13,6 +13,7 @@ spec:
     - hello-world.cluster.fun
     - ombi.cluster.fun
     - bsky-feeds.cluster.fun
+    - ai.cluster.fun
     secretName: non-auth-proxy-ingress
   rules:
   - host: hello-world.cluster.fun
@@ -36,6 +37,16 @@ spec:
             port:
               name: non-auth
   - host: bsky-feeds.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: tailscale-proxy
+            port:
+              name: non-auth
+  - host: ai.cluster.fun
     http:
       paths:
       - path: /
