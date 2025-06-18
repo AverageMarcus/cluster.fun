@@ -29,6 +29,7 @@ spec:
     - changedetection.cluster.fun
     - grafana.cluster.fun
     - podgrab.cluster.fun
+    - stablediffusion.cluster.fun
     secretName: auth-proxy-ingress
   rules:
   - host: downloads.cluster.fun
@@ -212,6 +213,16 @@ spec:
             port:
               name: auth
   - host: mylarr.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: tailscale-proxy
+            port:
+              name: auth
+  - host: stablediffusion.cluster.fun
     http:
       paths:
       - path: /
