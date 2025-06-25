@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: yay-or-nay
+  namespace: yay-or-nay
+  annotations:
+    kube-1password: vtnx2swze7r6qepxnlepufvcbi
+    kube-1password/vault: Kubernetes
+    kube-1password/secret-text-parse: "true"
+type: Opaque
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yay-or-nay
+  labels:
+    app: yay-or-nay
+    app.kubernetes.io/name: yay-or-nay
+  annotations:
+    reloader.stakater.com/search: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yay-or-nay
+  template:
+    metadata:
+      labels:
+        app: yay-or-nay
+        app.kubernetes.io/name: yay-or-nay
+    spec:
+      containers:
+      - name: yay-or-nay
+        image: ghcr.io/mocdaniel/yay-or-nay:1.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+          name: web
+        envFrom:
+        - secretRef:
+            name: yay-or-nay
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: yay-or-nay
+  labels:
+    app.kubernetes.io/name: yay-or-nay
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: web
+    name: web
+  selector:
+    app: yay-or-nay
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: yay-or-nay
+  labels:
+    app.kubernetes.io/name: yay-or-nay
+spec:
+  rules:
+  - host: yay-or-nay.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: yay-or-nay
+            port:
+              name: web
