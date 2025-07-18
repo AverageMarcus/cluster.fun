@@ -149,33 +149,3 @@ spec:
             name: social-to-rolodex
             port:
               number: 80
-
----
-# Continue to support old URL
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: social-to-grist
-  namespace: social-to-rolodex
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    kubernetes.io/ingress.class: traefik
-    traefik.ingress.kubernetes.io/router.tls: "true"
-    ingress.kubernetes.io/ssl-redirect: "true"
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
-spec:
-  tls:
-  - hosts:
-    - social-to-grist.cluster.fun
-    secretName: social-to-grist-ingress
-  rules:
-  - host: social-to-grist.cluster.fun
-    http:
-      paths:
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: social-to-rolodex
-            port:
-              number: 80
