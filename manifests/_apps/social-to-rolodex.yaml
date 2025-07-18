@@ -1,17 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: social-to-grist
+  name: social-to-rolodex
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   project: cluster.fun
   destination:
-    namespace: social-to-grist
+    namespace: social-to-rolodex
     name: civo
   source:
-    path: manifests/social-to-grist
+    path: manifests/social-to-rolodex
     repoURL: "https://git.cluster.fun/AverageMarcus/cluster.fun.git"
     targetRevision: HEAD
   syncPolicy:
