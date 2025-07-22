@@ -39,6 +39,17 @@ spec:
         envFrom:
         - secretRef:
             name: yay-or-nay
+        livenessProbe:
+          httpGet:
+            path: /
+            port: web
+          initialDelaySeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: web
+          initialDelaySeconds: 10
+
 ---
 apiVersion: v1
 kind: Service
