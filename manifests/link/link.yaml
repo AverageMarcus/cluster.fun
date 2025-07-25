@@ -33,6 +33,8 @@ data:
     kcdczechslovak: https://speaking.marcusnoble.co.uk/Np2xUv/pod-deep-dive-the-interesting-bits
     cnsmunich: https://speaking.marcusnoble.co.uk/HqYcp2/pod-deep-dive-the-interesting-bits
     cnsmunich-feedback: https://yay-or-nay.cluster.fun/feedback/20UETBI0
+    containerdays25: https://speaking.marcusnoble.co.uk/HARSlE/the-future-of-kubernetes-admission-logic
+    containerdays25-feedback: https://yay-or-nay.cluster.fun/feedback/F8P351QK
 ---
 apiVersion: v1
 kind: Service
