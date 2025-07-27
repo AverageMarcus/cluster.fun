@@ -22,7 +22,4 @@ spec:
   - kind: Secret
     jsonPointers:
     - /data
-  - group: apps
-    kind: Deployment
-    jqPathExpressions:
-    - .spec.template.spec.containers[]?.image
+
