@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
       - name: yay-or-nay
-        image: ghcr.io/mocdaniel/yay-or-nay:1.0.0
+        image: ghcr.io/mocdaniel/yay-or-nay:db-fix
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
