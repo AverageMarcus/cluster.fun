@@ -45,7 +45,7 @@ spec:
     spec:
       containers:
       - name: outline
-        image: outlinewiki/outline:0.85.1
+        image: outlinewiki/outline:0.86.0
         imagePullPolicy: IfNotPresent
         env:
         - name: ALLOWED_DOMAINS
