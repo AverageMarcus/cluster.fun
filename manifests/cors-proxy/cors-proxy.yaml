@@ -18,7 +18,7 @@ metadata:
   name: cors-proxy
   namespace: cors-proxy
 spec:
-  replicas: 0
+  replicas: 2
   selector:
     matchLabels:
       app: cors-proxy
