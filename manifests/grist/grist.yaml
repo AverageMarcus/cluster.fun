@@ -72,7 +72,7 @@ spec:
       serviceAccountName: grist
       containers:
         - name: grist
-          image: gristlabs/grist-oss:1.7.2
+          image: gristlabs/grist-oss:1.7.3
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
