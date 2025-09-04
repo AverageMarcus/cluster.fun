@@ -5,10 +5,7 @@ metadata:
   namespace: til
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
-    kubernetes.io/ingress.class: traefik
-    traefik.ingress.kubernetes.io/router.tls: "true"
     ingress.kubernetes.io/ssl-redirect: "true"
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
     nginx.ingress.kubernetes.io/server-snippet: |
       rewrite ^/dont-reuse-keys/?$ https://marcusnoble.co.uk/2020-10-03-t-i-l-don-t-reuse-api-keys/ permanent;
       rewrite ^/favicons/?$ https://marcusnoble.co.uk/2020-11-10-t-i-l-how-to-get-the-favicon-of-any-site/ permanent;

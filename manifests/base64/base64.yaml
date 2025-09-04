@@ -49,11 +49,8 @@ metadata:
   namespace: base64
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
-    kubernetes.io/ingress.class: traefik
-    traefik.ingress.kubernetes.io/router.tls: "true"
     ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
 spec:
   ingressClassName: nginx
   tls:
