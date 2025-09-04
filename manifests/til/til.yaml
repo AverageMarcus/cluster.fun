@@ -23,6 +23,7 @@ metadata:
       rewrite ^/yaml-multiline/?$ https://marcusnoble.co.uk/2020-09-17-t-i-l-yaml-multiline-values/ permanent;
       rewrite ^/?$ https://marcusnoble.co.uk/ permanent;
 spec:
+  ingressClassName: nginx
   tls:
   - hosts:
     - til.marcusnoble.co.uk
