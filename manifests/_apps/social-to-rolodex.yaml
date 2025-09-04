@@ -9,7 +9,7 @@ spec:
   project: cluster.fun
   destination:
     namespace: social-to-rolodex
-    name: civo
+    name: cluster-fun (v2)
   source:
     path: manifests/social-to-rolodex
     repoURL: "https://git.cluster.fun/AverageMarcus/cluster.fun.git"
