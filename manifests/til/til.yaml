@@ -1,45 +1,3 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: til
-  namespace: til
-spec:
-  type: ClusterIP
-  ports:
-  - port: 80
-    targetPort: web
-    name: web
-  selector:
-    app: til
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: til
-  namespace: til
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: til
-  template:
-    metadata:
-      labels:
-        app: til
-    spec:
-      containers:
-      - name: web
-        image: rg.fr-par.scw.cloud/averagemarcus/til:latest
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 80
-          name: web
-        resources:
-          limits:
-            memory: 20Mi
-          requests:
-            memory: 20Mi
----
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -51,6 +9,19 @@ metadata:
     traefik.ingress.kubernetes.io/router.tls: "true"
     ingress.kubernetes.io/ssl-redirect: "true"
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    nginx.ingress.kubernetes.io/server-snippet: |
+      rewrite ^/dont-reuse-keys/?$ https://marcusnoble.co.uk/2020-10-03-t-i-l-don-t-reuse-api-keys/ permanent;
+      rewrite ^/favicons/?$ https://marcusnoble.co.uk/2020-11-10-t-i-l-how-to-get-the-favicon-of-any-site/ permanent;
+      rewrite ^/getopts/?$ https://marcusnoble.co.uk/2021-08-04-t-i-l-cli-flag-handling-in-bash-using-getopts/ permanent;
+      rewrite ^/go-named-return-values/?$ https://marcusnoble.co.uk/2020-10-05-t-i-l-named-returns-in-go-functions/ permanent;
+      rewrite ^/golang-append/?$ https://marcusnoble.co.uk/2020-10-30-t-i-l-golang-s-append-mutates-the-provided-array/ permanent;
+      rewrite ^/golang-split-by-space/?$ https://marcusnoble.co.uk/2020-09-18-t-i-l-split-on-spaces-in-go/ permanent;
+      rewrite ^/kubectl-replace/?$ https://marcusnoble.co.uk/2020-09-25-t-i-l-kubectl-replace/ permanent;
+      rewrite ^/kubernetes-label-length/?$ https://marcusnoble.co.uk/2021-04-20-t-i-l-kubernetes-label-length/ permanent;
+      rewrite ^/tekton-multi-arch-builds/?$ https://marcusnoble.co.uk/2020-09-13-t-i-l-tekton-multi-arch-image-builds/ permanent;
+      rewrite ^/yaml-key-spaces/?$ https://marcusnoble.co.uk/2021-05-11-t-i-l-yaml-keys-allow-for-spaces-in-them/ permanent;
+      rewrite ^/yaml-multiline/?$ https://marcusnoble.co.uk/2020-09-17-t-i-l-yaml-multiline-values/ permanent;
+      rewrite ^/?$ https://marcusnoble.co.uk/ permanent;
 spec:
   tls:
   - hosts:
@@ -58,13 +29,3 @@ spec:
     secretName: til-ingress
   rules:
   - host: til.marcusnoble.co.uk
-    http:
-      paths:
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: til
-            port:
-              number: 80
-
