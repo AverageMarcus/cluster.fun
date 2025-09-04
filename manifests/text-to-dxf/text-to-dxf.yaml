@@ -45,11 +45,10 @@ metadata:
   namespace: text-to-dxf
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
-    kubernetes.io/ingress.class: traefik
-    traefik.ingress.kubernetes.io/router.tls: "true"
     ingress.kubernetes.io/ssl-redirect: "true"
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
+  ingressClassName: nginx
   tls:
   - hosts:
     - text-to-dxf.cluster.fun

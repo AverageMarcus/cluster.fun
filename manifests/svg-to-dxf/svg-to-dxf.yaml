@@ -45,14 +45,11 @@ metadata:
   namespace: svg-to-dxf
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
-    kubernetes.io/ingress.class: traefik
-    traefik.ingress.kubernetes.io/router.tls: "true"
     ingress.kubernetes.io/ssl-redirect: "true"
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    traefik.ingress.kubernetes.io/buffering: |
-      maxrequestbodybytes: 31457280
-      memrequestbodybytes: 62914560
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
 spec:
+  ingressClassName: nginx
   tls:
   - hosts:
     - svg-to-dxf.cluster.fun
