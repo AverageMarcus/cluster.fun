@@ -11,7 +11,7 @@ metadata:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     nginx.ingress.kubernetes.io/permanent-redirect: https://speaking.marcusnoble.co.uk
 spec:
-ingressClassName: nginx
+  ingressClassName: nginx
   tls:
   - hosts:
     - talks.marcusnoble.co.uk
