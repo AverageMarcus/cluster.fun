@@ -5,9 +5,7 @@ metadata:
   namespace: talks
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
-    traefik.ingress.kubernetes.io/router.tls: "true"
     ingress.kubernetes.io/ssl-redirect: "true"
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
     nginx.ingress.kubernetes.io/permanent-redirect: https://speaking.marcusnoble.co.uk
 spec:
   ingressClassName: nginx
