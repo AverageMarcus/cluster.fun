@@ -52,8 +52,10 @@ metadata:
     kubernetes.io/ingress.class: traefik
     traefik.ingress.kubernetes.io/router.tls: "true"
     ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
 spec:
+  ingressClassName: nginx
   tls:
   - hosts:
     - base64.cluster.fun
