@@ -41,7 +41,7 @@ spec:
         - name: PGID
           value: "1000"
         - name: TOKEN_TIME
-          value: "168"
+          value: "720"
         - name: DB_ENGINE
           value: postgres
         - name: POSTGRES_DB
