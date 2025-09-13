@@ -20,6 +20,9 @@ spec:
       values: |-
         vpa:
           enabled: true
+        controller:
+          flags:
+            on-by-default: true
   syncPolicy:
     automated: {}
     syncOptions:
