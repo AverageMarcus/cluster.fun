@@ -24,6 +24,8 @@ spec:
           flags:
             on-by-default: true
         dashboard:
+          flags:
+            on-by-default: true
           replicaCount: 1
   syncPolicy:
     automated: {}
