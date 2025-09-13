@@ -282,7 +282,10 @@ spec:
           periodSeconds: 10
         resources:
           requests:
-            memory: 450Mi
+            cpu: 1038m
+            memory: 512M
+          limits:
+            cpu: 1200m
         volumeMounts:
         - name: nextcloud-data
           mountPath: /var/www/
