@@ -23,6 +23,8 @@ spec:
         controller:
           flags:
             on-by-default: true
+        dashboard:
+          replicaCount: 1
   syncPolicy:
     automated: {}
     syncOptions:
