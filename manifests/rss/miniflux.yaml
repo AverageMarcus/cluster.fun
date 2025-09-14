@@ -25,6 +25,8 @@ data:
   POLLING_FREQUENCY: "15"
   BASE_URL: "https://miniflux.cluster.fun/"
   METRICS_COLLECTOR: "1"
+  CLEANUP_ARCHIVE_READ_DAYS: "365"
+  CLEANUP_ARCHIVE_UNREAD_DAYS: "365"
 ---
 apiVersion: v1
 kind: Service
