@@ -73,7 +73,7 @@ spec:
             cpu: 200m
             memory: 443M
           limits:
-            cpu: 200m
+            cpu: 1000m
             memory: 443M
       volumes:
       - name: data
