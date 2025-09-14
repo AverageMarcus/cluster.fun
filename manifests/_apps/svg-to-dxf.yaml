@@ -11,7 +11,7 @@ spec:
     namespace: svg-to-dxf
     name: cluster-fun (v2)
   source:
-    name: manifests/svg-to-dxf
+    path: manifests/svg-to-dxf
     repoURL: "https://git.cluster.fun/AverageMarcus/cluster.fun.git"
     targetRevision: HEAD
   syncPolicy:
