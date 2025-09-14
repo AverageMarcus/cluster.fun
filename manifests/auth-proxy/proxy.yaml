@@ -101,9 +101,9 @@ spec:
           protocol: TCP
         resources:
           limits:
-            memory: 50Mi
+            memory: 80Mi
           requests:
-            memory: 50Mi
+            memory: 80Mi
       volumes:
       - name: host-mappings
         configMap:
