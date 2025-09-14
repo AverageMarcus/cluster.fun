@@ -70,10 +70,10 @@ spec:
             name: data
         resources:
           requests:
-            cpu: 15m
+            cpu: 40m
             memory: 443M
           limits:
-            cpu: 15m
+            cpu: 40m
             memory: 443M
       volumes:
       - name: data
