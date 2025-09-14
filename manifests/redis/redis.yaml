@@ -327,6 +327,7 @@ spec:
               weight: 1
         nodeAffinity:
       terminationGracePeriodSeconds: 30
+      priorityClassName: critical
       containers:
         - name: redis
           image: docker.io/bitnamilegacy/redis:7.2.4-debian-11-r11

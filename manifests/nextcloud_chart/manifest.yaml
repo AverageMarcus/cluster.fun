@@ -201,6 +201,7 @@ spec:
         app.kubernetes.io/component: app
         nextcloud-nextcloud-redis-client: "true"
     spec:
+      priorityClassName: critical
       containers:
       - name: nextcloud
         image: "nextcloud:31.0.8-apache"

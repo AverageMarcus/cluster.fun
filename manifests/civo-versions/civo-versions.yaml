@@ -38,6 +38,7 @@ spec:
       labels:
         app: civo-versions
     spec:
+      priorityClassName: low
       containers:
       - name: web
         image: rg.fr-par.scw.cloud/averagemarcus/civo-versions:latest

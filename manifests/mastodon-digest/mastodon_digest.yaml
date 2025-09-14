@@ -123,6 +123,7 @@ spec:
     spec:
       imagePullSecrets:
         - name: docker-config
+      priorityClassName: low
       containers:
       - args:
         - --cookie-secure=false

@@ -70,6 +70,7 @@ spec:
         app.kubernetes.io/name: grist
     spec:
       serviceAccountName: grist
+      priorityClassName: critical
       containers:
         - name: grist
           image: gristlabs/grist-oss:1.7.3

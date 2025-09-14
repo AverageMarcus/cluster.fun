@@ -38,6 +38,7 @@ spec:
       labels:
         app: internal-proxy
     spec:
+      priorityClassName: critical
       serviceAccountName: default
       dnsPolicy: ClusterFirst
       dnsConfig:

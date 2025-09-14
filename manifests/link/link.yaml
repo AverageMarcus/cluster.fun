@@ -69,6 +69,7 @@ spec:
       labels:
         app: link
     spec:
+      priorityClassName: critical
       containers:
       - name: web
         image: rg.fr-par.scw.cloud/averagemarcus/link:latest

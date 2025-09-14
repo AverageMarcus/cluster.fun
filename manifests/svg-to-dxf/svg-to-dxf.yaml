@@ -27,6 +27,7 @@ spec:
       labels:
         app: svg-to-dxf
     spec:
+      priorityClassName: low
       containers:
       - name: web
         image: rg.fr-par.scw.cloud/averagemarcus/svg-to-dxf:latest

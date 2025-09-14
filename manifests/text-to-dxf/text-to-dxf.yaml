@@ -27,6 +27,7 @@ spec:
       labels:
         app: text-to-dxf
     spec:
+      priorityClassName: low
       containers:
       - name: web
         image: rg.fr-par.scw.cloud/averagemarcus/text-to-dxf:latest

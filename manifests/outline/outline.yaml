@@ -43,6 +43,7 @@ spec:
       labels:
         app.kubernetes.io/name: outline
     spec:
+      priorityClassName: critical
       containers:
       - name: outline
         image: outlinewiki/outline:0.87.3
