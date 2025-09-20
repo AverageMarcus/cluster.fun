@@ -51,6 +51,7 @@ spec:
         app.kubernetes.io/name: prometheus
         app.kubernetes.io/component: node-exporter
     spec:
+      priorityClassName: system-node-critical
       serviceAccountName: prometheus-node-exporter
       containers:
         - name: prometheus-node-exporter

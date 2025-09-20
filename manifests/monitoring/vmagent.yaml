@@ -213,6 +213,7 @@ spec:
         app.kubernetes.io/name: victoria-metrics
         app.kubernetes.io/component: agent
     spec:
+      priorityClassName: system-cluster-critical
       serviceAccountName: prometheus-server
       containers:
         - name: vmagent

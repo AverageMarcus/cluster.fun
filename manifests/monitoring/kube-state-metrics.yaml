@@ -201,6 +201,7 @@ spec:
       labels:
         app.kubernetes.io/name: kube-state-metrics
     spec:
+      priorityClassName: system-cluster-critical
       serviceAccountName: kube-state-metrics
       securityContext:
         fsGroup: 65534
