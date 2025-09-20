@@ -17,6 +17,10 @@ data:
     - job_name: 'vmagent'
       static_configs:
         - targets: ['localhost:8429']
+      relabel_configs:
+      - action: drop
+        source_labels: [__name__]
+        regex: "flag"
 
     - bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
       job_name: kubernetes-nodes
@@ -111,6 +115,21 @@ data:
         source_labels:
         - __meta_kubernetes_pod_node_name
         target_label: kubernetes_node
+      # We don't care about the flag metrics from VM
+      - action: drop
+        source_labels: [__name__]
+        regex: "flag"
+      # Drop unneeded labels
+      - action: labeldrop
+        regex: beta_kubernetes_io_os
+      - action: labeldrop
+        regex: beta_kubernetes_io_arch
+      - action: labeldrop
+        regex: kubernetes_io_arch
+      - action: labeldrop
+        regex: kubernetes_io_os
+      - action: labeldrop
+        regex: topology_jiva_openebs_io_nodeName
 
     - job_name: kubernetes-pods
       kubernetes_sd_configs:
@@ -149,6 +168,17 @@ data:
         regex: Pending|Succeeded|Failed
         source_labels:
         - __meta_kubernetes_pod_phase
+      # Drop unneeded labels
+      - action: labeldrop
+        regex: beta_kubernetes_io_os
+      - action: labeldrop
+        regex: beta_kubernetes_io_arch
+      - action: labeldrop
+        regex: kubernetes_io_arch
+      - action: labeldrop
+        regex: kubernetes_io_os
+      - action: labeldrop
+        regex: topology_jiva_openebs_io_nodeName
 
     - job_name: 'node-exporter'
       kubernetes_sd_configs:
