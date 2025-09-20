@@ -17,6 +17,7 @@ data:
     - job_name: 'vmagent'
       static_configs:
         - targets: ['localhost:8429']
+
     - bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
       job_name: kubernetes-nodes
       kubernetes_sd_configs:
@@ -35,6 +36,38 @@ data:
       tls_config:
         ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
         insecure_skip_verify: true
+
+    - job_name: cadvisor
+      bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      scheme: https
+      tls_config:
+        ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        insecure_skip_verify: true
+      kubernetes_sd_configs:
+      - role: node
+      relabel_configs:
+      - action: labelmap
+        regex: __meta_kubernetes_node_label_(.+)
+      - replacement: kubernetes.default.svc:443
+        target_label: __address__
+      - source_labels: [__meta_kubernetes_node_name]
+        regex: (.+)
+        target_label: __metrics_path__
+        replacement: /api/v1/nodes/$1/proxy/metrics/cadvisor
+      # Drop high cardinality labels
+      - action: labeldrop
+        regex: id
+      # Drop unneeded labels
+      - action: labeldrop
+        regex: beta_kubernetes_io_os
+      - action: labeldrop
+        regex: beta_kubernetes_io_arch
+      - action: labeldrop
+        regex: kubernetes_io_arch
+      - action: labeldrop
+        regex: kubernetes_io_os
+      - action: labeldrop
+        regex: topology_jiva_openebs_io_nodeName
 
     - job_name: kubernetes-service-endpoints
       kubernetes_sd_configs:
