@@ -72,10 +72,10 @@ spec:
         resources:
           requests:
             cpu: 200m
-            memory: 443M
+            memory: 500M
           limits:
             cpu: 1000m
-            memory: 443M
+            memory: 500M
       volumes:
       - name: data
         persistentVolumeClaim:
