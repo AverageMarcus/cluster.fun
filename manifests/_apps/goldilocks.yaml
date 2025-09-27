@@ -1,35 +1,35 @@
 
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-fun-goldilocks
-  namespace: argocd
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
-spec:
-  project: cluster.fun
-  destination:
-    namespace: goldilocks
-    name: cluster-fun (v2)
-  source:
-    repoURL: 'https://charts.fairwinds.com/stable'
-    targetRevision: 10.1.0
-    chart: goldilocks
-    helm:
-      version: v3
-      values: |-
-        vpa:
-          enabled: true
-        controller:
-          flags:
-            on-by-default: true
-        dashboard:
-          flags:
-            on-by-default: true
-          replicaCount: 1
-  syncPolicy:
-    automated: {}
-    syncOptions:
-      - CreateNamespace=true
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: cluster-fun-goldilocks
+#   namespace: argocd
+#   finalizers:
+#   - resources-finalizer.argocd.argoproj.io
+# spec:
+#   project: cluster.fun
+#   destination:
+#     namespace: goldilocks
+#     name: cluster-fun (v2)
+#   source:
+#     repoURL: 'https://charts.fairwinds.com/stable'
+#     targetRevision: 10.1.0
+#     chart: goldilocks
+#     helm:
+#       version: v3
+#       values: |-
+#         vpa:
+#           enabled: true
+#         controller:
+#           flags:
+#             on-by-default: true
+#         dashboard:
+#           flags:
+#             on-by-default: true
+#           replicaCount: 1
+#   syncPolicy:
+#     automated: {}
+#     syncOptions:
+#       - CreateNamespace=true
 
----
+# ---
