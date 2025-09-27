@@ -98,8 +98,6 @@ spec:
               value: default
             - name: GRIST_TELEMETRY_LEVEL
               value: "off"
-            - name: ALLOWED_WEBHOOK_DOMAINS
-              value: "tank.tank.svc,matrix.cluster.fun"
             - name: GRIST_ANON_PLAYGROUND
               value: "false"
             - name: GRIST_FORCE_LOGIN
