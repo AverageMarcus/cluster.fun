@@ -36,9 +36,9 @@ spec:
           name: web
         resources:
           limits:
-            memory: 200Mi
+            memory: 150Mi
           requests:
-            memory: 200Mi
+            memory: 150Mi
         livenessProbe:
           httpGet:
             path: /healthz

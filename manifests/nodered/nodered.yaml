@@ -78,6 +78,11 @@ spec:
         ports:
         - containerPort: 1880
           name: web
+        resources:
+          requests:
+            memory: 200M
+          limits:
+            memory: 200M
         volumeMounts:
           - name: data
             mountPath: /data

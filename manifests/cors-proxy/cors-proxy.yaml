@@ -37,6 +37,11 @@ spec:
         env:
         - name: ALLOWLIST
           value: cdn.bsky.app
+        resources:
+          requests:
+            memory: 184M
+          limits:
+            memory: 184M
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress

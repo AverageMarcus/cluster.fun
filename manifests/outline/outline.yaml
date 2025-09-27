@@ -73,7 +73,9 @@ spec:
         resources:
           requests:
             cpu: 8m
-            memory: 1024Mi
+            memory: 1389M
+          limits:
+            memory: 1489M
         volumeMounts:
           - mountPath: /opt/outline/.env
             subPath: .env

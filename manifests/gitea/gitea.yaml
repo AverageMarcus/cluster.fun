@@ -77,7 +77,7 @@ spec:
           name: web
         resources:
           requests:
-            memory: 400Mi
+            memory: 800Mi
         volumeMounts:
         - mountPath: /data
           name: git-data
