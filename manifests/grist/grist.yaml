@@ -64,6 +64,8 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: grist
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
