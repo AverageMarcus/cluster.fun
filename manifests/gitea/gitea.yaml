@@ -43,7 +43,7 @@ spec:
       priorityClassName: critical
       containers:
       - name: git
-        image: gitea/gitea:1.25.0
+        image: gitea/gitea:1.25.1
         env:
         - name: APP_NAME
           value: "Git"
