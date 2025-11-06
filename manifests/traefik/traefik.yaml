@@ -45,7 +45,7 @@ spec:
         - --entrypoints.websecure.http.tls=true
         - --entrypoints.web.http.redirections.entrypoint.to=websecure
         - --entrypoints.web.http.redirections.entrypoint.scheme=https
-        image: rancher/mirrored-library-traefik:2.11.29
+        image: rancher/mirrored-library-traefik:2.11.30
         imagePullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 3
