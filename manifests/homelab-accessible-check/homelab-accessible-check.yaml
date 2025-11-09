@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: docker-config
+  namespace: homelab-accessible-check
+  annotations:
+    kube-1password: i6ngbk5zf4k52xgwdwnfup5bby
+    kube-1password/vault: Kubernetes
+    kube-1password/secret-text-key: .dockerconfigjson
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: e30=
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: homelab-accessible-check
+  namespace: homelab-accessible-check
+  annotations:
+    kube-1password: bz6ujxc5neqma242lpfqdxfiay
+    kube-1password/vault: Kubernetes
+    kube-1password/secret-text-parse: "true"
+type: Opaque
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homelab-accessible-check
+  namespace: homelab-accessible-check
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: homelab-accessible-check
+  template:
+    metadata:
+      labels:
+        app: homelab-accessible-check
+    spec:
+      imagePullSecrets:
+        - name: docker-config
+      containers:
+      - name: checker
+        image: rg.fr-par.scw.cloud/averagemarcus-private/homelab-accessible-check:latest
+        imagePullPolicy: Always
+        envFrom:
+        - secretRef:
+            name: "homelab-accessible-check"
+        resources:
+          limits:
+            memory: 50Mi
+          requests:
+            memory: 50Mi
