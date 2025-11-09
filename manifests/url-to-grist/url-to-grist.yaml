@@ -1,0 +1,117 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: url-to-grist
+  namespace: cloudnative-now
+  annotations:
+    kube-1password: bu4lczquzosu3yxhyrzbtepply
+    kube-1password/vault: Kubernetes
+    kube-1password/secret-text-parse: "true"
+  labels:
+    app.kubernetes.io/name: url-to-grist
+    app.kubernetes.io/part-of: cloudnative.now
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: url-to-grist
+  labels:
+    app.kubernetes.io/name: url-to-grist
+    app.kubernetes.io/part-of: cloudnative.now
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: web
+    name: web
+  selector:
+    app.kubernetes.io/name: url-to-grist
+    app.kubernetes.io/part-of: cloudnative.now
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: url-to-grist
+  labels:
+    app.kubernetes.io/name: url-to-grist
+    app.kubernetes.io/part-of: cloudnative.now
+  annotations:
+    reloader.stakater.com/search: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: url-to-grist
+      app.kubernetes.io/part-of: cloudnative.now
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: url-to-grist
+        app.kubernetes.io/part-of: cloudnative.now
+    spec:
+      containers:
+      - name: url-to-grist
+        image: ghcr.io/namelessplanet/url-to-grist:v1.5.3
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: PORT
+          value: "8080"
+        envFrom:
+        - secretRef:
+            name: "url-to-grist"
+        ports:
+        - containerPort: 8080
+          name: web
+        livenessProbe:
+          httpGet:
+            port: web
+            path: /healthz
+          initialDelaySeconds: 1
+          periodSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+          timeoutSeconds: 3
+        readinessProbe:
+          httpGet:
+            port: web
+            path: /healthz
+          initialDelaySeconds: 1
+          periodSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+          timeoutSeconds: 3
+        resources:
+          limits:
+            memory: 20Mi
+          requests:
+            memory: 20Mi
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: url-to-grist
+  namespace: cloudnative-now
+  labels:
+    app.kubernetes.io/name: url-to-grist
+    app.kubernetes.io/part-of: cloudnative.now
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - "url-to-grist.cloudnative.now"
+      secretName: "url-to-grist-ingress"
+  rules:
+    - host: "url-to-grist.cloudnative.now"
+      http:
+        paths:
+          - path: "/"
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: url-to-grist
+                port:
+                  name: web
