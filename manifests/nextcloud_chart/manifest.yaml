@@ -57,6 +57,7 @@ data:
     <?php
     $CONFIG = array (
         'overwriteprotocol' => 'https',
+        'loglevel' => 1,
         'log_rotate_size' => 100 * 1024 * 1024
     );
   .htaccess: |-
