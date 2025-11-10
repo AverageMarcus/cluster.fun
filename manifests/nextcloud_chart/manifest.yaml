@@ -56,7 +56,8 @@ data:
   general.config.php: |-
     <?php
     $CONFIG = array (
-        'overwriteprotocol' => 'https'
+        'overwriteprotocol' => 'https',
+        'log_rotate_size' => 100 * 1024 * 1024
     );
   .htaccess: |-
     # line below if for Apache 2.4
