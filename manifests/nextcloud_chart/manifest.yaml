@@ -339,6 +339,97 @@ spec:
         - name: nextcloud-config
           mountPath: /var/www/html/config/smtp.config.php
           subPath: smtp.config.php
+      - name: cron
+        image: "nextcloud:32.0.1-apache"
+        imagePullPolicy: IfNotPresent
+        command:
+          - /cron.sh
+        env:
+          - name: SQLITE_DATABASE
+            value: "nextcloud"
+          - name: NEXTCLOUD_ADMIN_USER
+            valueFrom:
+              secretKeyRef:
+                name: nextcloud-nextcloud
+                key: nextcloud-username
+          - name: NEXTCLOUD_ADMIN_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: nextcloud-nextcloud
+                key: nextcloud-password
+          - name: NEXTCLOUD_TRUSTED_DOMAINS
+            value: nextcloud.cluster.fun
+          - name: NEXTCLOUD_DATA_DIR
+            value: "/var/www/html/data"
+          - name: REDIS_HOST
+            valueFrom:
+              secretKeyRef:
+                name: nextcloud-nextcloud-redis
+                key: redis-host
+          - name: REDIS_PORT
+            valueFrom:
+              secretKeyRef:
+                name: nextcloud-nextcloud-redis
+                key: redis-port
+          - name: REDIS_HOST_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: nextcloud-nextcloud-redis
+                key: redis-password
+          - name: REDIS_DB_INDEX
+            valueFrom:
+              secretKeyRef:
+                name: nextcloud-nextcloud-redis
+                key: redis-db-index
+        volumeMounts:
+        - name: nextcloud-data
+          mountPath: /var/www/
+          subPath: root
+        - name: nextcloud-data
+          mountPath: /var/www/html
+          subPath: html
+        - name: nextcloud-data
+          mountPath: /var/www/html/data
+          subPath: data
+        - name: nextcloud-data
+          mountPath: /var/www/html/config
+          subPath: config
+        - name: nextcloud-data
+          mountPath: /var/www/html/custom_apps
+          subPath: custom_apps
+        - name: nextcloud-data
+          mountPath: /var/www/tmp
+          subPath: tmp
+        - name: nextcloud-data
+          mountPath: /var/www/html/themes
+          subPath: themes
+        - name: nextcloud-config
+          mountPath: /var/www/html/config/general.config.php
+          subPath: general.config.php
+        - name: nextcloud-s3
+          mountPath: /var/www/html/config/s3.config.php
+          subPath: s3.config.php
+        - name: nextcloud-config
+          mountPath: /var/www/html/config/.htaccess
+          subPath: .htaccess
+        - name: nextcloud-config
+          mountPath: /var/www/html/config/apache-pretty-urls.config.php
+          subPath: apache-pretty-urls.config.php
+        - name: nextcloud-config
+          mountPath: /var/www/html/config/apcu.config.php
+          subPath: apcu.config.php
+        - name: nextcloud-config
+          mountPath: /var/www/html/config/apps.config.php
+          subPath: apps.config.php
+        - name: nextcloud-config
+          mountPath: /var/www/html/config/autoconfig.php
+          subPath: autoconfig.php
+        - name: nextcloud-config
+          mountPath: /var/www/html/config/redis.config.php
+          subPath: redis.config.php
+        - name: nextcloud-config
+          mountPath: /var/www/html/config/smtp.config.php
+          subPath: smtp.config.php
       volumes:
       - name: nextcloud-data
         persistentVolumeClaim:
@@ -353,6 +444,7 @@ spec:
       securityContext:
         fsGroup: 33
 ---
+<<<<<<< Updated upstream
 # Source: nextcloud/templates/cronjob.yaml
 apiVersion: batch/v1
 kind: CronJob
@@ -392,6 +484,8 @@ spec:
                 requests:
                   memory: 200Mi
 ---
+=======
+>>>>>>> Stashed changes
 # Source: nextcloud/templates/ingress.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
