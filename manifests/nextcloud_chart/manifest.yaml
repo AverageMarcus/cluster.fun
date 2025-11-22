@@ -340,7 +340,7 @@ spec:
           mountPath: /var/www/html/config/smtp.config.php
           subPath: smtp.config.php
       - name: cron
-        image: "nextcloud:32.0.1-apache"
+        image: "nextcloud:32.0.2-apache"
         imagePullPolicy: IfNotPresent
         command:
           - /cron.sh
@@ -444,48 +444,6 @@ spec:
       securityContext:
         fsGroup: 33
 ---
-<<<<<<< Updated upstream
-# Source: nextcloud/templates/cronjob.yaml
-apiVersion: batch/v1
-kind: CronJob
-metadata:
-  name: nextcloud-nextcloud-cron
-  labels:
-    app.kubernetes.io/name: nextcloud
-    app.kubernetes.io/instance: nextcloud-nextcloud
-  annotations:
-    {}
-spec:
-  schedule: "*/5 * * * *"
-  concurrencyPolicy: Forbid
-  failedJobsHistoryLimit: 5
-  successfulJobsHistoryLimit: 2
-  jobTemplate:
-    metadata:
-      labels:
-        app.kubernetes.io/name: nextcloud
-    spec:
-      template:
-        metadata:
-          labels:
-            app.kubernetes.io/name: nextcloud
-        spec:
-          restartPolicy: Never
-          containers:
-            - name: nextcloud
-              image: "nextcloud:32.0.2-apache"
-              imagePullPolicy: IfNotPresent
-              command: [ "curl" ]
-              args:
-                - "--fail"
-                - "-L"
-                - "https://nextcloud.cluster.fun/cron.php"
-              resources:
-                requests:
-                  memory: 200Mi
----
-=======
->>>>>>> Stashed changes
 # Source: nextcloud/templates/ingress.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
