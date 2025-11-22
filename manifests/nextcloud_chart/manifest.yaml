@@ -206,7 +206,7 @@ spec:
       priorityClassName: critical
       containers:
       - name: nextcloud
-        image: "nextcloud:32.0.1-apache"
+        image: "nextcloud:32.0.2-apache"
         imagePullPolicy: IfNotPresent
         env:
         - name: SQLITE_DATABASE
@@ -381,7 +381,7 @@ spec:
           restartPolicy: Never
           containers:
             - name: nextcloud
-              image: "nextcloud:32.0.1-apache"
+              image: "nextcloud:32.0.2-apache"
               imagePullPolicy: IfNotPresent
               command: [ "curl" ]
               args:
