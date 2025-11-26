@@ -35,6 +35,8 @@ data:
     cnsmunich-feedback: https://yay-or-nay.cluster.fun/feedback/20UETBI0
     containerdays25: https://speaking.marcusnoble.co.uk/HARSlE/the-future-of-kubernetes-admission-logic
     containerdays25-feedback: https://yay-or-nay.cluster.fun/feedback/F8P351QK
+    cdl-2026: https://speaking.marcusnoble.co.uk/lMcEwR/pod-deep-dive-the-interesting-bits
+    cdl-2026-feedback: https://yay-or-nay.cluster.fun/feedback/EMLARINI
 ---
 apiVersion: v1
 kind: Service
