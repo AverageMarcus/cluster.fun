@@ -38,7 +38,7 @@ spec:
           operator: "Exists"
       automountServiceAccountToken: false
       containers:
-      - image: ghcr.io/google/cadvisor:v0.53.0
+      - image: ghcr.io/google/cadvisor:0.54.0
         name: cadvisor
         ports:
         - containerPort: 8080
