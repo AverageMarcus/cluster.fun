@@ -52,7 +52,7 @@ spec:
     spec:
       containers:
       - name: url-to-grist
-        image: ghcr.io/namelessplanet/url-to-grist:v1.5.3
+        image: ghcr.io/namelessplanet/url-to-grist:v1.6.0
         imagePullPolicy: IfNotPresent
         env:
         - name: PORT
