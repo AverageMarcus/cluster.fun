@@ -31,7 +31,7 @@ spec:
       priorityClassName: critical
       containers:
       - name: frontend
-        image: ghcr.io/mealie-recipes/mealie:v3.7.0
+        image: ghcr.io/mealie-recipes/mealie:v3.8.0
         imagePullPolicy: Always
         envFrom:
         - secretRef:
