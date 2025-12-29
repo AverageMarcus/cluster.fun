@@ -37,6 +37,8 @@ data:
     containerdays25-feedback: https://yay-or-nay.cluster.fun/feedback/F8P351QK
     cdl-2026: https://speaking.marcusnoble.co.uk/lMcEwR/pod-deep-dive-the-interesting-bits
     cdl-2026-feedback: https://yay-or-nay.cluster.fun/feedback/EMLARINI
+    cdl-talk-2026: https://speaking.marcusnoble.co.uk/0rRvmv/debugging-your-conference-talk-practical-tips-to-resonate-with-your-audience
+    cdl-talk-2026-feedback: https://yay-or-nay.cluster.fun/feedback/22TO05MQ
 ---
 apiVersion: v1
 kind: Service
