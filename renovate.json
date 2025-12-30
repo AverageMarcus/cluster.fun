@@ -21,5 +21,8 @@
   },
   "kubernetes": {
     "fileMatch": ["manifests/.+\\.yaml$"]
+  },
+  "argocd": {
+    "managerFilePatterns": ["/manifests/_apps/.+\\.yaml$/"]
   }
 }
