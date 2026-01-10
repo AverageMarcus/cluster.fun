@@ -108,9 +108,9 @@ spec:
               value: gvisor
           resources:
             requests:
-              memory: 500M
+              memory: 300M
             limits:
-              memory: 500M
+              memory: 300M
           securityContext:
             capabilities:
               add:
