@@ -40,6 +40,7 @@ data:
     cdl-talk-2026: https://speaking.marcusnoble.co.uk/0rRvmv/debugging-your-conference-talk-practical-tips-to-resonate-with-your-audience
     cdl-talk-2026-feedback: https://yay-or-nay.cluster.fun/feedback/22TO05MQ
     technical-talking-blog-post: https://marcusnoble.co.uk/2025-04-30-my-tips-on-giving-technical-talks/
+    kubecon-eu-26: https://speaking.marcusnoble.co.uk/zT471P/kube-oddities-the-quirks-that-keep-kubernetes-interesting
 ---
 apiVersion: v1
 kind: Service
