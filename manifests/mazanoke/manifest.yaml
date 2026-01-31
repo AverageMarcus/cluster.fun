@@ -32,7 +32,7 @@ spec:
         image: ghcr.io/civilblur/mazanoke:v1.1.5
         imagePullPolicy: Always
         ports:
-        - containerPort: 3474
+        - containerPort: 80
           name: web
         resources:
           limits:
