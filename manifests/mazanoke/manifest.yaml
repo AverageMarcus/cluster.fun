@@ -1,0 +1,69 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mazanoke
+  namespace: mazanoke
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: web
+    name: web
+  selector:
+    app: mazanoke
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mazanoke
+  namespace: mazanoke
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mazanoke
+  template:
+    metadata:
+      labels:
+        app: mazanoke
+    spec:
+      containers:
+      - name: web
+        image: ghcr.io/civilblur/mazanoke:v1.1.5
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3474
+          name: web
+        resources:
+          limits:
+            memory: 200Mi
+          requests:
+            memory: 200Mi
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mazanoke
+  namespace: mazanoke
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - image.cluster.fun
+    secretName: mazanoke-ingress
+  rules:
+  - host: image.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: mazanoke
+            port:
+              number: 80
+
