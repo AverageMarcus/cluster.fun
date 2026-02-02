@@ -35,7 +35,7 @@ spec:
     name: cluster-fun (v2)
   source:
     repoURL: 'https://charts.jetstack.io'
-    targetRevision: v1.19.2
+    targetRevision: v1.19.3
     chart: cert-manager
     helm:
       version: v3
