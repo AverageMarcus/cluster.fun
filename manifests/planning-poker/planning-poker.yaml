@@ -1,0 +1,111 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: planning-poker
+  namespace: planning-poker
+  labels:
+    app.kubernetes.io/name: planning-poker
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: planning-poker-data
+  namespace: planning-poker
+  labels:
+    app.kubernetes.io/name: planning-poker
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: "1Gi"
+  storageClassName: "sbs-default-retain"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: planning-poker
+  namespace: planning-poker
+  labels:
+    app.kubernetes.io/name: planning-poker
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: web
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: planning-poker
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: planning-poker
+  namespace: planning-poker
+  labels:
+    app.kubernetes.io/name: planning-poker
+  annotations:
+    secret.reloader.stakater.com/reload: "planning-poker"
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: planning-poker
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: planning-poker
+    spec:
+      serviceAccountName: planning-poker
+      priorityClassName: critical
+      containers:
+        - name: planning-poker
+          image: ghcr.io/axeleroy/self-host-planning-poker:1.2.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: web
+              containerPort: 8000
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: http
+          readinessProbe:
+            tcpSocket:
+              port: http
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: planning-poker-data
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: planning-poker
+  namespace: planning-poker
+  labels:
+    app.kubernetes.io/name: planning-poker
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - planning-poker.cluster.fun
+    secretName: planning-poker-ingress
+  rules:
+    - host: "planning-poker.cluster.fun"
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: planning-poker
+                port:
+                  number: 80
