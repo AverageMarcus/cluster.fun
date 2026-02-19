@@ -70,10 +70,10 @@ spec:
               protocol: TCP
           livenessProbe:
             tcpSocket:
-              port: http
+              port: web
           readinessProbe:
             tcpSocket:
-              port: http
+              port: web
           volumeMounts:
             - name: data
               mountPath: /data
