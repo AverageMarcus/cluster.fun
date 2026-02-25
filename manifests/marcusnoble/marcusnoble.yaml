@@ -39,16 +39,16 @@ spec:
             memory: 50Mi
           requests:
             memory: 50Mi
-        # livenessProbe:
-        #   httpGet:
-        #     path: /healthz
-        #     port: web
-        #   initialDelaySeconds: 10
-        # readinessProbe:
-        #   httpGet:
-        #     path: /healthz
-        #     port: web
-        #   initialDelaySeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: web
+          initialDelaySeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: web
+          initialDelaySeconds: 10
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
