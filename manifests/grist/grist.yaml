@@ -110,7 +110,7 @@ spec:
             requests:
               memory: 300M
             limits:
-              memory: 300M
+              memory: 600M
           securityContext:
             capabilities:
               add:
