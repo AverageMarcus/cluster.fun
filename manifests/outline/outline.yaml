@@ -46,7 +46,7 @@ spec:
       priorityClassName: critical
       containers:
       - name: outline
-        image: outlinewiki/outline:1.5.0
+        image: outlinewiki/outline:1.6.0
         imagePullPolicy: IfNotPresent
         env:
         - name: ALLOWED_DOMAINS
