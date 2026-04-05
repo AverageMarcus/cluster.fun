@@ -68,7 +68,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: ghcr.io/miniflux/miniflux:2.2.18
+        image: ghcr.io/miniflux/miniflux:2.2.19
         imagePullPolicy: IfNotPresent
         envFrom:
         - configMapRef:
