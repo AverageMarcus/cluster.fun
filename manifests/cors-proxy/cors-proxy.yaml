@@ -36,7 +36,7 @@ spec:
           name: web
         env:
         - name: ALLOWLIST
-          value: cdn.bsky.app
+          value: cdn.bsky.app,en.wikipedia.org
         resources:
           requests:
             memory: 184M
