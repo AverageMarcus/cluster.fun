@@ -58,8 +58,7 @@ spec:
         livenessProbe:
           httpGet:
             path: /
-            port:
-              number: 3000
+            port: web
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
