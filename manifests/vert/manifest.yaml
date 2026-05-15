@@ -53,10 +53,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - image.cluster.fun
+    - vert.cluster.fun
     secretName: vert-ingress
   rules:
-  - host: image.cluster.fun
+  - host: vert.cluster.fun
     http:
       paths:
       - path: /
