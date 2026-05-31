@@ -13,7 +13,9 @@ data:
       "loki.auth-proxy.svc": "loki-write.cluster.local",
       "loki.auth-proxy.svc:80": "loki-write.cluster.local",
       "loki-distributed.auth-proxy.svc": "loki-loki.cluster.local",
-      "loki-distributed.auth-proxy.svc:80": "loki-loki.cluster.local"
+      "loki-distributed.auth-proxy.svc:80": "loki-loki.cluster.local",
+      "hermes.auth-proxy.svc": "hermes.cluster.local",
+      "hermes.auth-proxy.svc:80": "hermes.cluster.local"
     }
 ---
 apiVersion: apps/v1
