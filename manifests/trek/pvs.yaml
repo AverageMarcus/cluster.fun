@@ -1,0 +1,26 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: trek-data
+  namespace: trek
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: sbs-default-retain
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: trek-uploads
+  namespace: trek
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: sbs-default-retain
+---

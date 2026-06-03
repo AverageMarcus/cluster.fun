@@ -1,0 +1,157 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: trek
+  namespace: trek
+  labels:
+    app: trek
+    app.kubernetes.io/name: trek
+  annotations:
+    kube-1password: irpjqi7ppvbvldfni7ywgorpgi
+    kube-1password/vault: Kubernetes
+    kube-1password/secret-text-parse: "true"
+type: Opaque
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: trek
+  namespace: trek
+  labels:
+    app: trek
+    app.kubernetes.io/name: trek
+  annotations:
+    reloader.stakater.com/match: "true"
+data:
+  NODE_ENV: "production"
+  PORT: "3000"
+  TZ: "UTC"
+  LOG_LEVEL: "info"
+  DEFAULT_LANGUAGE: "en"
+  ALLOWED_ORIGINS: "https://trek.cluster.fun"
+  APP_URL: "https://trek.cluster.fun"
+  FORCE_HTTPS: "false"
+  COOKIE_SECURE: "true"
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trek
+  namespace: trek
+  labels:
+    app: trek
+    app.kubernetes.io/name: trek
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: trek
+  template:
+    metadata:
+      labels:
+        app: trek
+        app.kubernetes.io/name: trek
+    spec:
+      containers:
+      - name: trek
+        image: mauriceboe/trek:3.0.22
+        imagePullPolicy: IfNotPresent
+        envFrom:
+        - configMapRef:
+            name: trek
+        - secretRef:
+            name: trek
+        ports:
+        - containerPort: 3000
+          name: web
+        volumeMounts:
+          - mountPath: /app/data
+            name: data
+          - mountPath: /app/uploads
+            name: uploads
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: trek-data
+      - name: uploads
+        persistentVolumeClaim:
+          claimName: trek-uploads
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: trek
+  namespace: trek
+  labels:
+    app: trek
+    app.kubernetes.io/name: trek
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: web
+    name: web
+  selector:
+    app: trek
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: trek
+  namespace: trek
+  labels:
+    app: trek
+    app.kubernetes.io/name: trek
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/client-body-buffer-size: 25m
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-next-upstream: "300"
+    nginx.ingress.kubernetes.io/proxy-next-upstream-timeout: "300"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - trek.cluster.fun
+    secretName: trek-ingress
+  rules:
+  - host: trek.cluster.fun
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: trek
+            port:
+              name: web
