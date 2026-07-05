@@ -27,6 +27,15 @@ spec:
       labels:
         app: blog
     spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: blog
+                topologyKey: kubernetes.io/hostname
       containers:
       - name: web
         image: rg.fr-par.scw.cloud/averagemarcus/blog:latest
