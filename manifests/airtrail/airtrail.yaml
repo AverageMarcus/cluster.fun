@@ -66,25 +66,25 @@ spec:
         volumeMounts:
           - mountPath: /app/uploads
             name: uploads
-        # livenessProbe:
-        #   httpGet:
-        #     path: /api/health
-        #     port: 3000
-        #   initialDelaySeconds: 5
-        #   periodSeconds: 30
-        # readinessProbe:
-        #   httpGet:
-        #     path: /api/health
-        #     port: 3000
-        #   initialDelaySeconds: 5
-        #   periodSeconds: 10
-        # resources:
-        #   requests:
-        #     cpu: 300m
-        #     memory: 400Mi
-        #   limits:
-        #     cpu: 700m
-        #     memory: 800Mi
+        livenessProbe:
+          httpGet:
+            path: /api/ping
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /api/ping
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          requests:
+            cpu: 100m
+            memory: 150Mi
+          limits:
+            cpu: 200m
+            memory: 300Mi
       volumes:
       - name: uploads
         persistentVolumeClaim:
