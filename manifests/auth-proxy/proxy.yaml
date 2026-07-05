@@ -15,7 +15,9 @@ data:
       "loki-distributed.auth-proxy.svc": "loki-loki.cluster.local",
       "loki-distributed.auth-proxy.svc:80": "loki-loki.cluster.local",
       "hermes.auth-proxy.svc": "hermes.cluster.local",
-      "hermes.auth-proxy.svc:80": "hermes.cluster.local"
+      "hermes.auth-proxy.svc:80": "hermes.cluster.local",
+      "ollama.auth-proxy.svc": "ollama.cluster.local",
+      "ollama.auth-proxy.svc:11434": "ollama.cluster.local"
     }
 ---
 apiVersion: apps/v1
