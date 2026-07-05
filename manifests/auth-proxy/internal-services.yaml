@@ -100,3 +100,20 @@ spec:
     app: internal-proxy
   type: ClusterIP
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ollama
+  namespace: auth-proxy
+  labels:
+    app: internal-proxy
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: internal-proxy
+  type: ClusterIP
+---
