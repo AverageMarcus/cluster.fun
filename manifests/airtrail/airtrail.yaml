@@ -23,8 +23,8 @@ metadata:
   annotations:
     reloader.stakater.com/match: "true"
 data:
-  ORIGIN=https://airtrail.cluster.fun
-  UPLOAD_LOCATION=/app/uploads
+  ORIGIN: https://airtrail.cluster.fun
+  UPLOAD_LOCATION: /app/uploads
 ---
 apiVersion: apps/v1
 kind: Deployment
