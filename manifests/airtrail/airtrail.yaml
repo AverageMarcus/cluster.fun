@@ -47,6 +47,10 @@ spec:
         app: airtrail
         app.kubernetes.io/name: airtrail
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
       containers:
       - name: airtrail
         image: johly/airtrail:v3.11.1
