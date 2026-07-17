@@ -78,7 +78,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: metrics
-          image: ghcr.io/jmcgrath207/k8s-ephemeral-storage-metrics:1.21.1
+          image: ghcr.io/jmcgrath207/k8s-ephemeral-storage-metrics:1.21.3
           imagePullPolicy: IfNotPresent
           ports:
             - name: metrics
