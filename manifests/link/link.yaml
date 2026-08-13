@@ -42,6 +42,9 @@ data:
     technical-talking-blog-post: https://marcusnoble.co.uk/2025-04-30-my-tips-on-giving-technical-talks/
     kubecon-eu-26: https://speaking.marcusnoble.co.uk/zT471P/kube-oddities-the-quirks-that-keep-kubernetes-interesting
     cndro26: https://speaking.marcusnoble.co.uk/1OrBAe/kube-oddities-the-quirks-that-keep-kubernetes-interesting-marcus-noble-mark-sagi-kazar
+    cdh26: https://speaking.marcusnoble.co.uk/dvat0w/kube-oddities-the-quirks-that-keep-kubernetes-interesting-marcus-noble-mark-sagi-kazar
+    kcdsofia26: https://speaking.marcusnoble.co.uk/GFJgtL/kube-oddities-the-quirks-that-keep-kubernetes-interesting-marcus-noble-mark-sagi-kazar
+    cndpoland26: https://speaking.marcusnoble.co.uk/sZ2Ulk/kube-oddities-the-quirks-that-keep-kubernetes-interesting-marcus-noble-mark-sagi-kazar
 ---
 apiVersion: v1
 kind: Service
