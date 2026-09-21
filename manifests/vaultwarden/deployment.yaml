@@ -61,20 +61,6 @@ spec:
             requests:
               cpu: "100m"
               memory: "128Mi"
-          livenessProbe:
-            httpGet:
-              path: /alive
-              port: http
-            initialDelaySeconds: 30
-            periodSeconds: 30
-            failureThreshold: 3
-          readinessProbe:
-            httpGet:
-              path: /alive
-              port: http
-            initialDelaySeconds: 30
-            periodSeconds: 30
-            failureThreshold: 3
       volumes:
         - name: vaultwarden-data
           persistentVolumeClaim:
