@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: ghcr.io/civilblur/mazanoke:v1.1.6
+        image: ghcr.io/civilblur/mazanoke:v1.1.7
         imagePullPolicy: Always
         ports:
         - containerPort: 80
