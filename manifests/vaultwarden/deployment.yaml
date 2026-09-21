@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vaultwarden
+  labels:
+    app: vaultwarden
+    app.kubernetes.io/name: vaultwarden
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: vaultwarden
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: vaultwarden
+        app.kubernetes.io/name: vaultwarden
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - vaultwarden
+              topologyKey: kubernetes.io/hostname
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: vaultwarden
+          image: vaultwarden/server:1.37.3-alpine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          envFrom:
+          - configMapRef:
+              name: vaultwarden-config
+          - secretRef:
+              name: vaultwarden-credentials
+          - secretRef:
+              name: vaultwarden-smtp
+          volumeMounts:
+            - name: vaultwarden-data
+              mountPath: /data
+            - name: vaultwarden-attachments
+              mountPath: /data/attachments
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+          livenessProbe:
+            httpGet:
+              path: /alive
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /alive
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            failureThreshold: 3
+      volumes:
+        - name: vaultwarden-data
+          persistentVolumeClaim:
+            claimName: vaultwarden-data
+        - name: vaultwarden-attachments
+          persistentVolumeClaim:
+            claimName: vaultwarden-attachments
