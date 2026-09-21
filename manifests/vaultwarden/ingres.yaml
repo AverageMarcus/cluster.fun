@@ -22,10 +22,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - vaultwarden.cluster.fun
+    - vault.cluster.fun
     secretName: vaultwarden-ingress
   rules:
-  - host: vaultwarden.cluster.fun
+  - host: vault.cluster.fun
     http:
       paths:
       - path: /
