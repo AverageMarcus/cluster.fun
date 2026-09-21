@@ -7,11 +7,11 @@ metadata:
     app.kubernetes.io/name: vaultwarden
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 5Gi
-  storageClassName: sfs-standard-retain
+  storageClassName: sbs-default-retain
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -22,8 +22,8 @@ metadata:
     app.kubernetes.io/name: vaultwarden
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 5Gi
-  storageClassName: sfs-standard-retain
+  storageClassName: sbs-default-retain

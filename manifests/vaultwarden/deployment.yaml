@@ -6,12 +6,12 @@ metadata:
     app: vaultwarden
     app.kubernetes.io/name: vaultwarden
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: vaultwarden
   strategy:
-    type: RollingUpdate
+    type: Recreate
   template:
     metadata:
       labels:
