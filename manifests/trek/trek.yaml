@@ -58,7 +58,7 @@ spec:
     spec:
       containers:
       - name: trek
-        image: mauriceboe/trek:4.3.0
+        image: mauriceboe/trek:4.3.2
         imagePullPolicy: IfNotPresent
         envFrom:
         - configMapRef:
