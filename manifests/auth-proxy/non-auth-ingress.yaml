@@ -18,7 +18,6 @@ spec:
     - ombi.cluster.fun
     - bsky-feeds.cluster.fun
     - ai.cluster.fun
-    - penpot.cluster.fun
     - hermes-hooks.cluster.fun
     secretName: non-auth-proxy-ingress
   rules:
@@ -53,16 +52,6 @@ spec:
             port:
               name: non-auth
   - host: ai.cluster.fun
-    http:
-      paths:
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: tailscale-proxy
-            port:
-              name: non-auth
-  - host: penpot.cluster.fun
     http:
       paths:
       - path: /
