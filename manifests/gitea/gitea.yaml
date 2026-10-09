@@ -67,6 +67,8 @@ spec:
           value: arc-green
         - name: ALLOWED_HOST_LIST
           value: "*"
+        - name: EGRESS_MODE
+          value: "lax"
         - name: SECRET_KEY
           valueFrom:
             secretKeyRef:
