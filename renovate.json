@@ -8,7 +8,8 @@
   "rebaseWhen": "behind-base-branch",
   "extends": [
     "replacements:k8s-registry-move",
-    "local>averagemarcus/renovate-config//source-urls"
+    "local>averagemarcus/renovate-config//source-urls",
+    "docker:pinDigests"
   ],
   "ignorePaths": [
     "terraform"
