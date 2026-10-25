@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: rg.fr-par.scw.cloud/averagemarcus/bsky-screenshot:latest
+        image: rg.fr-par.scw.cloud/averagemarcus/bsky-screenshot:latest@sha256:0fae863fc3123f73aa6268a125d5bf2c2122c8a3f2aedaf129462e668e56ab23
         imagePullPolicy: Always
         ports:
         - containerPort: 80

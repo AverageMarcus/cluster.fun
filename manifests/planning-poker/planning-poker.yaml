@@ -62,7 +62,7 @@ spec:
       priorityClassName: critical
       containers:
         - name: planning-poker
-          image: ghcr.io/axeleroy/self-host-planning-poker:1.2.1
+          image: ghcr.io/axeleroy/self-host-planning-poker:1.2.1@sha256:0253f17c07f6c484b6fbef65867863541494e063355d39757ca27963404864d4
           imagePullPolicy: IfNotPresent
           ports:
             - name: web

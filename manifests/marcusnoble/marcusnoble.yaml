@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: rg.fr-par.scw.cloud/averagemarcus/marcusnoble:latest
+        image: rg.fr-par.scw.cloud/averagemarcus/marcusnoble:latest@sha256:258e639003301f9a41a796c74a963b624454de6dad2dd90f0a1eb745027cfc88
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

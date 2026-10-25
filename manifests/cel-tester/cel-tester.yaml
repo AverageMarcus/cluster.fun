@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: rg.fr-par.scw.cloud/averagemarcus/cel-tester:latest
+        image: rg.fr-par.scw.cloud/averagemarcus/cel-tester:latest@sha256:caf9044a19fa0e14f92232f68c1fe808249580d33619ea3706ff935bd2853559
         imagePullPolicy: Always
         ports:
         - containerPort: 80

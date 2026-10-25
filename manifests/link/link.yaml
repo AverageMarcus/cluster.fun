@@ -86,7 +86,7 @@ spec:
       priorityClassName: critical
       containers:
       - name: web
-        image: rg.fr-par.scw.cloud/averagemarcus/link:latest
+        image: rg.fr-par.scw.cloud/averagemarcus/link:latest@sha256:11d3908c87c91c3e9b0ac64377a016f967eb96d92c5a478f61ac4d6e4b7128f9
         imagePullPolicy: Always
         ports:
         - containerPort: 5050

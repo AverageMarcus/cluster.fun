@@ -30,7 +30,7 @@ spec:
       priorityClassName: low
       containers:
       - name: web
-        image: rg.fr-par.scw.cloud/averagemarcus/text-to-dxf:latest
+        image: rg.fr-par.scw.cloud/averagemarcus/text-to-dxf:latest@sha256:f1ce90feec0dae575979c7fa83b855ced939efe23d749cc2615f5d43a08cacb0
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
