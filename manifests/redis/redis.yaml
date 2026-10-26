@@ -330,7 +330,7 @@ spec:
       priorityClassName: critical
       containers:
         - name: redis
-          image: docker.io/bitnamilegacy/redis:7.2.4-debian-11-r11
+          image: docker.io/bitnamilegacy/redis:7.2.4-debian-11-r11@sha256:c81b0644726b22fa65669b427610701e86dceb0007438f5d75d271b3197a48bf
           imagePullPolicy: "IfNotPresent"
           securityContext:
             runAsUser: 1001
@@ -472,7 +472,7 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
         - name: redis
-          image: docker.io/bitnamilegacy/redis:7.2.4-debian-11-r11
+          image: docker.io/bitnamilegacy/redis:7.2.4-debian-11-r11@sha256:c81b0644726b22fa65669b427610701e86dceb0007438f5d75d271b3197a48bf
           imagePullPolicy: "IfNotPresent"
           securityContext:
             runAsUser: 1001

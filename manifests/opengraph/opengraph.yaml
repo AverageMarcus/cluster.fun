@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: rg.fr-par.scw.cloud/averagemarcus/opengraph-image-gen:latest
+        image: rg.fr-par.scw.cloud/averagemarcus/opengraph-image-gen:latest@sha256:97aea61e4db1e6d441fdfecd28f614b1e5342bfacd3a5ca6021ffca5c03db833
         imagePullPolicy: Always
         ports:
         - containerPort: 3000

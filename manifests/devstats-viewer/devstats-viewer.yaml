@@ -31,7 +31,7 @@ spec:
         - name: docker-config
       containers:
       - name: web
-        image: rg.fr-par.scw.cloud/averagemarcus/devstats-viewer:latest
+        image: rg.fr-par.scw.cloud/averagemarcus/devstats-viewer:latest@sha256:ecf19a3dd9ecc16f78d0a276aa977a7a8ee17635d5ee68ea86e5ee0a2e1ebe48
         imagePullPolicy: Always
         ports:
         - containerPort: 80

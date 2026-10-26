@@ -41,7 +41,7 @@ spec:
       priorityClassName: low
       containers:
       - name: web
-        image: rg.fr-par.scw.cloud/averagemarcus/civo-versions:latest
+        image: rg.fr-par.scw.cloud/averagemarcus/civo-versions:latest@sha256:90585c61b82e124f9179b60fc8231247e3b37cab76fd7c0185aeb4a4276a0ab4
         imagePullPolicy: Always
         ports:
         - containerPort: 8000

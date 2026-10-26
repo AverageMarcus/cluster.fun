@@ -46,7 +46,7 @@ spec:
           - 100.100.100.100
       containers:
       - name: proxy
-        image: rg.fr-par.scw.cloud/averagemarcus/proxy:latest
+        image: rg.fr-par.scw.cloud/averagemarcus/proxy:latest@sha256:2a401eec859bf665e75bbb737b3b1709cd1fa74576e4ba8c7daeb63d8b3e8d51
         imagePullPolicy: Always
         env:
         - name: PROXY_DESTINATION
@@ -68,7 +68,7 @@ spec:
           mountPath: /config/
 
       - name: oauth-proxy
-        image: quay.io/oauth2-proxy/oauth2-proxy:v7.15.5
+        image: quay.io/oauth2-proxy/oauth2-proxy:v7.15.5@sha256:8498b0d0ef0a7b29686414000a08aee467f02d0299c9ed1e006a8f33fc017916
         args:
         - --cookie-secure=false
         - --provider=oidc

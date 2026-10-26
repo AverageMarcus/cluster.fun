@@ -53,7 +53,7 @@ spec:
         fsGroup: 1000
       containers:
       - name: airtrail
-        image: johly/airtrail:v3.13.1
+        image: johly/airtrail:v3.13.1@sha256:800466d42393a0a9f360a93d98ab8da524381b19f3c06cd4552c27106d982e3d
         imagePullPolicy: IfNotPresent
         envFrom:
         - configMapRef:

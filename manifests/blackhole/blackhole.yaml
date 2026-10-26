@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: black-hole
-        image: averagemarcus/black-hole:latest
+        image: averagemarcus/black-hole:latest@sha256:1e9cb8396f67aeb25a9eaaf14b369a53a7b300ae465859f10d9f0f88ef3023e1
         imagePullPolicy: Always
         ports:
         - containerPort: 9090

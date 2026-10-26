@@ -32,7 +32,7 @@ spec:
       priorityClassName: low
       containers:
       - name: web
-        image: rg.fr-par.scw.cloud/averagemarcus/base64:latest
+        image: rg.fr-par.scw.cloud/averagemarcus/base64:latest@sha256:1ec2b770a5ffe986bdfbf24094ed945191bd7b9dd27a7b3212af92a3dfcea032
         imagePullPolicy: Always
         ports:
         - containerPort: 80

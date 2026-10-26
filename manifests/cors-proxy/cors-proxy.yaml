@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: rg.fr-par.scw.cloud/averagemarcus/cors-proxy:latest
+        image: rg.fr-par.scw.cloud/averagemarcus/cors-proxy:latest@sha256:306783c26392f92af7e34d173493b0f8d6fd7623421d16a02fad26857317aeec
         imagePullPolicy: Always
         ports:
         - containerPort: 8000

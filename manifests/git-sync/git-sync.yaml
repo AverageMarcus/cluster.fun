@@ -78,7 +78,7 @@ spec:
         spec:
           containers:
           - name: sync
-            image: rg.fr-par.scw.cloud/averagemarcus/git-sync:latest
+            image: rg.fr-par.scw.cloud/averagemarcus/git-sync:latest@sha256:6060f0e77e324179cf6b2136a180ceecbcc64344682154b8848434fd105323e7
             imagePullPolicy: Always
             env:
             - name: GITHUB_TOKEN

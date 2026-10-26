@@ -44,7 +44,7 @@ spec:
         fsGroup: 1000
       initContainers:
       - name: config-copy
-        image: bash:latest
+        image: bash:latest@sha256:ab2ada570d744f42f517986fdd3c81ef60fe2054ed0c5295a7922e3b0ccd1b02
         imagePullPolicy: IfNotPresent
         args:
           - -c
@@ -57,7 +57,7 @@ spec:
           - name: data
             mountPath: /data
       - name: update-native-modules
-        image: nodered/node-red:4.1.17-18
+        image: nodered/node-red:4.1.17-18@sha256:161239fa8c3ebc2e6c5c831eb536960d4bdec677c7117a738d89a106cc2755a6
         imagePullPolicy: IfNotPresent
         command:
           - bash
@@ -73,7 +73,7 @@ spec:
             mountPath: /data
       containers:
       - name: web
-        image: nodered/node-red:4.1.17-18
+        image: nodered/node-red:4.1.17-18@sha256:161239fa8c3ebc2e6c5c831eb536960d4bdec677c7117a738d89a106cc2755a6
         imagePullPolicy: Always
         ports:
         - containerPort: 1880
