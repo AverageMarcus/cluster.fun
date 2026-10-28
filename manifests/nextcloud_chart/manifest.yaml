@@ -206,7 +206,7 @@ spec:
       priorityClassName: critical
       containers:
       - name: nextcloud
-        image: "nextcloud:35.0.2-apache@sha256:89af7ee7a96ff5e9668280566209268ae6b2d02327f6ef6d56f6d68228cf9431"
+        image: "nextcloud:35.0.2-apache@sha256:0347adaf2fa460aa9589f8c2b1ed246788d11a72ad9918d55ca288f3137fe5ca"
         imagePullPolicy: IfNotPresent
         env:
         - name: SQLITE_DATABASE
@@ -340,7 +340,7 @@ spec:
           mountPath: /var/www/html/config/smtp.config.php
           subPath: smtp.config.php
       - name: cron
-        image: "nextcloud:35.0.2-apache@sha256:89af7ee7a96ff5e9668280566209268ae6b2d02327f6ef6d56f6d68228cf9431"
+        image: "nextcloud:35.0.2-apache@sha256:0347adaf2fa460aa9589f8c2b1ed246788d11a72ad9918d55ca288f3137fe5ca"
         imagePullPolicy: IfNotPresent
         command:
           - /cron.sh
