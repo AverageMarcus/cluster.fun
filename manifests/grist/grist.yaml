@@ -75,7 +75,7 @@ spec:
       priorityClassName: critical
       containers:
         - name: grist
-          image: gristlabs/grist-oss:1.7.21@sha256:5657dc14b1745ef759bf789e5206ff4591e9b7d61d53777cc2fc710bfc9fbe36
+          image: gristlabs/grist-oss:1.7.22@sha256:40d2c0ce0c29b2aa1ec1dcf9652ec26a13a8f2b4b44116733bcede428afd27dc
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
