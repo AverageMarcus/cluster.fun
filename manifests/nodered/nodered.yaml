@@ -44,7 +44,7 @@ spec:
         fsGroup: 1000
       initContainers:
       - name: config-copy
-        image: bash:latest@sha256:ab2ada570d744f42f517986fdd3c81ef60fe2054ed0c5295a7922e3b0ccd1b02
+        image: bash:latest
         imagePullPolicy: IfNotPresent
         args:
           - -c
