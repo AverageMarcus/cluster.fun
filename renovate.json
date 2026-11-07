@@ -25,5 +25,11 @@
   },
   "argocd": {
     "managerFilePatterns": ["/manifests/_apps/.+\\.yaml$/"]
-  }
+  },
+  "packageRules": [
+    {
+      "matchCurrentValue": "/(latest|full)/",
+      "pinDigests": false
+    }
+  ]
 }
