@@ -58,7 +58,7 @@ spec:
     spec:
       containers:
       - name: trek
-        image: mauriceboe/trek:5.1.1@sha256:7068cc86c0d4d5aa9b55aeffd03966f7458352bcb3e010721e3d7d6899ac60bd
+        image: mauriceboe/trek:5.1.3@sha256:6a6bb48bdf5c71314717ef3f1de8da51855d55f68e911ab68fd963644c7416d9
         imagePullPolicy: IfNotPresent
         envFrom:
         - configMapRef:
