@@ -47,8 +47,8 @@ data:
     cndpoland26: https://speaking.marcusnoble.co.uk/sZ2Ulk/kube-oddities-the-quirks-that-keep-kubernetes-interesting-marcus-noble-mark-sagi-kazar
     kcduk2026: https://speaking.marcusnoble.co.uk/Xpj6t6/pod-deep-dive-the-interesting-bits
     kcduk2026-feedback: https://yay-or-nay.cluster.fun/feedback/BS01AM1M
-    cndenmark: https://speaking.marcusnoble.co.uk/WbXSpV/the-ai-side-effects-were-not-talking-about
-    cndenmark-feedback: https://yay-or-nay.cluster.fun/feedback/Q1ERNBA1
+    cndenmark26: https://speaking.marcusnoble.co.uk/WbXSpV/the-ai-side-effects-were-not-talking-about
+    cndenmark26-feedback: https://yay-or-nay.cluster.fun/feedback/Q1ERNBA1
 ---
 apiVersion: v1
 kind: Service
