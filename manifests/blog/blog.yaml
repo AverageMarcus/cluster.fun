@@ -38,7 +38,7 @@ spec:
                 topologyKey: kubernetes.io/hostname
       containers:
       - name: web
-        image: rg.fr-par.scw.cloud/averagemarcus/blog:latest@sha256:510bcd2c77812e958c478c01a1cdd74629136c8543dbde68b259fc703829c84d
+        image: rg.fr-par.scw.cloud/averagemarcus/blog:latest@sha256:3ebf887d6840ebafec19e823070e87cf899c1c541c0ad462354bce7b3e44aaee
         imagePullPolicy: Always
         ports:
         - containerPort: 8000
